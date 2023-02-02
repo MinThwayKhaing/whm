@@ -1,0 +1,28 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:p="http://primefaces.org/ui">
+	<style type="text/css">
+.ui-layout-north {
+	z-index: 20 !important;
+	overflow: visible !important;;
+}
+
+.ui-layout-north .ui-layout-unit-content {
+	overflow: visible !important;
+}
+
+ul.ui-widget-content.ui-menu-list.ui-menu-child {
+	width: 270px;
+}
+</style>
+	<h:form>
+		<div class="whmLogo">
+			<div style="margin-left:70px;">
+				<h:commandButton disabled="#{sessionScope.loginUser == null}" action="home" image="/images/whm.png" />
+			</div>
+			<div>Working Hour Management System</div>
+		</div>
+	</h:form>
+</ui:composition>

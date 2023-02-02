@@ -1,0 +1,2 @@
+eclipse.preferences.version=1
+org.jboss.ide.eclipse.as.core.singledeployable.deployableList=src/com/mutu/chart/test/ResultTest.java\nsrc/com/java/groovy/GroovyRunner.java\nsrc/com/mutu/chart/test/BarChartTest.java\nsrc/com/mutu/json/person/Address.java\nsrc/com/cmpolaris/client/CMPolarisClient.java\nsrc/com/cyc/reprot/GroupSubtotalReport.java\nsrc/com/mutu/chart/test/BubbleChartTest.java\n

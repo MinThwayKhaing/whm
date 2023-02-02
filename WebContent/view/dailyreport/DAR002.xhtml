@@ -1,0 +1,443 @@
+
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:p="http://primefaces.org/ui"
+	template="/common/commonLayout.xhtml">
+
+	<ui:param name="leftMenu" value="/common/adminLeft.xhtml" />
+	<ui:param name="rendered" value="true" />
+	<ui:define name="content">
+		<h:body onload="#{DailyReportManagementBean.controlForm()}"
+			update=":dailyReportEntryForm :dailyReportTableForm">
+			<h:outputStylesheet library="css" name="deleteStyle.css"></h:outputStylesheet>
+			<h:form id="dailyReportEntryForm">
+				<table class="whmPageStatus"><tr><td><h:outputText value="Daily Activity Inquiry" style="padding:7px;"/></td></tr></table>
+				<table width="100%">
+					<tr>
+						<td></td>
+						<td width="70%" align="center">
+							<div
+								style="z-index: 100; position: fixed; margin-top: -30px; width: 700px;">
+								<p:messages globalOnly="true" showDetail="true" id="messages"
+									closable="true" />
+							</div>
+						</td>
+					</tr>
+				</table>
+				<!--
+					Revised By : Sai Kyaw Ye Myint
+					Revised Date : 2017/09/08
+					Explanation: Modify Staff ID and Staff Name text box disable.
+				 -->
+				<table class="whmBackStyle">
+					<tr>
+						<td width="120px;"><span class="cmms-label"><h:outputText
+									value="Staff ID" /></span></td>
+						<td>:</td>
+						<td><p:inputText
+								value="#{DailyReportManagementBean.dailyReport.staffID.username}"
+								id="staffID" style="width:150px;" maxlength="15"
+								disabled="#{sessionScope.loginUser.authorities.size() == 0 and sessionScope.loginUser.role != 'ADMIN'}">
+							</p:inputText></td>
+						<td></td>
+						<td></td>
+						<td></td>
+						<td></td>
+						<td><span class="cmms-label">Staff Name</span></td>
+						<td>:</td>
+						<td><p:inputText
+								value="#{DailyReportManagementBean.dailyReport.staffID.fullName}"
+								id="username" style="width:150px;" maxlength="50"
+								disabled="#{sessionScope.loginUser.authorities.size() == 0 and sessionScope.loginUser.role != 'ADMIN'}">
+
+							</p:inputText></td>
+					</tr>
+					<tr>
+						<td></td>
+						<td></td>
+						<td></td>
+						<td></td>
+						<td></td>
+						<td></td>
+						<td></td>
+						<td></td>
+						<td></td>
+						<td></td>
+					</tr>
+					<tr>
+						<td></td>
+						<td></td>
+						<td></td>
+						<td></td>
+						<td></td>
+						<td></td>
+						<td></td>
+						<td></td>
+						<td></td>
+					</tr>
+					<tr>
+						<td><span class="cmms-label">Report Date From</span></td>
+						<td>:</td>
+						<td><p:calendar pattern="yyyy/MM/dd"
+								value="#{DailyReportManagementBean.searchDate.fromDate}"
+								maxdate="#{DailyActivityManageBean.today}">
+								<p:ajax process="@this" update="messages" />
+							</p:calendar></td>
+						<td></td>
+						<td></td>
+						<td></td>
+						<td></td>
+						<td><span class="cmms-label">Report Date To</span></td>
+						<td>:</td>
+						<td><p:calendar pattern="yyyy/MM/dd"
+								value="#{DailyReportManagementBean.searchDate.toDate}"
+								maxdate="#{DailyActivityManageBean.today}">
+								<p:ajax process="@this" update="messages" />
+							</p:calendar></td>
+					</tr>
+					<tr>
+						<td colspan="6"></td>
+						<td></td>
+						<td></td>
+						<td></td>
+						<td></td>
+					</tr>
+					<tr>
+						<td><span class="cmms-label">Attendance</span></td>
+						<td>:</td>
+						<td><p:selectOneMenu id="leaveStatus" style="width:120px;"
+								value="#{DailyReportManagementBean.dailyReport.leaveStatus}">
+								<f:selectItem itemValue="#{null}" itemLabel="--Select All--" />
+								<f:selectItems
+									value="#{DailyReportManagementBean.leaveStatuses}" />
+							</p:selectOneMenu></td>
+						<td></td>
+						<td></td>
+						<td></td>
+						<td></td>
+						<td><span class="cmms-label">Approve Status</span></td>
+						<td>:</td>
+						<td><p:selectOneMenu id="approveStatus" style="width:120px;"
+								value="#{DailyReportManagementBean.dailyReport.checkDiv}">
+								<f:selectItem itemValue="#{null}" itemLabel="--Select All--" />
+								<f:selectItems value="#{DailyReportManagementBean.checkDivs}" />
+							</p:selectOneMenu></td>
+					</tr>
+					<tr>
+						<td colspan="10"></td>
+					</tr>
+
+					<tr>
+						<td colspan="2"><p:commandButton value="Search"
+								id="searchBtn"
+								action="#{DailyReportManagementBean.searchDailyReport}"
+								process="@form" oncomplete="PF('vtWidget').filter()"
+								update=":dailyReportEntryForm :dailyReportTableForm" /> <p:commandButton
+								value="Reset"
+								action="#{DailyReportManagementBean.searchDataClear}"
+								update=":dailyReportEntryForm :dailyReportTableForm" /></td>
+						<td></td>
+						<td></td>
+						<td></td>
+						<td></td>
+
+					</tr>
+				</table>
+				<br />
+				<p:separator style="height:5px;margin-top: 2px;margin-bottom: 2px;" />
+			</h:form>
+			<h:form id="dailyReportTableForm">
+				<table style="width: 100%;">
+					<tr>
+						<td colspan="2"><h:outputText
+								value="Total search result count : " /> <h:outputText
+								value="#{DailyReportManagementBean.dailyReportListSize}"></h:outputText></td>
+						<td align="right">
+					<p:commandButton value="Delete"
+							rendered="#{DailyReportManagementBean.btnDelVisible}"
+							disabled="#{DailyReportManagementBean.btnDel}"
+							update=":dailyReportTableForm dailyReportTable"
+							actionListener="#{DailyReportManagementBean.checkClicked}">
+					</p:commandButton> 
+					<p:commandButton value="Approve"
+							rendered="#{DailyReportManagementBean.btnApproveVisible}"
+							disabled="#{DailyReportManagementBean.btnApprove}"
+							process="@form" update=":dailyReportTableForm dailyReportTable"
+							actionListener="#{DailyReportManagementBean.apBtnClicked}">
+					</p:commandButton> 
+					<p:commandButton value="Remove Approval"
+							rendered="#{DailyReportManagementBean.btnApproveVisible}"
+							disabled="#{DailyReportManagementBean.btndisApprove}"
+							process="@form" update=":dailyReportTableForm dailyReportTable"
+							actionListener="#{DailyReportManagementBean.dapBtnClicked}">
+					</p:commandButton></td>
+						
+					</tr>
+				</table>
+				<!-- 
+				Revised By : Aye Thida Phyo
+				Revised Date : 2017/06/29
+				Explanation: Modify checkbox action for ADMIN role.
+			 -->
+
+				<p:dataTable var="dailyReport" widgetVar="vtWidget"
+					rowSelectMode="checkbox"
+					disabledSelection="${dailyReport.checkDiv eq 'CHECKED' and sessionScope.loginUser.role=='USER' and sessionScope.loginUser.authorities.size() == 0   }"
+					selection="#{DailyReportManagementBean.checkboxlist}"
+					rowKey="#{dailyReport.id}"
+					filteredValue="#{DailyReportManagementBean.dailyReportFilterList}"
+					value="#{DailyReportManagementBean.dailyReportList}"
+					id="dailyReportTable" paginator="true" rows="30"
+					emptyMessage="There is no record!"
+					paginatorTemplate="{CurrentPageReport}  {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"
+					rowsPerPageTemplate="30,50, 100" rowIndexVar="index"
+					styleClass="dailyReportTableStyle whmBackStyle">
+					
+					<!-- 
+						Revised By : Sai Kyaw Ye Myint
+						Revised Date : 2017/09/11
+						Explanation: Added listener for select box. 
+					-->
+					<p:ajax event="rowSelectCheckbox" listener="#{DailyReportManagementBean.onRowSelect}" update=":dailyReportTableForm" />
+        			<p:ajax event="rowUnselectCheckbox" listener="#{DailyReportManagementBean.onRowUnselect}" update=":dailyReportTableForm" />
+        			<p:ajax event="toggleSelect" listener="#{DailyReportManagementBean.btnManagement}" update=":dailyReportTableForm" />
+        			
+					<p:column id="selectRecord" selectRow="1" selectionMode="multiple"
+						headerText="Select Record" />
+
+					<p:column headerText="Staff ID"
+						sortBy="#{dailyReport.staffID.username}"
+						filterBy="#{dailyReport.staffID.username}"
+						filterMatchMode="contains">
+						<h:outputText value="#{dailyReport.staffID.username}" />
+					</p:column>
+					<p:column headerText="Name"
+						sortBy="#{dailyReport.staffID.fullName}"
+						filterBy="#{dailyReport.staffID.fullName}"
+						filterMatchMode="contains">
+						<h:outputText value="#{dailyReport.staffID.fullName}" />
+					</p:column>
+					<!-- 	
+					 	Modified By : Aye Myat Mon
+					 	Modified Date : 2018/08/20
+					 	Explanation : Modified Filter in Report Date column.
+					-->	
+					<p:column headerText="Report Date"
+						sortBy="#{DailyReportManagementBean.whmUtilities.customDateFormat(dailyReport.activityDate)}"
+						filterBy="#{DailyReportManagementBean.whmUtilities.customDateFormat(dailyReport.activityDate)}" filterMatchMode="contains">
+						<h:outputText value="#{dailyReport.activityDate}">
+							<f:convertDateTime pattern="#{DailyReportManagementBean.whmUtilities.datePattern()}"  />
+						</h:outputText>
+					</p:column>
+					<p:column headerText="Created By"
+						sortBy="#{dailyReport.createdBy.fullName}"
+						filterBy="#{dailyReport.createdBy.fullName}"
+						filterMatchMode="contains">
+						<h:outputText value="#{dailyReport.createdBy.fullName}" />
+					</p:column>
+					<p:column headerText="Last Updated By"
+						sortBy="#{dailyReport.lastUpdBy.fullName}"
+						filterBy="#{dailyReport.lastUpdBy.fullName}"
+						filterMatchMode="contains">
+						<h:outputText value="#{dailyReport.lastUpdBy.fullName}" />
+					</p:column>
+					<p:column headerText="Attendance"
+						sortBy="#{dailyReport.leaveStatus}"
+						filterBy="#{dailyReport.leaveStatus}" filterMatchMode="contains">
+						<h:outputText value="#{dailyReport.leaveStatus}" />
+					</p:column>
+
+
+					<p:column headerText="Daily Activity Inquiry">
+
+						<p:commandLink styleClass="button" id="activitylist"
+							actionListener="#{DailyActivityManageBean.activityList(dailyReport)}"
+							oncomplete="PF('dlg1').show()" update=":activityDialog">
+							<h:outputText value="Detail" />
+						</p:commandLink>
+					</p:column>
+
+					<p:column headerText="Daily Activity Edit">
+						<!-- 
+							Revised By : Sai Kyaw Ye Myint
+							Revised Date : 2017/07/07
+							Explanation: Added SCREEN_ID argument to DailyActivityManageBean for dynamically redirect page
+										 base on the SCREEN_ID.
+						-->
+						<p:commandLink
+							action="#{DailyActivityManageBean.setEditReportPage(dailyReport,DailyReportManagementBean.dailyReportList,DailyReportManagementBean.dailyReport,DailyReportManagementBean.searchDate,DailyReportManagementBean.SCREEN_ID)}"
+							ajax="false" update="dailyReportTableForm"
+							process="dailyReportTableForm"
+							disabled="${dailyReport.checkDiv eq 'CHECKED'}">
+							<h:outputText value="Edit" />
+						</p:commandLink>
+					</p:column>
+
+				</p:dataTable>
+			</h:form>
+			<!-- 
+				Revised By : Aye Thida Phyo
+				Revised Date : 2017/06/29
+				Explanation: Change style of Detail dialog.
+			 -->
+			<p:dialog id="activityDialog" header="Daily Activity Inquiry Detail"
+				widgetVar="dlg1" position="center" onShow="PF('dlg1').initPosition()">
+				<p:dataTable var="dailyActivity"
+					value="#{DailyActivityManageBean.dailyActivityListByReportID}"
+					id="dailyActivityTable" style="word-wrap: break-word;" 
+					scrollable="true" scrollHeight="250" scrollWidth="1200">
+					<p:columnGroup type="header">
+						<p:row>
+							<p:column rowspan="2" headerText="Project ID"
+								style="width:130px;" />
+							<p:column rowspan="2" headerText="Project Name"
+								style="width:200px;" />
+							<p:column rowspan="2" headerText="WBS No" style="width:100px;" />
+							<p:column colspan="5" headerText="Task" style="width:670px;" />
+							<p:column rowspan="2" headerText="Deliverables/Documents"
+								style="width:270px;">
+							</p:column>
+							<p:column rowspan="2" headerText="Begin Date" style="width:90px;" />
+							<p:column rowspan="2" headerText="End Date" style="width:90px;" />
+							<p:column rowspan="2" headerText="Progress (%)"
+								style="width:55px;" />
+							<p:column rowspan="2" headerText="Hours" style="width:50px;" />
+							<p:column rowspan="2" headerText="Delay/Forward"
+								style="width:95px;" />
+							<p:column rowspan="2" headerText="Task Status Count"
+								style="width:50px;" />
+							<p:column rowspan="2" headerText="Reason" style="width:180px;" />
+							<p:column rowspan="2" headerText="Review" style="width:270px;" />
+						</p:row>
+						<p:row>
+							<p:column headerText="Function ID" style="width:150px;" />
+							<p:column headerText="Category" style="width:150px;" />
+							<p:column headerText="Activity" style="width:100px;" />
+							<p:column colspan="2" headerText="Description"
+								style="width:270px;" />
+						</p:row>
+					</p:columnGroup>
+					<p:column headerText="Project ID" style="text-align:center;">
+						<h:outputText value="#{dailyActivity.project.id}" />
+					</p:column>
+					<p:column headerText="Project Name">
+						<h:outputText value="#{dailyActivity.project.projectName}" />
+					</p:column>
+					<p:column headerText="WBS No" style="text-align:center;">
+						<h:outputText value="#{dailyActivity.wbs}" />
+					</p:column>
+					<p:column headerText="Function ID" style="text-align:center;">
+						<h:outputText value="#{dailyActivity.wbsFunction}" />
+					</p:column>
+					<p:column headerText="Category">
+						<h:outputText value="#{dailyActivity.task.description}" />
+					</p:column>
+					<p:column headerText="Activity" style="text-align:center;">
+						<h:outputText value="#{dailyActivity.taskActivity.description}" />
+					</p:column>
+					<p:column colspan="2" headerText="Description">
+						<h:outputText value="#{dailyActivity.taskDescription}" />
+					</p:column>
+					<p:column headerText="Deliverables/Documents">
+						<h:outputText value="#{dailyActivity.deliveryOutput}" />
+					</p:column>
+					<p:column headerText="Begin Date" style="text-align:center;">
+						<h:outputText value="#{dailyActivity.beginDate}">
+							<f:convertDateTime pattern="yyyy-MM-dd" />
+						</h:outputText>
+					</p:column>
+					<p:column headerText="End Date" style="text-align:center;">
+						<h:outputText value="#{dailyActivity.endDate}">
+							<f:convertDateTime pattern="yyyy-MM-dd" />
+						</h:outputText>
+					</p:column>
+					<p:column headerText="Progress (%)" style="text-align:center;">
+						<h:outputText value="#{dailyActivity.progressPercentage}" />
+					</p:column>
+					<p:column headerText="Hours" style="text-align:center;">
+						<h:outputText value="#{dailyActivity.activityHours}" />
+					</p:column>
+					<p:column headerText="Delay/Forward" style="text-align:center;">
+						<h:outputText value="#{dailyActivity.taskStatus}" />
+					</p:column>
+					<p:column headerText="Task Status Count"
+						style="color : ${dailyActivity.taskStatus eq 'DELAY' ? 'red' : dailyActivity.taskStatus eq 'FORWARD' ? 'blue':'white'}; text-align:center;">
+						<h:outputText value="#{dailyActivity.taskStatusCount}" />
+					</p:column>
+					<p:column headerText="Reason">
+						<h:outputText value="#{dailyActivity.reason}" />
+					</p:column>
+					<p:column headerText="Review">
+						<h:outputText value="#{dailyActivity.review}" />
+					</p:column>
+				</p:dataTable>
+				<table>
+					<tr width="100%">
+						<td colspan="2"><span class="cmms-label">Total Hours:</span></td>
+						<td><h:outputText
+								value="#{DailyActivityManageBean.totalHours}"></h:outputText></td>
+					</tr>
+				</table>
+			</p:dialog>
+			
+			<!-- 
+				Revised By : Aye Thida Phyo
+				Revised Date : 2017/11/07
+				Explanation: Update for Total search result count
+			 -->
+			<p:confirmDialog header="Confirmation"
+				message="Are you sure to delete?" widgetVar="dlg2" minHeight="40"
+				global="true" class="ui-dialog-content">
+				<p:commandButton value="Yes" styleClass="ui-confirmdialog-yes"
+					action="#{DailyReportManagementBean.deleteDailyReport()}"
+					onclick="PF('dlg2').hide()"
+					update=":dailyReportEntryForm :dailyReportTableForm @this"
+					oncomplete="PF('vtWidget').filter()" />
+				<p:commandButton value="No" styleClass="ui-confirmdialog-no"
+					onclick="PF('dlg2').hide()" />
+			</p:confirmDialog>
+			<p:confirmDialog header="Warning"
+				message="You must check at least one checkbox!" widgetVar="dlg3"
+				minHeight="40" global="true" class="ui-dialog-content">
+				<p:commandButton value=" Ok " onclick="PF('dlg3').hide()" />
+			</p:confirmDialog>
+			<p:confirmDialog header="Confirmation"
+				message="Are you sure to approve?" widgetVar="dlg4" minHeight="40"
+				global="true" class="ui-dialog-content">
+				<p:commandButton value="Yes" styleClass="ui-confirmdialog-yes"
+					action="#{DailyReportManagementBean.approveDailyReport()}"
+					onclick="PF('dlg4').hide()"
+					update=":dailyReportEntryForm :dailyReportTableForm @this"
+					oncomplete="PF('vtWidget').filter()" />
+				<p:commandButton value="No" styleClass="ui-confirmdialog-no"
+					onclick="PF('dlg4').hide()" />
+			</p:confirmDialog>
+			<p:confirmDialog header="Confirmation"
+				message="Are you sure to disapprove?" widgetVar="dlg5"
+				minHeight="40" global="true" class="ui-dialog-content">
+				<p:commandButton value="Yes" styleClass="ui-confirmdialog-yes"
+					action="#{DailyReportManagementBean.disapproveDailyReport()}"
+					onclick="PF('dlg5').hide()"
+					update=":dailyReportEntryForm :dailyReportTableForm @this"
+					oncomplete="PF('vtWidget').filter()" />
+				<p:commandButton value="No" styleClass="ui-confirmdialog-no"
+					onclick="PF('dlg5').hide()" />
+			</p:confirmDialog>
+			<script type="text/javascript">
+				history.pushState(null, null, document.URL);
+				window.addEventListener('popstate', function () {
+				    history.pushState(null, null, document.URL);
+				});
+				function disableF5(e) {
+					if ((e.which || e.keyCode) == 116  || (e.which || e.keyCode) == 82) {
+						 e.preventDefault();
+						 e.stopPropagation();
+					}
+				};
+				$(document).bind("load", disableF5);
+			</script>
+		</h:body>
+	</ui:define>
+</ui:composition>

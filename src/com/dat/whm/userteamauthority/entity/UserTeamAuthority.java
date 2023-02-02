@@ -1,0 +1,76 @@
+/***************************************************************************************
+ * @author Aye Thida Phyo
+ * @Date 2017-09-14
+ * @Version 1.0
+ * @Purpose Created for PhaseIII : Team Management
+ *
+ ***************************************************************************************/
+package com.dat.whm.userteamauthority.entity;
+
+import java.io.Serializable;
+
+import javax.persistence.Entity;
+import javax.persistence.FetchType;
+import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
+import javax.persistence.NamedQueries;
+import javax.persistence.NamedQuery;
+import javax.persistence.Table;
+import javax.validation.constraints.NotNull;
+
+import org.apache.commons.lang.builder.EqualsBuilder;
+import org.apache.commons.lang.builder.HashCodeBuilder;
+
+import com.dat.whm.team.entity.Team;
+import com.dat.whm.user.entity.User;
+
+@Table(name = "USER_TEAM_AUTHORITY")
+@Entity
+@NamedQueries(value = {
+		@NamedQuery(name = "UserTeamAuthority.findByTeamID", query = "SELECT uta FROM UserTeamAuthority uta WHERE uta.team.id = :team_id")})
+public class UserTeamAuthority implements Serializable {	
+	
+	@Id
+	@ManyToOne(fetch = FetchType.LAZY)
+	@JoinColumn(name = "USER_ID")
+	@NotNull
+	private User user;
+	@Id
+	@ManyToOne(fetch = FetchType.LAZY)
+	@JoinColumn(name = "TEAM_ID")
+	@NotNull
+	private Team team;	
+	
+	public UserTeamAuthority() {
+
+	}
+
+	public User getUser() {
+		return user;
+	}
+
+	public void setUser(User user) {
+		this.user = user;
+	}
+
+	public Team getTeam() {
+		return team;
+	}
+
+	public void setTeam(Team team) {
+		this.team = team;
+	}
+
+	@Override
+	public boolean equals(Object object) {
+		return EqualsBuilder.reflectionEquals(this, object);
+	}
+
+	@Override
+	public int hashCode() {
+		return HashCodeBuilder.reflectionHashCode(this);
+	}
+
+	
+}

@@ -1,0 +1,199 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:p="http://primefaces.org/ui"
+	template="/common/commonLayout.xhtml">
+	<ui:param name="leftMenu" value="/common/adminLeft.xhtml" />
+	<ui:param name="rendered" value="true" />
+	<ui:define name="content">
+		<h:form id="monthlyReportForm" styleClass="form-horizontal">
+			<h:outputText value="Actual Project Working Hour Report"
+				style="margin-top: 0px; margin-bottom: 10px;font-size:20px;" />
+			<p:separator style="height:5px;margin-top: 2px;margin-bottom: 2px;" />
+			<table width="100%">
+				<tr>
+					<td></td>
+					<td width="70%" align="center">
+						<div
+							style="z-index: 100; position: fixed; margin-top: -30px; width: 700px;">
+							<p:messages showDetail="true" id="messages" autoUpdate="true"
+								closable="true" />
+						</div>
+					</td>
+				</tr>
+			</table>
+			<table>
+				<tr>
+					<td></td>
+					<td><p:message for="project" display="text" /></td>
+				</tr>
+				<tr>
+					<!-- <td><label>Project ID:</label></td> -->
+					<td width="120px;"><span class="cmms-label">Project ID</span></td>
+					<td>:</td>
+					<td><p:selectOneMenu id="project"
+							value="#{MonthlyReportManageBean.project}"
+							converter="omnifaces.SelectItemsConverter" style="width:120px;"
+							filter="true" filterMatchMode="contains">
+							<f:selectItem itemLabel="-" itemValue="#{null}" />
+							<f:selectItems var="project"
+								value="#{MonthlyReportManageBean.projects}"
+								itemLabel="#{project.id}" itemValue="#{project}" />
+							<p:ajax listener="#{MonthlyReportManageBean.changeProject()}"
+								update="projectName" />
+						</p:selectOneMenu></td>
+				</tr>
+<!-- 				<tr></tr> -->
+<!-- 				<tr></tr> -->
+				<tr>
+						<!-- <td><label>Project Name:</label></td> -->
+					<td width="120px;"><span class="cmms-label">Project Name</span></td>
+					<td>:</td>
+					<td><h:outputText id="projectName"
+							value="#{MonthlyReportManageBean.projectName}" /></td>
+				</tr>
+<!-- 				<tr></tr> -->
+				<tr>
+					<td></td>
+				</tr>
+				<tr>
+						<!-- <td><label>Month:</label></td> -->
+					<td width="120px;"><span class="cmms-label">Month</span></td>
+					<td>:</td>
+					<td><p:selectOneMenu id="month"
+							value="#{MonthlyReportManageBean.selectedMonth}"
+							style="width:120px;">
+							<f:selectItem itemLabel="-" itemValue="#{null}" />
+							<f:selectItems value="#{MonthlyReportManageBean.months}" />
+						</p:selectOneMenu></td>
+				</tr>
+<!-- 				<tr></tr> -->
+<!-- 				<tr></tr> -->
+				<tr>
+					<td></td>
+				</tr>
+				<tr>
+					<!-- <td><label>Year:</label></td> -->
+					<td width="120px;"><span class="cmms-label">Year</span></td>
+					<td>:</td>
+					<td><p:selectOneMenu id="year"
+							value="#{MonthlyReportManageBean.selectedYear}"
+							style="width:120px;">
+							<f:selectItem itemLabel="-" itemValue="#{null}" />
+							<f:selectItems value="#{MonthlyReportManageBean.years}" />
+						</p:selectOneMenu></td>
+				</tr>
+<!-- 				<tr></tr> -->
+<!-- 				<tr></tr> -->
+				<tr>
+					<td><p:commandButton value="#{label['COMMON_SHOW_BTN']}"
+							update=":monthlyReportTableForm"
+							action="#{MonthlyReportManageBean.show}" /></td>
+				</tr>
+			</table>
+		</h:form>
+		<p:separator style="height:5px;margin-top: 2px;margin-bottom: 2px;" />
+		<p></p>
+		<h:form id="monthlyReportTableForm">
+			<h:commandLink process="@this" title="Export Table as Excel"
+				rendered="#{MonthlyReportManageBean.tableOne}">
+				<h:outputText value="Download Excel"
+					style="text-decoration:none;color:green;" />
+				<p:dataExporter type="xls" target="monthlyReportTable"
+					fileName="#{MonthlyReportManageBean.fileName}" pageOnly="true" />
+			</h:commandLink>
+			<h:commandLink process="@this" title="Export Table as Excel"
+				rendered="#{MonthlyReportManageBean.tableOne}">
+				<p:graphicImage value="/images/excel.png" styleClass="command-image" />
+				<p:dataExporter type="xls" target="monthlyReportTable"
+					fileName="#{MonthlyReportManageBean.fileName}" pageOnly="true" />
+			</h:commandLink>
+			<h:commandLink process="@this" title="Export Table as Excel"
+				rendered="#{MonthlyReportManageBean.tableTwo}">
+				<h:outputText value="Download Excel" />
+				<p:dataExporter type="xls" target="monthlyReportTableTwo"
+					fileName="#{MonthlyReportManageBean.fileName}" pageOnly="true" />
+			</h:commandLink>
+			<h:commandLink process="@this" title="Export Table as Excel"
+				rendered="#{MonthlyReportManageBean.tableTwo}">
+				<p:graphicImage value="/images/excel.png" styleClass="command-image" />
+				<p:dataExporter type="xls" target="monthlyReportTableTwo"
+					fileName="#{MonthlyReportManageBean.fileName}" pageOnly="true" />
+			</h:commandLink>
+			<p:dataTable var="data"
+				rendered="#{MonthlyReportManageBean.tableOne}"
+				value="#{MonthlyReportManageBean.tableDataList}"
+				id="monthlyReportTable">
+				<p:column headerText="Project" style="width:200px;">
+					<h:outputText value="#{data.project}">
+					</h:outputText>
+				</p:column>
+				<p:column headerText="Project Name" style="width:200px;">
+					<h:outputText value="#{data.project.projectName}">
+					</h:outputText>
+				</p:column>
+				<p:column headerText="Year" style="width:100px;">
+					<h:outputText value="#{data.year}" style="text-align:center">
+					</h:outputText>
+				</p:column>
+				<p:column headerText="Month" style="width:100px;">
+					<h:outputText value="#{data.month}">
+					</h:outputText>
+				</p:column>
+				<p:column headerText="Hour" style="width:200px;">
+					<h:outputText value="#{data.hours}">
+					</h:outputText>
+				</p:column>
+			</p:dataTable>
+			<p:dataTable var="project"
+				rendered="#{MonthlyReportManageBean.tableTwo}"
+				value="#{MonthlyReportManageBean.projects}"
+				id="monthlyReportTableTwo">
+				<f:facet name="header">
+					<h:outputText value="#{MonthlyReportManageBean.selectedYear}" />
+				</f:facet>
+				<p:columnGroup type="header">
+					<p:row>
+						<p:column rowspan="3" headerText="Project" style="width:120px;" />
+						<p:column rowspan="3" headerText="Project Name" style="width:150px;" />
+						<p:column colspan="12" headerText="Months" />
+					</p:row>
+					<p:row>
+						<ui:repeat value="#{MonthlyReportManageBean.months}" var="month">
+							<p:column headerText="#{month}" />
+						</ui:repeat>
+					</p:row>
+				</p:columnGroup>
+				<p:column headerText="Project">
+					<h:outputText
+						value="#{MonthlyReportManageBean.getProjectByYear(project)}">
+					</h:outputText>
+				</p:column>
+				<p:column headerText="Project Name">
+					<h:outputText
+						value="#{project.projectName}">
+					</h:outputText>
+				</p:column>
+				<p:columns headerText="#{m}"
+					value="#{MonthlyReportManageBean.months}" var="m">
+					<h:outputText value="#{MonthlyReportManageBean.caseFive(m)}">
+					</h:outputText>
+				</p:columns>
+			</p:dataTable>
+		</h:form>
+		<script type="text/javascript">
+			history.pushState(null, null, document.URL);
+			window.addEventListener('popstate', function() {
+				history.pushState(null, null, document.URL);
+			});
+			function disableF5(e) {
+				if ((e.which || e.keyCode) == 116
+						|| (e.which || e.keyCode) == 82) {
+					e.preventDefault();
+				}
+			};
+			$(document).bind("load", disableF5);
+		</script>
+	</ui:define>
+</ui:composition>

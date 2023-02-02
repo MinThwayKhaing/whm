@@ -1,0 +1,649 @@
+<!-- 
+	Created By: Sai Kyaw Ye Myint
+	Created Date : 2017/09/22
+	Explanation : Created for Phase III.
+ -->
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:p="http://primefaces.org/ui"
+	template="/common/commonLayout.xhtml">
+	<ui:define name="content">
+		<h:body onload="#{ProjectInformationManageBean.detail()})" update=":projectInfoDetailForm">
+			<h:outputStylesheet library="css" name="default.css"></h:outputStylesheet>
+			<table class="whmPageStatus"><tr><td><h:outputText value="Project Information" style="padding:7px;"/></td></tr></table>
+			
+			<table>
+				<tr>
+					<td></td>
+					<td width="70%" align="center">
+						<div style="z-index: 100; position: fixed; margin-top: -30px; width: 700px;">
+							<p:messages globalOnly="true" showDetail="true" id="messages" closable="true" />
+						</div>
+					</td>
+				</tr>
+			</table>
+			
+			<h:form class="whmBackStyle" id="projectInfoDetailForm">
+				<table>
+					<tr>
+						<td style="width: 150px">
+							<span class="cmms-label">
+								<h:outputText value="Project ID" />
+							</span>
+						</td>
+						<td>:</td>
+						<td>
+							<h:outputText id="projectID" value="#{ProjectInformationManageBean.project.id}" />
+						</td>
+					</tr>
+					<tr>
+						<td>
+							<span class="cmms-label">
+								<h:outputText value="Project Name" />
+							</span>
+						</td>
+						<td >:</td>
+						<td>
+							<h:outputText id="projetName" value="#{ProjectInformationManageBean.project.projectName}" />
+						</td>
+					</tr>
+					<tr>
+						<td style="vertical-align: 0">
+							<span class="cmms-label">
+								<h:outputText value="Project Background" />
+							</span>
+						</td>
+						<td style="vertical-align: 0">:</td>
+						<td>
+							<div class="verticalScollableDiv" style="width: 50%;word-break: break-all;">
+								<h:outputText id="projetBackground" value="#{ProjectInformationManageBean.project.projectBackground}" />
+							</div>
+						</td>
+					</tr>
+					<tr>
+						<td style="vertical-align: 0">
+							<span class="cmms-label">
+								<h:outputText value="Purpose" />
+							</span>
+						</td>
+						<td style="vertical-align: 0">:</td>
+						<td>
+							<div class="verticalScollableDiv" style="width: 50%;word-break: break-all;">
+								<h:outputText id="purpose" value="#{ProjectInformationManageBean.project.purpose}" />
+							</div>
+						</td>
+					</tr>
+					<tr>
+						<td style="vertical-align: 0">
+							<span class="cmms-label">
+								<h:outputText value="Objectives" />
+							</span>
+						</td>
+						<td style="vertical-align: 0">:</td>
+						<td>
+							<div class="verticalScollableDiv" style="width: 50%;word-break: break-all;">
+								<h:outputText id="objectives" value="#{ProjectInformationManageBean.project.objectives}" />
+							</div>
+						</td>
+					</tr>
+					<tr>
+						<td>
+							<span class="cmms-label">
+								<h:outputText value="Duration" />
+							</span>
+						</td>
+						<td >:</td>
+						<td>
+							<h:outputText id="duration" value="#{ProjectInformationManageBean.project.duration}" />
+							<h:outputText value="month(s)" />
+						</td>
+					</tr>
+					<tr>
+						<td style="vertical-align: 0">
+							<span class="cmms-label">
+								<h:outputText value="Start Date" />
+							</span>
+						</td>
+						<td style="vertical-align: 0">:</td>
+						<td>
+							<h:outputText id="startDate" value="#{ProjectInformationManageBean.project.startDate}">
+								<f:convertDateTime type="date" pattern="yyyy-MM-dd"/>
+							</h:outputText>
+						</td>
+					</tr>
+					<tr>
+						<td style="vertical-align: 0">
+							<span class="cmms-label">
+								<h:outputText value="End Date" />
+							</span>
+						</td>
+						<td style="vertical-align: 0">:</td>
+						<td>
+							<h:outputText id="endDate" value="#{ProjectInformationManageBean.project.endDate}">
+								<f:convertDateTime type="date" pattern="yyyy-MM-dd"/>
+							</h:outputText>
+						</td>
+					</tr>
+					<tr>
+						<td style="vertical-align: 0">
+							<span class="cmms-label">
+								<h:outputText value="Budget" />
+							</span>
+						</td>
+						<td style="vertical-align: 0">:</td>
+						<td>
+							<!--
+								Revised By : Sai Kyaw Ye Myint
+								Revised Date : 2018/07/20
+								Explanation: Modify to hide currency when budget is null.
+							-->
+							<h:outputText id="budget" value="#{ProjectInformationManageBean.project.budget}">
+								<f:convertNumber type="currency" pattern="#,##0.00" />
+							</h:outputText><p:spacer width="10px;"/>
+							<h:outputText id="currency" value="#{ProjectInformationManageBean.project.currency}" rendered="#{ProjectInformationManageBean.project.budget != null}" />
+						</td>
+					</tr>
+					<tr>
+						<td style="vertical-align: 0">
+							<span class="cmms-label">
+								<h:outputText value="Project Summary" />
+							</span>
+						</td>
+						<td style="vertical-align: 0">:</td>
+						<td>
+							<div class="verticalScollableDiv" style="width: 50%;word-break: break-all;">
+								<h:outputText id="summary" value="#{ProjectInformationManageBean.project.projectSummary}" />
+							</div>
+						</td>
+					</tr>
+					<tr>
+						<td style="vertical-align: 0">
+							<span class="cmms-label">
+								<h:outputText value="Project Manager" />
+							</span>
+						</td>
+						<td style="vertical-align: 0">:</td>
+						<td style="vertical-align: 0">
+							<h:outputText id="projectManager" value="#{ProjectInformationManageBean.project.projectManager}" />
+						</td>
+					</tr>
+				</table>
+				<div class="proInfoContantBody">
+					<div class="proInfoContantHeader">Client Information</div>
+					<table style="margin-left: 10px;font-family: sans-serif;font-size: 14px;">
+						<tr style="vertical-align: top">
+							<td>
+								<span class="cmms-label">
+									<h:outputText value="Organization" />
+								</span>
+							</td>
+							<td><span class="cmms-label">:</span></td>
+							<td style="width: 200px;word-break: break-all;">
+								<h:outputText id="clientOrganization" value="#{ProjectInformationManageBean.project.clientOrganization}" />
+							</td>
+							<td>
+								<span class="cmms-label">
+									<h:outputText value="Person In Charge" />
+								</span>
+							</td>
+							<td><span class="cmms-label">:</span></td>
+							<td style="width: 200px;word-break: break-all;">
+								<h:outputText id="clientIncharge" value="#{ProjectInformationManageBean.project.clientIncharge}" />
+							</td>
+						</tr>
+						<tr style="vertical-align: top">
+							<td>
+								<span class="cmms-label">
+									<h:outputText value="Department" />
+								</span>
+							</td>
+							<td><span class="cmms-label">:</span></td>
+							<td style="width: 200px;word-break: break-all;">
+								<h:outputText id="clientDept" value="#{ProjectInformationManageBean.project.clientDept}" />
+							</td>
+							<td></td>
+							<td></td>
+							<td></td>
+						</tr>
+					</table>
+					<p:dataTable id="clientContactPersonTable" var="clientContactPerson"
+						styleClass="whmBackStyle proInfoContantTable" style="margin-bottom: 20px;"
+						value="#{ProjectInformationManageBean.clientContactPersonList}">
+						<f:facet name="header">
+	           							Contact Person:
+	           						</f:facet>
+						<p:column style="width : 50px" >
+							<h:outputText id="clientEmailType" value="#{clientContactPerson.emailType}" />
+						</p:column>
+						<p:column headerText="Name">
+							<h:outputText id="clientName" value="#{clientContactPerson.name}" />
+						</p:column>
+						<p:column headerText="Email Address">
+							<h:outputText id="clientEmail" value="#{clientContactPerson.email}" />
+						</p:column>
+						<p:column headerText="Phone No">
+							<h:outputText id="clientPhone" value="#{clientContactPerson.phone}" />
+						</p:column>
+						<p:column headerText="Fax">
+							<h:outputText id="clientFax" value="#{clientContactPerson.fax}" />
+						</p:column>
+					</p:dataTable>
+				</div>
+				<div class="proInfoContantBody">
+					<div class="proInfoContantHeader">Service Provider Information</div>
+					<table  style="margin-left: 10px;font-family: sans-serif;font-size: 14px;">
+						<tr style="vertical-align: top">
+							<td>
+								<span class="cmms-label">
+									<h:outputText value="Organization" />
+								</span>
+							</td>
+							<td><span class="cmms-label">:</span></td>
+							<td style="width: 200px;word-break: break-all;">
+								<h:outputText id="serviceOrganization" value="#{ProjectInformationManageBean.project.spOrganization}" />
+							</td>
+							<td>
+								<span class="cmms-label">
+									<h:outputText value="Person In Charge" />
+								</span>
+							</td>
+							<td><span class="cmms-label">:</span></td>
+							<td style="width: 200px;word-break: break-all;">
+								<h:outputText id="serviceIncharge" value="#{ProjectInformationManageBean.project.spIncharge}" />
+							</td>
+						</tr>
+						<tr style="vertical-align: top">
+							<td>
+								<span class="cmms-label">
+									<h:outputText value="Department" />
+								</span>
+							</td>
+							<td><span class="cmms-label">:</span></td>
+							<td style="width: 200px;word-break: break-all;">
+								<h:outputText id="serviceDept" value="#{ProjectInformationManageBean.project.spDept}" />
+							</td>
+							<td></td>
+							<td></td>
+							<td></td>
+						</tr>
+					</table>
+					<p:dataTable id="serviceContactPersonTable" var="spContactPerson" styleClass="whmBackStyle proInfoContantTable" 
+									value="#{ProjectInformationManageBean.serviceContactPersonList}" style="margin-bottom: 20px;">
+						<f:facet name="header">
+	           							Contact Person:
+	           			</f:facet>
+						<p:column style="width : 50px" >
+							<h:outputText id="serviceEmailType" value="#{spContactPerson.emailType}" />
+						</p:column>
+						<p:column headerText="Name">
+							<h:outputText id="serviceName" value="#{spContactPerson.name}" />
+						</p:column>
+						<p:column headerText="Email Address">
+							<h:outputText id="serviceEmail" value="#{spContactPerson.email}" />
+						</p:column>
+						<p:column headerText="Phone No">
+							<h:outputText id="servicePhone" value="#{spContactPerson.phone}" />
+						</p:column>
+						<p:column headerText="Fax">
+							<h:outputText id="serviceFax" value="#{spContactPerson.fax}" />
+						</p:column>
+					</p:dataTable>
+				</div>
+				<div class="proInfoContantBody">
+					<div class="proInfoContantHeader">Communication Plan</div>
+					<p:dataTable id="communicationPlanTable" var="communicationPlan" styleClass="whmBackStyle proInfoContantTable" 
+									value="#{ProjectInformationManageBean.project.communicationPlanList}" style="margin-bottom: 20px;">
+						<p:column headerText="Groups/Individuals Involved">
+							<h:outputText id="commGroups" value="#{communicationPlan.commgroups}" />
+						</p:column>
+						<p:column headerText="Type of Communication">
+							<h:outputText id="commType" value="#{communicationPlan.commType}" />
+						</p:column>
+						<p:column headerText="Frequency"  >
+							<h:outputText id="commFrequency" value="#{communicationPlan.commFrequency}" />
+						</p:column>
+						<p:column headerText="Communication Method"  >
+							<h:outputText id="commMethod" value="#{communicationPlan.commMethod}" />
+						</p:column>
+						<p:column headerText="Communication Language"  >
+							<h:outputText id="commLanguage" value="#{communicationPlan.commLanguage}" />
+						</p:column>
+						<p:column headerText="Purpose">
+							<h:outputText id="commPurpose" value="#{communicationPlan.commPurpose}" />
+						</p:column>
+					</p:dataTable>
+				</div>
+				<div class="proInfoContantBody">
+					<div class="proInfoContantHeader">Project Control</div>
+					<p:dataTable id="projectControlTable" var="projectControl" styleClass="whmBackStyle proInfoContantTable" 
+									value="#{ProjectInformationManageBean.project.projectControlList}" style="margin-bottom: 20px;">
+						<p:column headerText="Deliverables">
+							<h:outputText id="prjCtlDeliverables" value="#{projectControl.prjCtlDeliverables}" />
+						</p:column>
+						<p:column headerText="Person In Charge"  >
+							<h:outputText id="prjCtlIncharge" value="#{projectControl.prjCtlIncharge}" />
+						</p:column>
+						<p:column headerText="Language used in Document"  >
+							<h:outputText id="prjCtlLanguage" value="#{projectControl.prjCtlLanguage}" />
+						</p:column>
+						<p:column headerText="Remark">
+							<h:outputText id="prjCtlRemark" value="#{projectControl.prjCtlRemark}" />
+						</p:column>
+					</p:dataTable>
+				</div>
+				<div class="proInfoContantBody">
+					<div class="proInfoContantHeader">System Outline (Draft)</div>
+					<table style="width: 99%;margin-left: 10px;border-spacing: 5px;font-family:sans-serif;font-size: 14px;">
+						<tr>
+							<td style="vertical-align: top">
+								<span class="cmms-label">
+									<h:outputText value="Operating System" />
+								</span>
+							</td>
+							<td style="vertical-align: top"><span class="cmms-label">:</span></td>
+							<td style="vertical-align: top; word-break: break-all;width: 25%;">
+								<h:outputText id="operatingSystem" value="#{ProjectInformationManageBean.project.operatingSystem}" />
+							</td>
+							<td style="vertical-align: top">
+								<span class="cmms-label">
+									<h:outputText value="Application Framework" />
+								</span>
+							</td>
+							<td style="vertical-align: top"><span class="cmms-label"><span class="cmms-label">:</span></span></td>
+							<td style="vertical-align: top; word-break: break-all;width: 25%;">
+								<h:outputText id="appFramework" value="#{ProjectInformationManageBean.project.appFramework}" />
+							</td>
+							<td rowspan="6" style="vertical-align: top">
+								<span class="cmms-label">
+									<h:outputText value="Others" />
+								</span>
+							</td>
+							<td rowspan="6" style="vertical-align: top"><span class="cmms-label">:</span></td>
+							<td rowspan="6" style="vertical-align: top; word-break: break-all;width: 25%;">
+								<div class="verticalScollableDiv" style="height : 227px">
+									<h:outputText id="others" value="#{ProjectInformationManageBean.project.others}"/>
+								</div>
+							</td>
+						</tr>
+						<tr>
+							<td style="vertical-align: top">
+								<span class="cmms-label">
+									<h:outputText value="Application Run-time" />
+								</span>
+							</td>
+							<td style="vertical-align: top"><span class="cmms-label">:</span></td>
+							<td style="vertical-align: top; word-break: break-all;width: 25%;">
+								<h:outputText id="appRuntime" value="#{ProjectInformationManageBean.project.appRuntime}" />
+							</td>
+							<td style="vertical-align: top">
+								<span class="cmms-label">
+									<h:outputText value="Client Agent" />
+								</span>
+							</td>
+							<td style="vertical-align: top"><span class="cmms-label">:</span></td>
+							<td style="vertical-align: top; word-break: break-all;width: 25%;">
+								<h:outputText id="clientAgent" value="#{ProjectInformationManageBean.project.clientAgent}" />
+							</td>
+						</tr>
+						<tr>
+							<td style="vertical-align: top">
+								<span class="cmms-label">
+									<h:outputText value="Web Server" />
+								</span>
+							</td>
+							<td style="vertical-align: top"><span class="cmms-label">:</span></td>
+							<td style="vertical-align: top; word-break: break-all;width: 25%;">
+								<h:outputText id="webserver" value="#{ProjectInformationManageBean.project.webServer}" />
+							</td>
+							<td rowspan="2" style="vertical-align: top">
+								<span class="cmms-label">
+									<h:outputText value="Programming Language(s)" />
+								</span>
+							</td>
+							<td rowspan="2" style="vertical-align: top"><span class="cmms-label">:</span></td>
+							<td style="vertical-align: top; word-break: break-all;width: 25%;">
+								<div class="verticalScollableDiv" style="height : 70px">
+									<h:outputText id="pgmLanguage" value="#{ProjectInformationManageBean.project.pgmLanguage}" />
+								</div>
+							</td>
+						</tr>
+						<tr>
+							<td style="vertical-align: top">
+								<span class="cmms-label">
+									<h:outputText value="Application Server" />
+								</span>
+							</td>
+							<td style="vertical-align: top"><span class="cmms-label">:</span></td>
+							<td style="vertical-align: top; word-break: break-all;width: 25%;">
+								<h:outputText id="appserver" value="#{ProjectInformationManageBean.project.appServer}" />
+							</td>
+						</tr>
+						<tr>
+							<td style="vertical-align: top">
+								<span class="cmms-label">
+									<h:outputText value="Database Server" />
+								</span>
+							</td>
+							<td style="vertical-align: top"><span class="cmms-label">:</span></td>
+							<td style="vertical-align: top; word-break: break-all;width: 25%;">
+								<h:outputText id="dbServer" value="#{ProjectInformationManageBean.project.dbServer}" />
+							</td>
+							<td rowspan="2" style="vertical-align: top">
+								<span class="cmms-label">
+									<h:outputText value="Libraries/Other Frameworks" />
+								</span>
+							</td>
+							<td rowspan="2" style="vertical-align: top"><span class="cmms-label">:</span></td>
+							<td style="vertical-align: top; word-break: break-all;width: 25%;">
+								<div class="verticalScollableDiv" style="height : 70px">
+									<h:outputText id="libraries" value="#{ProjectInformationManageBean.project.libraries}" />
+								</div>
+							</td>
+						</tr>
+						<tr></tr>
+					</table>
+				</div>
+				<div class="proInfoContantBody">
+					<div class="proInfoContantHeader">Project Deliverables</div>
+					<p:dataTable id="projectDeliverableTable" var="projectDeliverable" styleClass="whmBackStyle proInfoContantTable" 
+									value="#{ProjectInformationManageBean.project.projectDeliverablesList}" style="margin-bottom: 20px;">
+						<p:column headerText="Phase">
+							<h:outputText id="prjDelPhase" value="#{projectDeliverable.prjDelPhase}" />
+						</p:column>
+						<p:column headerText="Design Type">
+							<h:outputText id="prjDelDesignType" value="#{projectDeliverable.prjDelDesignType}" />
+						</p:column>
+						<p:column headerText="Person In Charge"  >
+							<h:outputText id="prjDelIncharge" value="#{projectDeliverable.prjDelIncharge}" />
+						</p:column>
+						<p:column headerText="Language used in Document"  >
+							<h:outputText id="prjDelLanguage" value="#{projectDeliverable.prjDelLanguage}" />
+						</p:column>
+						<p:column headerText="Remark">
+							<h:outputText id="prjDelRemark" value="#{projectDeliverable.prjDelRemark}" />
+						</p:column>
+					</p:dataTable>
+				</div>
+				<div class="proInfoContantBody">
+					<div class="proInfoContantHeader">Risk Factors</div>
+					<p:dataTable id="riskFactorsTable" var="riskFactors" styleClass="whmBackStyle proInfoContantTable" 
+									value="#{ProjectInformationManageBean.project.riskFactorList}" style="margin-bottom: 20px;">
+						<p:column headerText="Expected Risk">
+							<h:outputText id="riskExpected" value="#{riskFactors.riskExpected}" />
+						</p:column>
+						<p:column headerText="Probability of Occurence"  >
+							<h:outputText id="riskProbability" value="#{riskFactors.riskProbability}" />
+						</p:column>
+						<p:column headerText="Impact">
+							<h:outputText id="riskimpact" value="#{riskFactors.riskimpact}" />
+						</p:column>
+						<p:column headerText="Countermeasure">
+							<h:outputText id="riskCounterMeasure" value="#{riskFactors.riskCounterMeasure}" />
+						</p:column>
+					</p:dataTable>
+				</div>
+				<div class="proInfoContantBody">
+					<div class="proInfoContantHeader">Project Volume</div>
+					<table id="projectInfoTable" style="margin-left: 10px;">
+						<tr>
+							<td><h:outputText value="Project Period" /></td>
+							<td>:</td>
+							<td><h:outputText id="prjPeroid" value="#{ProjectInformationManageBean.project.prjPeroid}" /></td>
+							<td><h:outputText value="months" /></td>
+						</tr>
+						<tr>
+							<td><h:outputText value="Total Man-Month" /></td>
+							<td>:</td>
+							<td><h:outputText id="totalManMonth" value="#{ProjectInformationManageBean.project.totalManMonth}"/></td>
+							<td><h:outputText value="(without risk)" /></td>
+						</tr>
+					</table>
+					<p:dataTable id="phaseInfoTable" var="projectVolume" styleClass="whmBackStyle proInfoContantTable"  
+								value="#{ProjectInformationManageBean.project.projectVolumeList}" style="margin-bottom: 20px;">
+						<p:columnGroup type="header">
+							<p:row>
+								<p:column rowspan="2" headerText="Phase"/>
+								<p:column colspan="3" headerText="Man-Month"/>
+								<p:column colspan="3" headerText="Man-Day"/>
+							</p:row>
+							<p:row>
+								<p:column headerText="Work"/>
+								<p:column headerText="Review"/>
+								<p:column headerText="Total"/>
+								<p:column headerText="Work"/>
+								<p:column headerText="Review"/>
+								<p:column headerText="Total"/>
+							</p:row>
+						</p:columnGroup>
+						
+						<p:column>
+							<h:outputText value="#{projectVolume.phase}" />
+						</p:column>
+						
+						<!-- Man-Month -->
+						<p:column>
+							 <h:outputText value="#{projectVolume.workManMonth}" />
+						</p:column>
+						<p:column>
+							 <h:outputText value="#{projectVolume.reviewManMonth}" />
+						</p:column>
+						<p:column>
+							 <h:outputText value="#{projectVolume.totalManMonth}" />
+						</p:column>
+						
+						<!-- Man-Day -->
+						<p:column>
+							<h:outputText id="workManDay" value="#{projectVolume.workManDay}" />
+						</p:column>
+						<p:column>
+							<h:outputText id="reviewManDay" value="#{projectVolume.reviewManDay}" />
+						</p:column>
+						<p:column>
+							 <h:outputText value="#{projectVolume.totalManDay}" />
+						</p:column>
+						<p:columnGroup type="footer">
+				            <p:row>
+				                <p:column style="text-align:right" footerText="Sub Total(Man-Month)" />
+				                <p:column footerText="#{ProjectInformationManageBean.project.workSManMonth}" />
+				                <p:column footerText="#{ProjectInformationManageBean.project.reviewSManMonth}" />
+				                <p:column footerText="#{ProjectInformationManageBean.project.totalSManMonth}" />
+				                
+				                <p:column footerText="#{ProjectInformationManageBean.project.workSManDay}" />
+				                <p:column footerText="#{ProjectInformationManageBean.project.reviewSManDay}" />
+				                <p:column footerText="#{ProjectInformationManageBean.project.totalSManDay}" />
+				            </p:row>
+				            <p:row>
+				                <p:column style="text-align:right" footerText="Risk(10%)" />
+				                <p:column footerText="" />
+				                <p:column footerText="" />
+				                <p:column footerText="#{ProjectInformationManageBean.project.totalRManMonth}" />
+				                
+				                <p:column footerText="" />
+				                <p:column footerText="" />
+				                <p:column footerText="#{ProjectInformationManageBean.project.totalRManDay}" />
+				            </p:row>
+				            <p:row>
+				                <p:column style="text-align:right" footerText="Total(Man-Month)" />
+				                <p:column footerText="" />
+				                <p:column footerText="" />
+				                <p:column footerText="#{ProjectInformationManageBean.project.totalTManMonth}" />
+				                
+				                <p:column footerText="" />
+				                <p:column footerText="" />
+				                <p:column footerText="#{ProjectInformationManageBean.project.totalTManDay}" />
+				            </p:row>
+				        </p:columnGroup>
+					</p:dataTable>
+				</div>
+				<div class="proInfoContantBody" style="display: ${ProjectInformationManageBean.scheduleTableVisible ? 'block' : 'none'}">
+					<div class="proInfoContantHeader">Schedule</div>
+					<div class="scheduleViewContainer" style="margin-bottom: 20px;">
+					<p:panelGrid id="scheduleGrid">
+						<f:facet name="header">
+							<ui:repeat var="rowName"
+								value="#{ProjectInformationManageBean.rowRepeat}">
+								<p:row>
+									<p:column colspan="30" rowspan="2">#{rowName}</p:column>
+									<ui:repeat var="scheduleYM"
+										value="#{ProjectInformationManageBean.scheduleYMList}">
+										<p:column
+											colspan="#{ProjectInformationManageBean.workingWeekPerMonth * ProjectInformationManageBean.workingDayPerWeek}">#{scheduleYM}</p:column>
+									</ui:repeat>
+								</p:row>
+								<p:row>
+									<ui:repeat var="scheduleYM"
+										value="#{ProjectInformationManageBean.scheduleYMList}">
+										<ui:repeat var="weekPerMonth"
+											value="#{ProjectInformationManageBean.weekPerMonthList}">
+											<p:column
+												colspan="#{ProjectInformationManageBean.workingDayPerWeek}">#{weekPerMonth}</p:column>
+										</ui:repeat>
+									</ui:repeat>
+								</p:row>
+								<p:row>
+									<p:column colspan="30"> Phase </p:column>
+									<ui:repeat var="scheduleYM"
+										value="#{ProjectInformationManageBean.scheduleYMList}">
+										<ui:repeat var="weekPerMonth"
+											value="#{ProjectInformationManageBean.weekPerMonthList}">
+											<p:column
+												colspan="#{ProjectInformationManageBean.workingDayPerWeek}">
+											</p:column>
+										</ui:repeat>
+									</ui:repeat>
+								</p:row>
+							</ui:repeat>
+						</f:facet>
+						<ui:repeat var="projectSchedule" varStatus="myVarStatus"
+							value="#{ProjectInformationManageBean.project.projectScheduleList}">
+							<p:row id="phases"
+								style="width: 30em;overflow-x: auto;white-space: nowrap;">
+								<p:column colspan="30">#{projectSchedule.phase}</p:column>
+								<ui:repeat var="workDay" value="#{projectSchedule.workingList}">
+									<p:column
+										style="background : ${workDay.working ? '#F1EF12' : 'white'};">
+										<h:outputText value="#{workDay.daysPerWeek}" />
+									</p:column>
+								</ui:repeat>
+							</p:row>
+						</ui:repeat>
+					</p:panelGrid>
+					</div>
+				</div>
+				
+				<div align="right" class="proInfoContantAddClearBtn">
+						<p:commandButton value="Back" id="btnBack" process="@all"
+							action="#{ProjectInformationManageBean.back}" ajax="false">
+						</p:commandButton>
+						<p:commandButton value="Export PDF" id="btnExport" process="@all"
+							actionListener="#{ProjectInformationManageBean.exportPDF}" ajax="false"
+							update="projectInfoDetailForm messages" onclick="PrimeFaces.monitorDownload(start, stop);">
+							<p:fileDownload value="#{ProjectInformationManageBean.download}" />
+						</p:commandButton>
+				</div>
+			</h:form>
+		</h:body>
+	</ui:define>
+</ui:composition>

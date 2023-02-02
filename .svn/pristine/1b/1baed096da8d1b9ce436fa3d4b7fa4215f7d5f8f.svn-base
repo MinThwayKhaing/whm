@@ -1,0 +1,76 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<PROCESS model-entity="JSFProcess">
+ <PROCESS-ITEM NAME="rules:*" PATH="*" SHAPE="32,17,0,0" model-entity="JSFProcessGroup">
+  <PROCESS-ITEM ID="rules:*:0" NAME="item" PATH="*" model-entity="JSFProcessItem">
+   <PROCESS-ITEM-OUTPUT ID="login::#view#login.xhtml" NAME="output"
+    PATH="/view/login.xhtml" TARGET="rules:#view#login.xhtml"
+    TITLE="login" model-entity="JSFProcessItemOutput"/>
+   <PROCESS-ITEM-OUTPUT ID="register::#manage#register.xhtml"
+    NAME="output1" PATH="/manage/register.xhtml"
+    TARGET="rules:#manage#register.xhtml" TITLE="register" model-entity="JSFProcessItemOutput"/>
+   <PROCESS-ITEM-OUTPUT ID="manageResume::#manage#manageResume.xhtml"
+    NAME="output2" PATH="/manage/manageResume.xhtml"
+    TARGET="rules:#manage#manageResume.xhtml" TITLE="manageResume" model-entity="JSFProcessItemOutput"/>
+   <PROCESS-ITEM-OUTPUT ID="home::#manage#home.xhtml" NAME="output3"
+    PATH="/manage/home.xhtml" TARGET="rules:#manage#home.xhtml"
+    TITLE="home" model-entity="JSFProcessItemOutput"/>
+   <PROCESS-ITEM-OUTPUT
+    ID="changePassword::#manage#changePassword.xhtml" NAME="output4"
+    PATH="/manage/changePassword.xhtml"
+    TARGET="rules:#manage#changePassword.xhtml" TITLE="changePassword" model-entity="JSFProcessItemOutput"/>
+   <PROCESS-ITEM-OUTPUT
+    ID="managementSetting::#manage#managementSetting.xhtml"
+    NAME="output5" PATH="/manage/managementSetting.xhtml"
+    TARGET="rules:#manage#managementSetting.xhtml"
+    TITLE="managementSetting" model-entity="JSFProcessItemOutput"/>
+   <PROCESS-ITEM-OUTPUT ID="manageUser::#manage#manageUsers.xhtml"
+    NAME="output6" PATH="/manage/manageUsers.xhtml"
+    TARGET="rules:#manage#manageUsers.xhtml" TITLE="manageUser" model-entity="JSFProcessItemOutput"/>
+   <PROCESS-ITEM-OUTPUT ID="managePost::#manage#managePost.xhtml"
+    NAME="output7" PATH="/manage/managePost.xhtml"
+    TARGET="rules:#manage#managePost.xhtml" TITLE="managePost" model-entity="JSFProcessItemOutput"/>
+   <PROCESS-ITEM-OUTPUT
+    ID="manageTownship::#manage#manageTownship.xhtml" NAME="output8"
+    PATH="/manage/manageTownship.xhtml"
+    TARGET="rules:#manage#manageTownship.xhtml" TITLE="manageTownship" model-entity="JSFProcessItemOutput"/>
+   <PROCESS-ITEM-OUTPUT
+    ID="detailsApplication::#manage#detailsApplication.xhtml"
+    NAME="output9" PATH="/manage/detailsApplication.xhtml"
+    TARGET="rules:#manage#detailsApplication.xhtml"
+    TITLE="detailsApplication" model-entity="JSFProcessItemOutput"/>
+   <PROCESS-ITEM-OUTPUT
+    ID="editApplication::#manage#editApplication.xhtml" NAME="output10"
+    PATH="/manage/editApplication.xhtml"
+    TARGET="rules:#manage#editApplication.xhtml" TITLE="editApplication" model-entity="JSFProcessItemOutput"/>
+   <PROCESS-ITEM-OUTPUT
+    ID="manageNotification::#manage#manageNotification.xhtml"
+    NAME="output11" PATH="/manage/manageNotification.xhtml"
+    TARGET="rules:#manage#manageNotification.xhtml"
+    TITLE="manageNotification" model-entity="JSFProcessItemOutput"/>
+  </PROCESS-ITEM>
+ </PROCESS-ITEM>
+ <PROCESS-ITEM NAME="rules:#manage#manageUsers.xhtml"
+  PATH="/manage/manageUsers.xhtml" SHAPE="304,1057,0,0" model-entity="JSFProcessGroup"/>
+ <PROCESS-ITEM NAME="rules:#manage#editApplication.xhtml"
+  PATH="/manage/editApplication.xhtml" SHAPE="304,1505,0,0" model-entity="JSFProcessGroup"/>
+ <PROCESS-ITEM NAME="rules:#view#login.xhtml" PATH="/view/login.xhtml"
+  SHAPE="304,33,0,0" model-entity="JSFProcessGroup"/>
+ <PROCESS-ITEM NAME="rules:#manage#manageTownship.xhtml"
+  PATH="/manage/manageTownship.xhtml" SHAPE="304,1281,0,0" model-entity="JSFProcessGroup"/>
+ <PROCESS-ITEM NAME="rules:#manage#register.xhtml"
+  PATH="/manage/register.xhtml" SHAPE="304,497,0,0" model-entity="JSFProcessGroup"/>
+ <PROCESS-ITEM NAME="rules:#manage#managePost.xhtml"
+  PATH="/manage/managePost.xhtml" SHAPE="304,1169,0,0" model-entity="JSFProcessGroup"/>
+ <PROCESS-ITEM NAME="rules:#manage#detailsApplication.xhtml"
+  PATH="/manage/detailsApplication.xhtml" SHAPE="304,1393,0,0" model-entity="JSFProcessGroup"/>
+ <PROCESS-ITEM NAME="rules:#manage#manageNotification.xhtml"
+  PATH="/manage/manageNotification.xhtml" SHAPE="304,1617,0,0" model-entity="JSFProcessGroup"/>
+ <PROCESS-ITEM NAME="rules:#manage#changePassword.xhtml"
+  PATH="/manage/changePassword.xhtml" SHAPE="304,833,0,0" model-entity="JSFProcessGroup"/>
+ <PROCESS-ITEM NAME="rules:#manage#managementSetting.xhtml"
+  PATH="/manage/managementSetting.xhtml" SHAPE="304,945,0,0" model-entity="JSFProcessGroup"/>
+ <PROCESS-ITEM NAME="rules:#manage#home.xhtml" PATH="/manage/home.xhtml"
+  SHAPE="304,721,0,0" model-entity="JSFProcessGroup"/>
+ <PROCESS-ITEM NAME="rules:#manage#manageResume.xhtml"
+  PATH="/manage/manageResume.xhtml" SHAPE="304,609,0,0" model-entity="JSFProcessGroup"/>
+</PROCESS>

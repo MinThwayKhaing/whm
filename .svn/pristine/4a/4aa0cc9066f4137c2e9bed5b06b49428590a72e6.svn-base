@@ -1,0 +1,62 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:p="http://primefaces.org/ui" template="/common/userLayout.xhtml">
+	<ui:define name="content">
+		<h:form id="loginForm" >
+			<div class="loginform">
+				<table width="100%">
+					<tr>
+						<td width="35%" align="center" style="width: 395px;">
+							<div
+								style="z-index: 50; position: fixed; margin-top: -50px; width: 390px;">
+								<p:messages globalOnly="true" showDetail="true" id="messages" />
+							</div>
+						</td>
+					</tr>
+				</table>
+				<div class="loginheader">
+					<span style="font-size: 50px;">Welcome to Working Hour
+						Management System!</span>
+				</div>
+<!-- 				<div class="whmLoginLogo"> -->
+<!-- 					<div> -->
+<!-- 						<h:graphicImage value="/images/whm.png" /> -->
+<!-- 					</div> -->
+<!-- 					<div>Working Hour Management System</div> -->
+<!-- 				</div> -->
+				<table class="loginbody whmBackStyle">
+					<tr>
+						<th style="float: left;margin-bottom:5px;">Sign In</th>
+					</tr>
+					<tr>
+						<td><p:message for="username" /> <p:inputText id="username"
+								value="#{LoginBean.username}" required="true"
+								styleClass="formcontrol" placeholder="Staff ID" /></td>
+					</tr>
+					<tr>
+						<td><p:message for="password" /> <p:password id="password"
+								value="#{LoginBean.password}" required="true"
+								styleClass="formcontrol" placeholder="Password" /></td>
+					</tr>
+					<tr>
+						<td><p:spacer height="7px;" /></td>
+					</tr>
+					<tr>
+						<td align="right"><p:commandButton value="Login"
+								action="#{LoginBean.authenticate()}" ajax="false"
+								update="loginForm" process="loginForm" /></td>
+					</tr>
+				</table>
+<!-- 				<table class="whmLoginFooter"> -->
+<!-- 					<tr> -->
+<!-- 						<td><h:graphicImage value="/images/dat.ico" /></td> -->
+<!-- 						<td><span>Copyright(c) 2017 DIR-ACE Technology -->
+<!-- 						Ltd. All rights reserved.</span></td> -->
+<!-- 					</tr> -->
+<!-- 				</table> -->
+			</div>
+		</h:form>
+	</ui:define>
+</ui:composition>

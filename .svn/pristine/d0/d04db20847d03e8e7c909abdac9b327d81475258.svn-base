@@ -1,0 +1,160 @@
+<!-- 
+	Created By		: Aye Myat Mon
+	Created Date 	: 2018/02/01
+	Explanation 	: Created for HR Overhead Cost Management function. 
+ -->
+ <ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:p="http://primefaces.org/ui"
+	template="/common/commonLayout.xhtml">
+	<ui:param name="leftMenu" value="/common/adminLeft.xhtml" />
+	<ui:param name="rendered" value="true" />
+	<ui:define name="content">
+		<h:form id="HRCostForm" styleClass="form-horizontal">
+			<h:outputText value="HR Overhead Cost Management"
+				style="margin-top: 0px; margin-bottom:10px; font-size:20px;" />
+			<p:separator style="height:5px; margin-top:2px; margin-bottom: 20px;" />
+			<table style="width: 100%">
+				<tr>
+					<td></td>
+					<td width="75%" align="center">
+						<div
+							style="z-index: 100; position: fixed; margin-top: -30px; width: 850px;">
+							<p:messages globalOnly="true" showDetail="true" id="messages"
+								closable="true" escape="false" />
+						</div>
+					</td>
+				</tr>
+			</table>
+			<table class="whmBackStyle">
+				<tr>
+					<td></td>
+					<td></td>
+					<td><p:message for="year" id="msgyear" /></td>
+				</tr>
+				<tr>
+					<td width="120px;"><span class="cmms-label">Year<span
+							style="color: red;"> *</span></span></td>
+					<td>:</td>
+					<td><p:inputText value="#{HRCostManagementBean.hrcost.year}"
+							id="year" required="true" style="width:200px;"
+							disabled="#{HRCostManagementBean.textYear}"
+							validatorMessage="Please enter available year (yyyy)">
+							<f:validateLongRange minimum="1000" maximum="9999" />
+							<p:ajax event="blur" update="msgyear" execute="currentInput"
+								process="@this" />
+							<p:ajax event="blur" update="messages btnAdd"
+								listener="#{HRCostManagementBean.checkYear()}" />
+						</p:inputText></td>
+				</tr>
+				<tr>
+					<td></td>
+					<td></td>
+					<td><p:message for="hrCost" id="msghrCost" /></td>
+				</tr>
+				<tr>
+					<td><span class="cmms-label">HR Cost<span
+							style="color: red;"> *</span></span></td>
+					<td>:</td>
+					<td><p:inputText id="hrCost" style="width:200px;"
+							value="#{HRCostManagementBean.hrcost.hr_cost}"
+							validator="noBlankSpaceValidator" required="true"
+							converterMessage="Value must be between 1 and 99999999.9">
+							<f:validateDoubleRange minimum="1.0" maximum="99999999.9" />
+							<p:ajax event="blur" update="msghrCost" execute="currentInput"
+								process="@this" />
+						</p:inputText> 
+						<span class="cmms-label">(MMK)</span>
+					</td>
+				</tr>
+				<tr>
+					<td><p:commandButton id="btnAdd"
+							value="#{label['COMMON_ADDNEW_BTN']}"
+							action="#{HRCostManagementBean.addNewHRCost}"
+							rendered="#{HRCostManagementBean.createNew}"
+							update="HRCostForm :hrCostTableForm" style="font-size:13px;"
+							disabled="#{HRCostManagementBean.btnAdd}" /> <p:commandButton
+							id="btnUpdate" value="#{label['COMMON_UPDATE_BTN']}"
+							action="#{HRCostManagementBean.updateHRCost}"
+							rendered="#{!HRCostManagementBean.createNew}"
+							update="HRCostForm :hrCostTableForm" style="font-size:13px;" /></td>
+				</tr>
+			</table>
+		</h:form>
+		<p:separator style="height:5px;margin-top: 2px;margin-bottom: 2px;" />
+		<br />
+		<h:form id="hrCostTableForm">
+			<p:commandLink id="lnkNew"
+				action="#{HRCostManagementBean.createNewHRCost}"
+				update=":HRCostForm hrCostTableForm">
+				<h:panelGrid columns="2">
+					<h:graphicImage value="/images/add.png" styleClass="command-image" />
+					<h:outputText value="#{label['COMMON_ADDNEW_LINK']}"
+						styleClass="command-link" />
+				</h:panelGrid>
+			</p:commandLink>
+			<p:dataTable var="hrcost" value="#{HRCostManagementBean.listHrcost}"
+				styleClass="whmBackStyle" id="hrCostTable" paginator="true"
+				rows="30" style="width:100%;"
+				paginatorTemplate="{CurrentPageReport}  {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"
+				rowsPerPageTemplate="30, 50, 100" rowIndexVar="index">
+				<p:column headerText="No" style="width:50px;text-align : center;">
+					<h:outputText id="lblNo" value="#{index + 1}" />
+				</p:column>
+				<p:column headerText="Year" sortBy="#{hrcost.year}"
+					filterBy="#{hrcost.year}" filterMatchMode="contains"
+					style="text-align : center;">
+					<p:spacer width="10px;" />
+					<h:outputText id="lblyear" value="#{hrcost.year}" />
+				</p:column>
+				<p:column headerText="HR Cost" sortBy="#{hrcost.hr_cost}"
+					filterBy="#{hrcost.hr_cost}" filterMatchMode="contains">
+					<p:spacer width="10px;" />
+					<h:outputText id="lblHrCostLabel" value="#{hrcost.hr_cost}" />
+				</p:column>
+				<p:column headerText="Edit" style="width:50px;">
+					<p:commandLink id="lnkEdit"
+						action="#{HRCostManagementBean.prepareUpdateHRCost(hrcost)}"
+						update=":HRCostForm">
+						<h:outputText value="Edit"
+							style="text-align:center;display:block;" />
+					</p:commandLink>
+				</p:column>
+				<p:column headerText="Delete" style="width:50px;">
+					<p:commandLink id="lnkDelete"
+						actionListener="#{HRCostManagementBean.deleteHRCost(hrcost)}"
+						update=":hrCostTableForm:hrCostTable :HRCostForm @this">
+						<h:outputText value="Delete"
+							style="text-align:center;display:block;" />
+						<p:confirm header="Confirmation" message="Are you sure?"
+							icon="ui-icon-alert" />
+					</p:commandLink>
+				</p:column>
+			</p:dataTable>
+			<p:confirmDialog global="true" showEffect="fade" hideEffect="explode">
+				<p:commandButton value="Yes" type="button"
+					styleClass="ui-confirmdialog-yes"
+					oncomplete="PF('vtWidget').filter()" />
+				<p:commandButton value="No" type="button"
+					styleClass="ui-confirmdialog-no" />
+			</p:confirmDialog>
+		</h:form>
+
+		<script type="text/javascript">
+			history.pushState(null, null, document.URL);
+			window.addEventListener('popstate', function() {
+				history.pushState(null, null, document.URL);
+			});
+			function disableF5(e) {
+				if ((e.which || e.keyCode) == 116
+						|| (e.which || e.keyCode) == 82) {
+					e.preventDefault();
+				}
+			};
+			$(document).bind("load", disableF5);
+		</script>
+
+	</ui:define>
+</ui:composition>

@@ -1,0 +1,169 @@
+* {
+	-webkit-box-sizing: border-box;
+	-moz-box-sizing: border-box;
+	box-sizing: border-box;
+}
+
+*, html {
+	margin: 0px;
+	padding: 0px;
+	font-size: 13px !important;
+}
+
+.clearfix:after, .clearfix:before {
+	display: table;
+	content: " ";
+}
+
+.clearfix:after {
+	clear: both;
+}
+
+.nav {
+	float: right;
+	padding-right: 15px;
+}
+
+.login .ui-widget-content {
+	background: transparent;
+	margin: 0;
+	padding: 0;
+	border: 0;
+}
+
+.login .ui-layout-unit, .login .ui-layout-unit {
+	padding: 0;
+	border-radius: 0;
+}
+
+.login {
+    filter: alpha(opacity=50);
+}
+
+.loginform {
+	margin-top: 5%;
+	margin-left:58%;
+	width: 320px;
+	height:300px;
+	background: #f5f3e5;
+	border-style: solid;
+	border:none;
+	border-radius: 10px;
+	box-shadow:0 12px 15px 0 rgba(0,0,0,.24),0 17px 50px 0 rgba(0,0,0,.19);
+	opacity:0.7;
+}
+
+#manageResumeForm {
+	margin: 7.5% auto 0px;
+	width: 1000px;
+	background-color: #fff;
+	min-height: 500px;
+}
+
+.whmLoginLogo {
+	color: #63B175;
+	font-family: Lucida Bright;
+	height: 80px;
+	margin: 40px 0px 0px 20px;
+	text-align: center;
+	width: 250px;
+}
+
+.loginheader {
+	padding: 15px;
+	text-align: center;
+	border-bottom: 1px solid #adadad;
+	font-family: segoe ui, Arial, sans-serif;
+	color: #000000;
+	font-style: normal;
+	font-size: 50px;
+}
+
+.loginbody {
+	margin-left: 40px;
+	margin-top: 35px;
+	margin-bottom: 10px;
+	width:250px;
+}
+
+.whmLoginFooter{
+	font-family: segoe ui,Arial,sans-serif;
+	font-size:0px;
+	margin-left: 10px;
+	margin-top: 50px;
+}
+
+.loginbody p {
+	font-size: 13px;
+	line-height: 16px;
+	color: #1aab0f;
+	margin-bottom: 15px;
+}
+
+.formgroup {
+	margin-bottom: 25px;
+}
+
+.login .formcontrol {
+	padding: 6px 0px;
+	width: 100%;
+	position: relative;
+	border: 0px !important;
+	border-bottom: 1px solid #adadad !important;
+	box-shadow: none;
+	font-size: 13px;
+}
+
+.login .formcontrol:focus {
+	border-bottom: 1px solid #e91e63;
+	outline: 0;
+	box-shadow: none;
+	font-size: 13px;
+}
+
+.btn {
+	border: 0px;
+	background: none;
+	float: right;
+	color: #333;
+	font-size: 13px !important;
+	padding: 5px 10px;
+	cursor: pointer;
+}
+
+a.btn {
+	text-decoration: none;
+	color: #333;
+	line-height: 15px;
+}
+
+.btn:hover {
+	background: #adadad;
+}
+
+.radio-inline {
+	font-size: 13px;
+	color: #999;
+	line-height: -1px;
+}
+
+.radio-inline input {
+	margin-right: 5px;
+}
+
+.col6 {
+	width: 50%;
+	float: left;
+	position: relative;
+}
+
+.instruction li {
+	font-size: 13px;
+	color: #999;
+	margin-left: 20px;
+}
+
+.command-image {
+	width: 25px;
+	height: 25px;
+}

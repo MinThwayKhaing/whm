@@ -1,0 +1,336 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:p="http://primefaces.org/ui"
+	template="/common/commonLayout.xhtml">
+
+	<ui:param name="leftMenu" value="/common/adminLeft.xhtml" />
+	<ui:param name="rendered" value="true" />
+	<ui:define name="content">
+		<h:body onload="#{WeeklyReportManagementBean.controlForm()}"
+			update=":weeklyReportEntryForm :weeklyReportTableForm"
+			style="width: auto;">
+			<h:outputStylesheet library="css" name="deleteStyle.css"></h:outputStylesheet>
+			<h:form id="weeklyReportEntryForm" styleClass="form-horizontal"
+				style="margin-bottom: 1px;">
+				<table class="whmPageStatus"><tr><td><h:outputText value="Weekly Activity Inquiry" style="padding:7px;"/></td></tr></table>
+				<table width="100%">
+					<tr>
+						<td></td>
+						<td width="70%" align="center">
+							<div
+								style="z-index: 100; position: fixed; margin-top: -30px; width: 700px;">
+								<p:messages globalOnly="true" showDetail="true" id="messages"
+									closable="true" />
+							</div>
+						</td>
+					</tr>
+				</table>
+				<table  class="whmBackStyle">
+					<tr>
+						<td></td>
+						<td></td>
+						<td></td>
+						<td><p:message for="staffID"/></td>
+						<td></td>
+						<td></td>
+						<td></td>
+						<td></td>
+					</tr>
+
+					<tr>
+						<td colspan="2"><span class="cmms-label"><h:outputText
+									value="Staff ID" /><span style="color: red">*</span></span></td>
+						<td>:</td>
+						<td><p:inputText
+								value="#{WeeklyReportManagementBean.dailyReport.staffID.username}"
+								id="staffID" style="width:146px;" maxlength="15">
+								<p:ajax listener="#{WeeklyReportManagementBean.changeUser}"
+									update="staffName messages resetBtn searchBtn" event="blur" />
+							</p:inputText></td>
+						<td></td>
+						<td></td>
+						<td></td>
+						<td></td>
+
+					</tr>
+
+					<tr>
+						<td colspan="2"><span class="cmms-label">Staff Name </span></td>
+						<td>:</td>
+						<td><h:outputText id="staffName"
+								value="#{WeeklyReportManagementBean.dailyReport.staffID.fullName}" /></td>
+						<td></td>
+						<td></td>
+						<td></td>
+						<td></td>
+					</tr>
+
+					<tr>
+						<td></td>
+						<td></td>
+						<td></td>
+						<td><p:message for="fromDate"/></td>
+						<td></td>
+						<td></td>
+						<td></td>
+						<td></td>
+					</tr>
+
+					<tr>
+						<td colspan="2"><span class="cmms-label">Report Date
+								From</span><span style="color: red">*</span></td>
+						<td>:</td>
+						<td><p:calendar id="fromDate" pattern="yyyy/MM/dd"
+								value="#{WeeklyReportManagementBean.searchDate.fromDate}"
+								maxdate="#{DailyActivityManageBean.today}">
+								<p:ajax event="change"
+									listener="#{WeeklyReportManagementBean.changeDate}"
+									update="toDate resetBtn searchBtn messages" />
+								<p:ajax event="dateSelect"
+									listener="#{WeeklyReportManagementBean.changeDate}"
+									update="toDate resetBtn searchBtn messages" />
+							</p:calendar></td>
+						<td colspan="3"></td>
+						<td colspan="2"><span class="cmms-label">Report Date
+								To</span></td>
+						<td width="20px"></td>
+						<td>:</td>
+						<td><p:calendar id="toDate" pattern="yyyy/MM/dd"
+								disabled="true"
+								value="#{WeeklyReportManagementBean.searchDate.toDate}">
+								<p:ajax process="@this" update="messages" />
+							</p:calendar></td>
+					</tr>
+					<tr>
+						<td colspan="6"></td>
+						<td></td>
+						<td></td>
+						<td></td>
+						<td></td>
+					</tr>
+					<tr>
+						<td colspan="2"><p:commandButton value="Search"
+								id="searchBtn"
+								disabled="#{WeeklyReportManagementBean.btnControl}"
+								action="#{WeeklyReportManagementBean.searchReport}"
+								update=":weeklyReportEntryForm :weeklyReportTableForm" /><p:commandButton value="Reset" id="resetBtn"
+								disabled="#{WeeklyReportManagementBean.btnControl}"
+								action="#{WeeklyReportManagementBean.searchDataClear}"
+								update=":weeklyReportEntryForm :weeklyReportTableForm" /></td>
+						<td></td>
+						<td></td>
+						<td></td>
+						<td></td>
+
+					</tr>
+				</table>
+				<br />
+				<p:separator style="height:5px;margin-top: 2px;margin-bottom: 2px;" />
+			</h:form>
+			<h:form id="weeklyReportTableForm" widgetVar="vtWidget">
+				<div align="right">
+					<p:commandButton value="Delete" id="delBtn"
+						disabled="#{WeeklyReportManagementBean.btnDel}"
+						action="#{WeeklyReportManagementBean.delBtnClicked()}"
+						update=":weeklyReportTableForm  :weeklyReportEntryForm">
+					</p:commandButton>
+					<p:commandButton value="Approve" id="approveBtn"
+						disabled="#{WeeklyReportManagementBean.btnApprove}"
+						action="#{WeeklyReportManagementBean.apBtnClicked()}"
+						update=":weeklyReportTableForm  :weeklyReportEntryForm">
+					</p:commandButton>
+					<p:commandButton value="Remove Approval" id="removeApprovalBtn"
+						disabled="#{WeeklyReportManagementBean.btndisApprove}"
+						action="#{WeeklyReportManagementBean.disapproveDailyReport()}"
+						update=":weeklyReportTableForm  :weeklyReportEntryForm">
+					</p:commandButton>
+				</div>
+				<div class="reportContainer" style="#{empty WeeklyReportManagementBean.weeklyReportData ? 'height:auto;' : 'height:48%'};">
+					<table class="weeklyRptTbl" style="width: 2365px;">
+						<tr>
+							<th style="width: 50px;"><h:outputText value="Select Record" /></th>
+							<th style="width: 100px;"><h:outputText value="Date" /></th>
+							<th>
+								<table>
+									<tr>
+										<th rowspan="2"
+											style="width: 120px; border-left: 0px !important;"><h:outputText
+												value="Project ID" /></th>
+										<th rowspan="2" style="width: 200px;"><h:outputText
+												value="Project Name" /></th>
+										<th rowspan="2" style="width: 70px;"><h:outputText
+												value="WBS No" /></th>
+										<th colspan="4" style="border-bottom: 1px solid #327e04;"><h:outputText
+												value="Task" /></th>
+										<th rowspan="2" style="width: 250px;"><h:outputText
+												value="Deliverables/Documents" escape="false"
+												style="white-space:pre-line;" /></th>
+										<th rowspan="2" style="width: 85px;"><h:outputText
+												value="Begin Date" /></th>
+										<th rowspan="2" style="width: 85px;"><h:outputText
+												value="End Date" /></th>
+										<th rowspan="2" style="width: 60px;"><h:outputText
+												value="Progress (%)" style="white-space:pre-line;" /></th>
+										<th rowspan="2" style="width: 60px;"><h:outputText
+												value="Hours" /></th>
+										<th rowspan="2" style="width: 80px;"><h:outputText
+												value="Delay/ Forward" /></th>
+										<th rowspan="2" style="width: 50px;"><h:outputText
+												value="Task Status Count" /></th>
+										<th rowspan="2" style="width: 180px;"><h:outputText
+												value="Reason" /></th>
+										<th rowspan="2" style="width: 215px;"><h:outputText
+												value="Review" /></th>
+									</tr>
+									<tr>
+										<th style="width: 110px;"><h:outputText
+												value="Function ID" /></th>
+										<th style="width: 170px;"><h:outputText value="Category" /></th>
+										<th style="width: 110px;"><h:outputText value="Activity" /></th>
+										<th style="width: 270px;"><h:outputText
+												value="Description" /></th>
+									</tr>
+								</table>
+							</th>
+						</tr>
+
+						<ui:repeat var="oneDayData"
+							value="#{WeeklyReportManagementBean.weeklyReportData}">
+							<tr>
+								<td
+									style="border-bottom: 1px solid #d4ccb0; border-right: 1px solid #d4ccb0; border-left: 1px solid #d4ccb0;">
+									<p:selectBooleanCheckbox
+										value="#{oneDayData.selectRecord}">
+										<!-- 
+											Revised By : Sai Kyaw Ye Myint
+											Revised Date : 2017/09/11
+											Explanation: Added listener for select box. 
+										-->
+										<p:ajax update=":weeklyReportTableForm" listener="#{WeeklyReportManagementBean.rollSelectListener}" />
+									</p:selectBooleanCheckbox>
+								</td>
+								<td
+									style="border-bottom: 1px solid #d4ccb0; border-right: 1px solid #d4ccb0;">
+									<p:commandLink ajax="false" process="weeklyReportTableForm"
+										disabled="${oneDayData.dailyReport.checkDiv eq 'CHECKED'}"
+										action="#{DailyActivityManageBean.setEditReportPage(oneDayData.dailyReport,WeeklyReportManagementBean.dailyReportList,WeeklyReportManagementBean.dailyReport,WeeklyReportManagementBean.searchDate,WeeklyReportManagementBean.SCREEN_ID)}"
+										update=":weeklyReportTableForm :weeklyReportEntryForm">
+										<h:outputText value="#{oneDayData.activityDate}" />
+										<p:graphicImage value="/images/edit.png"
+											styleClass="edit-image" />
+									</p:commandLink>
+								</td>
+								<td
+									style="border-bottom: 1px solid #d4ccb0; border-right: 1px solid #d4ccb0;">
+									<table class="weeklyActivityTbl">
+										<ui:repeat var="activities" value="#{oneDayData.activities}">
+											<tr>
+												<td style="width: 124px;"><div>
+														<h:outputText value="#{activities.projectID}" />
+													</div></td>
+												<td style="width: 202px; text-align: left"><h:outputText
+														value="#{activities.projectName}" /></td>
+												<td style="width: 72px;"><h:outputText
+														value="#{activities.wbsNo}" /></td>
+												<td style="width: 112px;"><h:outputText
+														value="#{activities.functionID}" /></td>
+												<td style="width: 172px; text-align: left"><h:outputText
+														value="#{activities.category}"  /></td>
+												<td style="width: 112px;"><h:outputText
+														value="#{activities.activities}" /></td>
+												<td style="width: 272px; text-align: left;"><h:outputText
+														value="#{activities.description}" /></td>
+												<td style="width: 252px; text-align: left"><h:outputText
+														value="#{activities.deliveryOutput}" /></td>
+												<td style="width: 87px;"><h:outputText
+														value="#{activities.beginDate}">
+														<f:convertDateTime pattern="yyyy/MM/dd" />
+													</h:outputText></td>
+												<td style="width: 87px;"><h:outputText
+														value="#{activities.endDate}">
+														<f:convertDateTime pattern="yyyy/MM/dd" />
+													</h:outputText></td>
+												<td style="width: 62px;"><h:outputText
+														value="#{activities.progress}" /></td>
+												<td style="width: 62px;"><h:outputText
+														value="#{activities.hour}" /></td>
+												<td style="width: 82px;"><h:outputText
+														value="#{activities.status}" /></td>
+												<td style="width: 52px;color : ${activities.status eq 'DELAY' ? 'red' : activities.status eq 'FORWARD' ? 'blue':'white'};">
+													<h:outputText value="#{activities.taskStatusCount}" style="" /></td>
+												<td style="width: 182px; text-align: left"><h:outputText
+														value="#{activities.reason}" /></td>
+												<td style="border-right: 0px; text-align: left"><h:outputText
+														value="#{activities.review}" /></td>
+											</tr>
+										</ui:repeat>
+										<tr style="background-color: #63B175; ">
+											<td colspan="16" style="text-align: left; color: #ffffff"><h:outputText
+													value="Totals Hour : #{oneDayData.totalHour}" /></td>
+										</tr>
+									</table>
+								</td>
+							</tr>
+						</ui:repeat>
+					</table>
+				</div>
+			</h:form>
+
+			<p:confirmDialog header="Confirmation" showEffect="explode"
+				hideEffect="explode" message="Are you sure to delete?"
+				widgetVar="dlg2" minHeight="40" global="true"
+				class="ui-dialog-content">
+				<p:commandButton value="Yes" styleClass="ui-confirmdialog-yes"
+					action="#{WeeklyReportManagementBean.deleteDailyReport()}"
+					onclick="PF('dlg2').hide()"
+					update=":weeklyReportEntryForm :weeklyReportTableForm @this" />
+				<p:commandButton value="No" styleClass="ui-confirmdialog-no" onclick="PF('dlg2').hide()" />
+			</p:confirmDialog>
+
+			<p:confirmDialog header="Warning" showEffect="explode"
+				hideEffect="explode" message="You must check at least one checkbox!"
+				widgetVar="dlg3" minHeight="40" global="true"
+				class="ui-dialog-content">
+				<p:commandButton value=" Ok " onclick="PF('dlg3').hide()" />
+			</p:confirmDialog>
+
+			<p:confirmDialog header="Confirmation" showEffect="explode"
+				hideEffect="explode" message="Are you sure to approve?"
+				widgetVar="dlg4" minHeight="40" global="true"
+				class="ui-dialog-content">
+				<p:commandButton value="Yes" styleClass="ui-confirmdialog-yes"
+					action="#{WeeklyReportManagementBean.approveDailyReport()}"
+					onclick="PF('dlg4').hide()"
+					update=":weeklyReportEntryForm  :weeklyReportTableForm @this" />
+				<p:commandButton value="No" styleClass="ui-confirmdialog-no" onclick="PF('dlg4').hide()" />
+			</p:confirmDialog>
+
+			<p:confirmDialog header="Confirmation" showEffect="explode"
+				hideEffect="explode" message="Are you sure to disapprove?"
+				widgetVar="dlg5" minHeight="40" global="true"
+				class="ui-dialog-content">
+				<p:commandButton value="Yes" styleClass="ui-confirmdialog-yes"
+					action="#{WeeklyReportManagementBean.removeApproval()}"
+					onclick="PF('dlg5').hide()"
+					update=":weeklyReportEntryForm  :weeklyReportTableForm @this" />
+				<p:commandButton value="No" styleClass="ui-confirmdialog-no" onclick="PF('dlg5').hide()" />
+			</p:confirmDialog>
+
+			<script type="text/javascript">
+				history.pushState(null, null, document.URL);
+				window.addEventListener('popstate', function () {
+				    history.pushState(null, null, document.URL);
+				});
+				function disableF5(e) {
+					if ((e.which || e.keyCode) == 116  || (e.which || e.keyCode) == 82) {
+						 e.preventDefault();
+						 e.stopPropagation();
+					}
+				};
+				$(document).bind("load", disableF5);
+			</script>
+		</h:body>
+	</ui:define>
+</ui:composition>

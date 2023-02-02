@@ -1,0 +1,168 @@
+<!-- 
+	Created By: Aye Myat Mon
+	Created Date : 2018/09/24
+	Explanation : Created for Phase IV.
+ -->
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:p="http://primefaces.org/ui"
+	template="/common/commonLayout.xhtml">
+	<ui:define name="content">
+		<h:body>
+			<h:outputText value="Working Hour Management (Team Detail)"
+				style="margin-top: 0px; margin-bottom: 10px;font-size:20px;" />
+			<p:separator style="height:5px;margin-top: 2px;margin-bottom: 2px;" />
+			<h:form>
+				<p:commandButton id="exportBtn" value="Export"
+					icon="ui-icon-arrowthick-1-s"
+					actionListener="#{WorkingHourManagementTeamDetailBean.export}"
+					onclick="PrimeFaces.monitorDownload(start, stop);">
+					<p:fileDownload
+						value="#{WorkingHourManagementTeamDetailBean.download}" />
+				</p:commandButton>
+				<p:spacer width="5px" />
+				<p:commandButton id="backBtn" value="Back"
+					action="#{WorkingHourManagementTeamDetailBean.back}"
+					process="@form" ajax="false">
+				</p:commandButton>
+			</h:form>
+			<div class="workingHoruManagemntTeamTable">
+				<p:panelGrid>
+					<f:facet name="header">
+						<ui:repeat var="rowRepeat"
+							value="#{WorkingHourManagementTeamDetailBean.rowRepeat}">
+							<p:row>
+								<p:column rowspan="2">
+									<h:outputText value="Team" />
+								</p:column>
+								<p:column rowspan="2">
+									<h:outputText value="Members" />
+								</p:column>
+								<p:column rowspan="2">
+									<h:outputText style="white-space: nowrap" value="Project ID" />
+								</p:column>
+								<p:column rowspan="2">
+									<h:outputText style="white-space: nowrap" value="Project Name" />
+								</p:column>
+								<p:column rowspan="2">
+									<h:outputText style="white-space: nowrap" value="Staff ID" />
+								</p:column>
+								<p:column rowspan="2">
+									<h:outputText style="white-space: nowrap" value="Staff Name" />
+								</p:column>
+								<ui:repeat var="yearMonth"
+									value="#{WorkingHourManagementTeamDetailBean.yearMonth}">
+									<p:column colspan="2" width="100px">
+										<h:outputText value="#{yearMonth}" />
+									</p:column>
+								</ui:repeat>
+							</p:row>
+							<p:row>
+								<ui:repeat var="yearMonth"
+									value="#{WorkingHourManagementTeamDetailBean.yearMonth}">
+									<p:column>
+										<h:outputText value="Hour" />
+									</p:column>
+									<p:column>
+										<h:outputText value="M-M" />
+									</p:column>
+								</ui:repeat>
+							</p:row>
+						</ui:repeat>
+					</f:facet>
+					<ui:repeat var="workingHourManagementTeamView"
+						value="#{WorkingHourManagementTeamDetailBean.viewData}">
+						<p:row>
+							<p:column
+								rowspan="#{workingHourManagementTeamView.totalRowCount +2}">
+								<h:outputText style="white-space: nowrap"
+									value="#{workingHourManagementTeamView.teamId}" />
+							</p:column>
+							<p:column
+								rowspan="#{workingHourManagementTeamView.totalRowCount +2}">
+								<h:outputText value="#{workingHourManagementTeamView.members}" />
+							</p:column>
+							<ui:repeat var="projectDivision"
+								value="#{workingHourManagementTeamView.projectDivision}">
+								<p:row>
+									<p:column rowspan="#{projectDivision.staffDivision.size() +1}">
+										<h:outputText style="white-space: nowrap"
+											value="#{projectDivision.projectId}" />
+									</p:column>
+									<p:column rowspan="#{projectDivision.staffDivision.size() +1}">
+										<h:outputText style="white-space: nowrap"
+											value="#{projectDivision.projectName} " />
+									</p:column>
+									<ui:repeat var="staffDivision"
+										value="#{projectDivision.staffDivision}">
+										<p:row>
+											<p:column>
+												<h:outputText style="white-space: nowrap"
+													value="#{staffDivision.staffId}" />
+											</p:column>
+											<p:column>
+												<h:outputText style="white-space: nowrap"
+													value="#{staffDivision.staffName}" />
+											</p:column>
+											<ui:repeat var="yearMonthDivision"
+												value="#{staffDivision.yearMonthDivision}">
+												<p:column>
+													<h:outputText value="#{yearMonthDivision.hour}">
+														<f:convertNumber type="number" groupingUsed="true"
+															minFractionDigits="2" pattern="#0.000" />
+													</h:outputText>
+												</p:column>
+												<p:column>
+													<h:outputText value="#{yearMonthDivision.manMonth}">
+														<f:convertNumber type="number" groupingUsed="true"
+															minFractionDigits="2" pattern="#0.000" />
+													</h:outputText>
+												</p:column>
+											</ui:repeat>
+										</p:row>
+									</ui:repeat>
+								</p:row>
+							</ui:repeat>
+						</p:row>
+						<p:row>
+							<p:column colspan="4">
+								<h:outputText value="Total" />
+							</p:column>
+							<ui:repeat var="yearMonthDivision"
+								value="#{WorkingHourManagementTeamDetailBean.totalRow.yearMonthDivision}">
+								<p:column>
+									<h:outputText value="#{yearMonthDivision.hour}">
+										<f:convertNumber type="number" groupingUsed="true"
+											minFractionDigits="2" pattern="#0.000" />
+									</h:outputText>
+								</p:column>
+								<p:column>
+									<h:outputText value="#{yearMonthDivision.manMonth}">
+										<f:convertNumber type="number" groupingUsed="true"
+											minFractionDigits="2" pattern="#0.000" />
+									</h:outputText>
+								</p:column>
+							</ui:repeat>
+						</p:row>
+					</ui:repeat>
+				</p:panelGrid>
+			</div>
+		</h:body>
+		<style>
+.ui-widget-header {
+	border: 1px solid #327e04;
+	background: #63b175;
+	color: #FFFF;
+}
+</style>
+	</ui:define>
+	<style>
+.ui-widget-header {
+	border: 1px solid #327e04;
+	background: #63b175;
+	color: #FFFF;
+}
+</style>
+</ui:composition>

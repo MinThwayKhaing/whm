@@ -1,0 +1,389 @@
+<!-- 
+	Created By: Ye Thu Naing, Kyi Saw Win
+	Created Date : 2017/09/11
+	Explanation : Created for Phase III.
+ -->
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:p="http://primefaces.org/ui"
+	template="/common/commonLayout.xhtml">
+	<ui:param name="leftMenu" value="/common/adminLeft.xhtml" />
+	<ui:param name="rendered" value="true" />
+	<ui:define name="content">
+		<h:form id="actualPrjWorkingHrReportForm" styleClass="form-horizontal">
+			<h:outputText value="Actual Project Working Hour Report"
+				style="margin-top: 0px; margin-bottom: 10px;font-size:20px;" />
+			<p:separator style="height:5px;margin-top: 2px;margin-bottom: 2px;" />
+			<table width="100%">
+				<tr>
+					<td></td>
+					<td width="70%" align="center">
+						<div
+							style="z-index: 100; position: fixed; margin-top: -30px; width: 700px;">
+							<p:messages showDetail="true" id="messages" autoUpdate="true"
+								closable="true" />
+						</div>
+					</td>
+				</tr>
+			</table>
+			<table class="whmBackStyle">
+				<tr>
+					<td width="120px;"><span class="cmms-label">Project ID</span></td>
+					<td>:</td>
+					<td><p:selectOneMenu id="projectID"
+							value="#{ActualPrjWorkingHrRptManageBean.dailyActivity.project}"
+							converter="omnifaces.SelectItemsConverter" style="width:120px;"
+							filter="true" filterMatchMode="contains">
+							<f:selectItem itemLabel="-" itemValue="#{null}" />
+							<f:selectItems var="project"
+								value="#{ActualPrjWorkingHrRptManageBean.projects}"
+								itemLabel="#{project.id}" itemValue="#{project}" />
+							<p:ajax update="projectName" />
+						</p:selectOneMenu></td>
+					<td></td>
+					<td></td>
+					<td width="120px;"><span class="cmms-label">Project
+							Name</span></td>
+					<td>:</td>
+					<td><h:outputText id="projectName"
+							style="display:block;width:200px; word-wrap:break-word;font-size:12px;"
+							value="${empty ActualPrjWorkingHrRptManageBean.dailyActivity.project.projectName or ActualPrjWorkingHrRptManageBean.dailyActivity.project.projectName eq null? '--------' : ActualPrjWorkingHrRptManageBean.dailyActivity.project.projectName}" />
+					</td>
+					<td></td>
+					<td></td>
+					<td width="120px;"><span class="cmms-label">Function ID</span></td>
+					<td>:</td>
+					<td><p:inputText id="functionID" style="width:146px;"
+							maxlength="15" required="false"
+							value="#{ActualPrjWorkingHrRptManageBean.dailyActivity.wbsFunction}">
+						</p:inputText></td>
+					<td></td>
+					<td></td>
+					<td width="120px;"><span class="cmms-label">Report Date
+							From</span></td>
+					<td>:</td>
+					<td width="152px"><p:calendar pattern="yyyy/MM/dd" id="fromDate" 
+							value="#{ActualPrjWorkingHrRptManageBean.searchDate.fromDate}"
+							maxdate="#{ActualPrjWorkingHrRptManageBean.today}">
+							<p:ajax process="@this" update="messages" />
+						</p:calendar></td>
+				</tr>
+				<tr>
+					<td width="120px;"><span class="cmms-label">Staff ID</span></td>
+					<td>:</td>
+					<td><p:inputText
+							value="#{ActualPrjWorkingHrRptManageBean.dailyReport.staffID.username}"
+							id="staffID" style="width:146px;" maxlength="15">
+							<p:ajax listener="#{ActualPrjWorkingHrRptManageBean.changeUser}"
+								update="staffName staffID messages" event="blur" />
+							<p:ajax listener="#{ActualPrjWorkingHrRptManageBean.changeUser}"
+								update="staffName staffID messages" event="change" />
+						</p:inputText></td>
+					<td></td>
+					<td></td>
+					<td width="120px;"><span class="cmms-label">Staff Name</span></td>
+					<td>:</td>
+					<td><p:inputText id="staffName" style="width: 152px;"
+							value="#{ActualPrjWorkingHrRptManageBean.dailyReport.staffID.fullName}">
+							<p:ajax event="change" update="staffName" />
+						</p:inputText></td>
+					<td></td>
+					<td></td>
+					<td width="120px;"><span class="cmms-label">Description</span></td>
+					<td>:</td>
+					<td><p:inputText id="description" style="width:146px;"
+							maxlength="250" required="false"
+							value="#{ActualPrjWorkingHrRptManageBean.dailyActivity.taskDescription}">
+						</p:inputText></td>
+					<td></td>
+					<td></td>
+					<td width="120px;"><span class="cmms-label">Report Date
+							To</span></td>
+					<td>:</td>
+					<td width="152px"><p:calendar pattern="yyyy/MM/dd" id="toDate"
+							value="#{ActualPrjWorkingHrRptManageBean.searchDate.toDate}">
+							<p:ajax process="@this" update="messages" />
+						</p:calendar></td>
+				</tr>
+				<tr>
+					<td></td>
+				</tr>
+				<tr>
+					<td width="120px;"><span class="cmms-label">Year<span
+							style="color: red;">*</span></span></td>
+					<td>:</td>
+					<td><p:selectOneMenu id="year"
+							value="#{ActualPrjWorkingHrRptManageBean.year}"
+							style="width:120px;">
+							<f:selectItem itemLabel="-" itemValue="#{null}" />
+							<f:selectItems value="#{ActualPrjWorkingHrRptManageBean.years}" />
+						</p:selectOneMenu></td>
+					<td></td>
+					<td></td>
+					<td width="120px;"><span class="cmms-label">WBS No</span></td>
+					<td>:</td>
+					<td><p:inputText id="wbsNo" style="width: 152px;"
+							maxlength="15" required="false"
+							value="#{ActualPrjWorkingHrRptManageBean.dailyActivity.wbs}">
+						</p:inputText></td>
+					<td></td>
+					<td></td>
+					<td><span class="cmms-label">Attendance</span></td>
+					<td>:</td>
+					<td><p:selectOneMenu id="leaveStatus" style="width:120px;"
+							value="#{ActualPrjWorkingHrRptManageBean.dailyReport.leaveStatus}">
+							<f:selectItem itemValue="#{null}" itemLabel="--Select All--" />
+							<f:selectItems
+								value="#{ActualPrjWorkingHrRptManageBean.leaveStatuses}" />
+						</p:selectOneMenu></td>
+					<td></td>
+					<td></td>
+				</tr>
+				<tr>
+					<td></td>
+				</tr>
+				<tr>
+					<td width="120px;"><span class="cmms-label">Month</span></td>
+					<td>:</td>
+					<td><p:selectOneMenu id="month"
+							value="#{ActualPrjWorkingHrRptManageBean.month}"
+							style="width:120px;">
+							<f:selectItem itemLabel="-" itemValue="#{null}" />
+							<f:selectItems value="#{ActualPrjWorkingHrRptManageBean.months}" />
+						</p:selectOneMenu></td>
+					<td></td>
+					<td></td>
+					<td width="120px;"><span class="cmms-label">Category</span></td>
+					<td>:</td>
+					<td><p:selectOneMenu id="category"
+							value="#{ActualPrjWorkingHrRptManageBean.dailyActivity.task}"
+							converter="omnifaces.SelectItemsConverter" style="width:126px;">
+							<f:selectItem itemLabel="-" itemValue="#{null}" />
+							<f:selectItems var="task"
+								value="#{ActualPrjWorkingHrRptManageBean.categories}"
+								itemLabel="#{task.description}" itemValue="#{task}" />
+							<p:ajax event="change" update="category" />
+						</p:selectOneMenu></td>
+					<td></td>
+					<td></td>
+					<td><span class="cmms-label">Approve Status</span></td>
+					<td>:</td>
+					<td><p:selectOneMenu id="approveStatus" style="width:120px;"
+							value="#{ActualPrjWorkingHrRptManageBean.dailyReport.checkDiv}">
+							<f:selectItem itemValue="#{null}" itemLabel="--Select All--" />
+							<f:selectItems
+								value="#{ActualPrjWorkingHrRptManageBean.checkDivs}" />
+						</p:selectOneMenu></td>
+					<td></td>
+					<td></td>
+				</tr>
+				<tr>
+					<td></td>
+				</tr>
+				<tr>
+				<tr>
+					<td width="120px;"><span class="cmms-label">Day</span></td>
+					<td>:</td>
+					<td><p:selectOneMenu id="day"
+							value="#{ActualPrjWorkingHrRptManageBean.day}"
+							style="width:120px;">
+							<f:selectItem itemLabel="-" itemValue="#{null}" />
+							<f:selectItems value="#{ActualPrjWorkingHrRptManageBean.days}" />
+						</p:selectOneMenu></td>
+					<td></td>
+					<td></td>
+					<td width="120px;"><span class="cmms-label">Activity</span></td>
+					<td>:</td>
+					<td><p:selectOneMenu id="activities"
+							value="#{ActualPrjWorkingHrRptManageBean.dailyActivity.taskActivity}"
+							converter="omnifaces.SelectItemsConverter" style="width:127px;">
+							<f:selectItem itemValue="#{null}" itemLabel="--Select All--" />
+							<f:selectItems var="taskActivity"
+								value="#{ActualPrjWorkingHrRptManageBean.taskActivities}"
+								itemLabel="#{taskActivity.description}"
+								itemValue="#{taskActivity}" />
+							<p:ajax event="change" update="activities" />
+						</p:selectOneMenu></td>
+					<td></td>
+					<td></td>
+					<td width="120px;"><span class="cmms-label">Delay/Forward</span></td>
+					<td>:</td>
+					<td><p:selectOneMenu id="taskStatus" style="width:120px;"
+							value="#{ActualPrjWorkingHrRptManageBean.dailyActivity.taskStatus}">
+							<f:selectItem itemValue="#{null}" itemLabel="--Select All--" />
+							<f:selectItems
+								value="#{ActualPrjWorkingHrRptManageBean.taskStatuses}" />
+						</p:selectOneMenu></td>
+				</tr>
+				</tr>
+				<tr>
+					<td></td>
+				</tr>
+			</table>
+			<table>
+				<tr>
+					<td><p:commandButton value="#{label['COMMON_SHOW_BTN']}"
+							id="show" update=":actualPrjWorkingHrReportTableForm download"
+							action="#{ActualPrjWorkingHrRptManageBean.show}" /></td>
+					<td><p:commandButton value="Export" id="download"
+							actionListener="#{ActualPrjWorkingHrRptManageBean.export}"
+							process="@form" ajax="false"
+							onclick="PrimeFaces.monitorDownload(start, stop);"
+							disabled="#{ActualPrjWorkingHrRptManageBean.btnExport}"
+							icon="ui-icon-arrowthick-1-s"
+							update=":actualPrjWorkingHrReportTableForm">
+							<p:fileDownload
+								value="#{ActualPrjWorkingHrRptManageBean.download}" />
+						</p:commandButton></td>
+				</tr>
+			</table>
+		</h:form>
+		<p:separator style="height:5px;margin-top: 2px;margin-bottom: 2px;" />
+		<p></p>
+		 <!-- 
+		 	Modified By : Aung Htay Oo
+		 	Modified Date : 2017/11/22
+		 	Explanation : Add Filter in search result dataTable.
+		  -->		
+		<h:form id="actualPrjWorkingHrReportTableForm">
+			<p>
+				<h:outputText id="totalHours"
+					value="Total Hours : #{ActualPrjWorkingHrRptManageBean.totalHour}" />
+			</p>
+			<p:tabView id="tabber"
+				value="#{ActualPrjWorkingHrRptManageBean.tabViewDataList}"
+				var="tabView">
+				<p:tab title="#{tabView.tabName}">
+					<p:dataTable id="actualWorkingHrTable" styleClass="whmBackStyle"
+						value="#{tabView.rptDataList}" var="tabdata" paginator="true"
+						filteredValue="#{ActualPrjWorkingHrRptManageBean.filteredDataList}"
+						rows="30" emptyMessage="There is no record!"
+						paginatorTemplate="{CurrentPageReport}  {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"
+						rowsPerPageTemplate="30,50,100" rowIndexVar="index">
+						
+						<!-- 	
+						 	Modified By : Aye Myat Mon
+						 	Modified Date : 2018/08/20
+						 	Explanation : Modified Filter in date column.
+						-->	
+						
+						<p:column headerText="Date" style="text-align:center; width:130px;"
+							filterBy="#{ActualPrjWorkingHrRptManageBean.whmUtilities.customDateFormat(tabdata.date)}" filterMatchMode="contains">
+							<h:outputText id="date" value="#{tabdata.date}">
+								<f:convertDateTime pattern="#{ActualPrjWorkingHrRptManageBean.whmUtilities.datePattern()}" />
+							</h:outputText>
+						</p:column>
+						
+						<p:column headerText="Project ID" style="text-align:center; width:130px;"
+							filterBy="#{tabdata.projectID}" filterMatchMode="contains">
+							<h:outputText id="projectID" value="#{tabdata.projectID}" />
+						</p:column>
+						
+						<p:column headerText="Project Name" style="width:200px;"
+							filterBy="#{tabdata.projectName}" filterMatchMode="contains">
+							<h:outputText id="projectName" value="#{tabdata.projectName}" />
+						</p:column>
+
+						<p:column headerText="Staff ID" style="text-align:center; width:130px;"
+							filterBy="#{tabdata.staffID}" filterMatchMode="contains">
+							<h:outputText id="staffId" value="#{tabdata.staffID}" />
+						</p:column>
+						
+						<p:column headerText="Staff Name" style="width:130px;"
+							filterBy="#{tabdata.staffName}" filterMatchMode="contains">
+							<h:outputText id="staffName" value="#{tabdata.staffName}" />
+						</p:column>
+
+						<p:column headerText="WBS No" style="text-align:center; width:130px;"
+							filterBy="#{tabdata.wbsNo}" filterMatchMode="contains">
+							<h:outputText id="wbsNo" value="#{tabdata.wbsNo}" />
+						</p:column>
+						
+						<p:column headerText="Function ID" style="text-align:center; width:150px;"
+							filterBy="#{tabdata.functionID}" filterMatchMode="contains">
+							<h:outputText id="functionID" value="#{tabdata.functionID}" />
+						</p:column>
+						
+						<p:column headerText="Category" style="width:150px;"
+							filterBy="#{tabdata.category.description}" filterMatchMode="contains">
+							<h:outputText id="category" value="#{tabdata.category.description}" />
+						</p:column>
+						
+						<p:column headerText="Activity" style="text-align:center; width:130px;"
+							filterBy="#{tabdata.activities.description}" filterMatchMode="contains">
+							<h:outputText id="activities" value="#{tabdata.activities.description}" />
+						</p:column>
+						
+						<p:column headerText="Description" style="width:270px;"
+							filterBy="#{tabdata.description}" filterMatchMode="contains">
+							<h:outputText id="description" value="#{tabdata.description}" />
+						</p:column>
+						
+						<p:column headerText="Deliverables/Documents" style="width:270px;"
+							filterBy="#{tabdata.deliveryOutput}" filterMatchMode="contains">
+							<h:outputText id="deliveryOutput"
+								value="#{tabdata.deliveryOutput}" />
+						</p:column>
+						
+						<p:column headerText="Begin Date" style="text-align:center; width:120px;"
+							filterBy="#{tabdata.beginDate}" filterMatchMode="contains">
+							<h:outputText id="beginDate" value="#{tabdata.beginDate}">
+								<f:convertDateTime pattern="yyyy-MM-dd" />
+							</h:outputText>
+						</p:column>
+						
+						<p:column headerText="End Date" style="text-align:center; width:120px;"
+							filterBy="#{tabdata.endDate}" filterMatchMode="contains">
+							<h:outputText id="endDate" value="#{tabdata.endDate}">
+								<f:convertDateTime pattern="yyyy-MM-dd" />
+							</h:outputText>
+						</p:column>
+						
+						<p:column headerText="Progress (%)" style="text-align:center; width:120px;"
+							filterBy="#{tabdata.progress}" filterMatchMode="contains">
+							<h:outputText id="progress" value="#{tabdata.progress}" />
+						</p:column>
+						
+						<p:column headerText="Hours" style="text-align:center; width:60px;"
+							filterBy="#{tabdata.hour}" filterMatchMode="contains" filterStyle="width:46px;">
+							<h:outputText id="hour" value="#{tabdata.hour}" />
+						</p:column>
+						
+						<p:column headerText="Delay/Forward" style="text-align:center; width:120px;"
+							filterBy="#{tabdata.status}" filterMatchMode="contains">
+							<h:outputText id="status" value="#{tabdata.status}" />
+						</p:column>
+						
+						<p:column headerText="Task Status Count"
+							style="text-align:center; width:120px;"
+							filterBy="#{tabdata.taskStatusCount}" filterMatchMode="contains">
+							<h:outputText id="taskStatusCount"
+								value="#{tabdata.taskStatusCount}" />
+						</p:column>
+						
+						<p:column headerText="Reason" style="width:180px;"
+							filterBy="#{tabdata.reason}" filterMatchMode="contains">
+							<h:outputText id="reason" value="#{tabdata.reason}" />
+						</p:column>
+					</p:dataTable>
+				</p:tab>
+			</p:tabView>
+		</h:form>
+
+		<script type="text/javascript">
+			history.pushState(null, null, document.URL);
+			window.addEventListener('popstate', function() {
+				history.pushState(null, null, document.URL);
+			});
+			function disableF5(e) {
+				if ((e.which || e.keyCode) == 116
+						|| (e.which || e.keyCode) == 82) {
+					e.preventDefault();
+				}
+			};
+			$(document).bind("load", disableF5);
+		</script>
+	</ui:define>
+</ui:composition>

@@ -1,0 +1,26 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:p="http://primefaces.org/ui"
+	template="/common/commonLayout.xhtml">
+	<ui:define name="content">
+		<h:form id="homePageForm">
+			<div class="whmHome">
+				<p:imageSwitch effect="shuffle" widgetVar="switcher"
+					id="manuelSwitcher" slideshowAuto="true" slideshowSpeed="4000">
+					<ui:repeat value="#{HomePage.images}" var="imagelist"
+						id="manuelSwitcherImages">
+						<p:graphicImage value="/images/#{imagelist}" id="imageno" styleClass="img-circle"></p:graphicImage>
+					</ui:repeat>
+				</p:imageSwitch>
+			</div>
+			<div style="margin-left:930px;">
+			<p:commandButton type="button" onclick="PF('switcher').previous();"
+					icon="ui-icon-circle-triangle-w" id="prev" update="description image manuelSwitcher" />
+				<p:commandButton type="button" onclick="PF('switcher').next();"
+					icon="ui-icon-circle-triangle-e" id="next" update="description image manuelSwitcher"/>
+			</div>
+		</h:form>
+	</ui:define>
+</ui:composition>

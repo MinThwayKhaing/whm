@@ -1,0 +1,349 @@
+<!-- 
+	Created By: Ye Thu Naing, Kyi Saw Win
+	Created Date : 2017/09/18
+	Explanation : Created for Phase III.
+ -->
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:p="http://primefaces.org/ui"
+	template="/common/commonLayout.xhtml">
+	<ui:param name="leftMenu" value="/common/adminLeft.xhtml" />
+	<ui:param name="rendered" value="true" />
+	<ui:define name="content">
+		<h:body onload="#{WorkingHourManageBean.controlForm()}"
+			update=":WorkingHrManagementTableForm :workinghrManagementForm">
+			<h:form id="workinghrManagementForm" styleClass="form-horizontal">
+				<h:outputText value="Working Hour Management Report"
+					style="margin-top: 0px; margin-bottom: 10px;font-size:20px;" />
+				<p:separator style="height:5px;margin-top: 2px;margin-bottom: 2px;" />
+				<table width="100%">
+					<tr>
+						<td></td>
+						<td width="70%" align="center">
+							<div
+								style="z-index: 100; position: fixed; margin-top: -30px; width: 700px;">
+								<p:messages showDetail="true" id="messages" autoUpdate="true"
+									closable="true" />
+							</div>
+						</td>
+					</tr>
+				</table>
+				<table class="whmBackStyle">
+					<tr>
+						<td width="120px;"><span class="cmms-label">Project ID</span><span style="color: red"> *</span></td>
+						<td>:</td>
+						<td><p:selectOneMenu id="projectID"
+								value="#{WorkingHourManageBean.dailyActivity.project}"
+								converter="omnifaces.SelectItemsConverter" style="width:120px;"
+								filter="true" filterMatchMode="contains">
+								<f:selectItem itemLabel="-" itemValue="#{null}" />
+								<f:selectItems var="project"
+									value="#{WorkingHourManageBean.projects}"
+									itemLabel="#{project.id}" itemValue="#{project}" />
+								<p:ajax event="change"
+									listener="#{WorkingHourManageBean.getYear}"
+									update=":workinghrManagementForm WorkingHrManagementTableForm projectName spInfo clientInfo startYear startMonth endYear endMonth messages" />
+								<p:ajax event="blur" listener="#{WorkingHourManageBean.getYear}"
+									update=":workinghrManagementForm WorkingHrManagementTableForm projectName spInfo clientInfo startYear startMonth endYear endMonth messages" />
+							</p:selectOneMenu></td>
+						<td></td>
+						<td></td>
+						<td width="120px;"><span class="cmms-label">Start Year</span></td>
+						<td>:</td>
+						<td><p:selectOneMenu id="startYear"
+								value="#{WorkingHourManageBean.startYear}" style="width:120px;">
+								<f:selectItems value="#{WorkingHourManageBean.years}" />
+								<p:ajax event="blur"
+									update="startYear startMonth endYear endMonth" />
+							</p:selectOneMenu></td>
+
+						<td></td>
+						<td></td>
+						<td width="120px;"><span class="cmms-label">Start
+								Month</span></td>
+						<td>:</td>
+						<td><p:selectOneMenu id="startMonth"
+								value="#{WorkingHourManageBean.startMonth}" style="width:120px;">
+								<f:selectItems value="#{WorkingHourManageBean.months}" />
+								<p:ajax event="blur"
+									update="startYear startMonth endYear endMonth" />
+							</p:selectOneMenu></td>
+					</tr>
+					<tr height="55px;">
+						<td width="120px;"><span class="cmms-label">Project
+								Name</span></td>
+						<td>:</td>
+						<td><h:outputText id="projectName"
+								style="display:block;width:200px; word-wrap:break-word;font-size:12px;"
+								value="${empty WorkingHourManageBean.dailyActivity.project.projectName or WorkingHourManageBean.dailyActivity.project.projectName eq null? '--------' : WorkingHourManageBean.dailyActivity.project.projectName}" />
+						</td>
+						<td></td>
+						<td></td>
+						<td width="120px;"><span class="cmms-label">End Year</span></td>
+						<td>:</td>
+						<td><p:selectOneMenu id="endYear"
+								value="#{WorkingHourManageBean.endYear}" style="width:120px;">
+								<f:selectItems value="#{WorkingHourManageBean.years}" />
+								<p:ajax event="blur"
+									update="startYear startMonth endYear endMonth" />
+							</p:selectOneMenu></td>
+						<td></td>
+						<td></td>
+						<td width="120px;"><span class="cmms-label">End Month</span></td>
+						<td>:</td>
+						<td><p:selectOneMenu id="endMonth"
+								value="#{WorkingHourManageBean.endMonth}" style="width:120px;">
+								<f:selectItems value="#{WorkingHourManageBean.months}" />
+								<p:ajax event="blur"
+									update="startYear startMonth endYear endMonth" />
+							</p:selectOneMenu></td>
+					</tr>
+					<tr>
+						<td width="120px;"><span class="cmms-label">Service
+								Provider</span></td>
+						<td>:</td>
+						<td>
+							<div style="display : ${WorkingHourManageBean.dailyActivity.project.spDept eq null
+										and WorkingHourManageBean.dailyActivity.project.spIncharge eq null
+										and WorkingHourManageBean.dailyActivity.project.spOrganization eq null ? 'none' : 'block'}">
+								<h:outputText id="spInfo"
+										style="display:block;width:200px; word-wrap:break-word;font-size:12px;"
+										value="#{WorkingHourManageBean.dailyActivity.project.spIncharge}/#{WorkingHourManageBean.dailyActivity.project.spDept} (#{WorkingHourManageBean.dailyActivity.project.spOrganization})" />
+							</div>
+							<div style="display : ${WorkingHourManageBean.dailyActivity.project.spDept eq null
+										and WorkingHourManageBean.dailyActivity.project.spIncharge eq null
+										and WorkingHourManageBean.dailyActivity.project.spOrganization eq null ? 'block' : 'none'}">
+								<h:outputText value="--------"></h:outputText>
+							</div>
+						</td>
+						<td></td>
+						<td></td>
+						<td width="120px;"><span class="cmms-label">Client</span></td>
+						<td>:</td>
+						<td>
+							<div style="display : ${WorkingHourManageBean.dailyActivity.project.clientDept eq null
+										and WorkingHourManageBean.dailyActivity.project.clientIncharge eq null
+										and WorkingHourManageBean.dailyActivity.project.clientOrganization eq null ? 'none' : 'block'}">
+										<h:outputText id="clientInfo"
+												style="display:block;width:200px; word-wrap:break-word;font-size:12px;"
+												value="#{WorkingHourManageBean.dailyActivity.project.clientIncharge}/#{WorkingHourManageBean.dailyActivity.project.clientDept} (#{WorkingHourManageBean.dailyActivity.project.clientOrganization})" />
+							</div>
+							<div style="display : ${WorkingHourManageBean.dailyActivity.project.clientDept eq null
+										and WorkingHourManageBean.dailyActivity.project.clientIncharge eq null
+										and WorkingHourManageBean.dailyActivity.project.clientOrganization eq null ? 'block' : 'none'}">
+								<h:outputText value="--------"></h:outputText>
+							</div>
+						</td>
+
+					</tr>
+				</table>
+				<table>
+					<tr>
+						<td><p:commandButton value="#{label['COMMON_SHOW_BTN']}"
+								id="show" update=":WorkingHrManagementTableForm"
+								action="#{WorkingHourManageBean.show}" disabled="#{WorkingHourManageBean.btnShow}"/></td>
+					</tr>
+				</table>
+			</h:form>
+			<h:form id="WorkingHrManagementTableForm">
+				<p:separator style="height:5px;margin-top: 2px;margin-bottom: 2px;" />
+				<p></p>
+				<h:commandLink process="@this" title="Go To Detail Information"
+					action="#{WorkingHourManageBean.detail(WorkingHourManageBean.monthlyRptDataMap,screenId)}"
+					rendered="#{WorkingHourManageBean.detailLnkVisible}">
+					<h:outputText id="detailLnk" value="Go To Detail Information"
+						style="text-decoration:none;color:green;" />
+				</h:commandLink>
+				<p:dataTable id="workinghrtable" var="workinghrlist"
+					value="#{WorkingHourManageBean.calculateDataList}"
+					styleClass="whmBackStyle" tableStyle="#{empty WorkingHourManageBean.calculateDataList? 'width:100%;': 'width:auto;'}" rowIndexVar="index" paginator="true"
+					rows="5" emptyMessage="There is no record!"
+					paginatorTemplate="{CurrentPageReport}  {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"
+					rowsPerPageTemplate="5,10, 15, 20, 30">
+					<p:columnGroup type="header" style="height:30px;">
+						<p:row>
+							<p:column rowspan="2" headerText="Month" />
+							<p:column rowspan="2" headerText="Project ID" />
+							<p:column rowspan="2" headerText="Project Name" />
+							<p:column rowspan="2" headerText="Members" />
+							<p:column rowspan="2" headerText="Total Hours (monthly)" />
+							<p:column rowspan="2" headerText="Actual Total Hours (monthly)" />
+							<p:column colspan="8" headerText="By Category" />
+							<p:column colspan="8" headerText="By Tasks Summary" />
+						</p:row>
+						<!-- 
+							Modified By: Aung Htay Oo
+							Modified Date : 2017/11/08
+							Explanation : Display numbers in '#,##0.00' pattern and adjust columns width.
+ 						-->
+						<p:row>
+							<p:column colspan="2" headerText="Project Management" style="text-align:center;width:120px;" />
+							<p:column colspan="2" headerText="Task Management" style="text-align:center;width:120px;" />
+							<p:column colspan="2" headerText="Others" style="text-align:center;width:120px;" />
+							<p:column colspan="2" headerText="Idling" style="text-align:center;width:120px;" />
+							<p:column colspan="2" headerText="Actual Work" style="text-align:center;width:120px;" />
+							<p:column colspan="2" headerText="Internal Work" style="text-align:center;width:120px;" />
+							<p:column colspan="2" headerText="Waiting Time" style="text-align:center;width:120px;" />
+							<p:column colspan="2" headerText="Idling Time" style="text-align:center;width:120px;" />
+						</p:row>
+						<p:row></p:row>
+					</p:columnGroup>
+					<p:column headerText="Month" style="text-align:center;width:80px;">
+						<h:outputText id="month" value="#{workinghrlist.month}" />
+					</p:column>
+
+					<p:column headerText="Project ID" style="text-align:center;width:130px;">
+						<h:outputText id="projectID" value="#{workinghrlist.projectID}" />
+					</p:column>
+
+					<p:column headerText="Project Name" style="text-align:left;width:150px;">
+						<h:outputText id="projectName"
+							value="#{workinghrlist.projectName}" />
+					</p:column>
+
+					<p:column headerText="Members" style="text-align:center;">
+						<h:outputText id="members" value="#{workinghrlist.members}" />
+					</p:column>
+
+					<p:column headerText="Total Hours (Monthly)"
+						style="text-align:center;width:50px;">
+						<h:outputText id="totalHours" value="#{workinghrlist.totalHours}">
+							<f:convertNumber type="number" pattern="#,##0.00"/>
+						</h:outputText>
+					</p:column>
+
+					<p:column headerText="Actual Total Hours (monthly)"
+						style="text-align:center;">
+						<h:outputText id="acutalTotalHours" value="#{workinghrlist.actualTotalHours}">
+							<f:convertNumber type="number" pattern="#,##0.00"/>
+						</h:outputText>
+					</p:column>
+
+					<p:column headerText="Project Management"
+						style="text-align:center;width:35px;">
+						<h:outputText id="projectMgt" value="#{workinghrlist.projectMgt}">
+							<f:convertNumber type="number" pattern="#,##0.00"/>
+						</h:outputText>
+					</p:column>
+
+					<p:column headerText="Project Management"
+						style="text-align:center;width:35px;">
+						<h:outputText id="projectMgtPercent" value="#{workinghrlist.projectMgtPercent}"/>
+					</p:column>
+
+					<p:column headerText="Task Management" style="text-align:center;width:35px;">
+						<h:outputText id="taskMgt" value="#{workinghrlist.taskMgt}">
+							<f:convertNumber type="number" pattern="#,##0.00"/>
+						</h:outputText>
+					</p:column>
+
+					<p:column headerText="Task Management" style="text-align:center;width:35px;">
+						<h:outputText id="taskMgtPercent"
+							value="#{workinghrlist.taskMgtPercent}" />
+					</p:column>
+
+					<p:column headerText="Others" style="text-align:center;width:35px;">
+						<h:outputText id="others" value="#{workinghrlist.others}">
+							<f:convertNumber type="number" pattern="#,##0.00"/>
+						</h:outputText>
+					</p:column>
+
+					<p:column headerText="Others" style="text-align:center;width:35px;">
+						<h:outputText id="othersPercent"
+							value="#{workinghrlist.othersPercent}" />
+					</p:column>
+
+					<p:column headerText="Idling" style="text-align:center;width:35px;">
+						<h:outputText id="idling" value="#{workinghrlist.idling}">
+							<f:convertNumber type="number" pattern="#,##0.00"/>
+						</h:outputText>
+					</p:column>
+
+					<p:column headerText="Idling" style="text-align:center;width:35px;">
+						<h:outputText id="idlingPercent"
+							value="#{workinghrlist.idlingPercent}" />
+					</p:column>
+
+					<p:column headerText="Actual Work" style="text-align:center;width:35px;">
+						<h:outputText id="actualWork" value="#{workinghrlist.actualwork}">
+							<f:convertNumber type="number" pattern="#,##0.00"/>
+						</h:outputText>
+					</p:column>
+
+					<p:column headerText="Actual Work" style="text-align:center;width:35px;">
+						<h:outputText id="actualWorkPercent"
+							value="#{workinghrlist.actualWorkPercent}" />
+					</p:column>
+
+					<p:column headerText="Internal Work" style="text-align:center;width:35px;">
+						<h:outputText id="internalWork" value="#{workinghrlist.internalwork}">
+							<f:convertNumber type="number" pattern="#,##0.00"/>
+						</h:outputText>
+					</p:column>
+
+					<p:column headerText="Internal Work" style="text-align:center;width:35px;">
+						<h:outputText id="internalWorkPercent" value="#{workinghrlist.internalWorkPercent}"/>
+					</p:column>
+
+					<p:column headerText="Waiting Time" style="text-align:center;width:35px;">
+						<h:outputText id="waitingTime" value="#{workinghrlist.waitingTime}">
+							<f:convertNumber type="number" pattern="#,##0.00"/>
+						</h:outputText>
+					</p:column>
+
+					<p:column headerText="Waiting Time" style="text-align:center;width:35px;">
+						<h:outputText id="waitingTimePercent"
+							value="#{workinghrlist.waitingTimePercent}" />
+					</p:column>
+
+					<p:column headerText="Idling Time" style="text-align:center;width:35px;">
+						<h:outputText id="idlingTime" value="#{workinghrlist.idlingTime}">
+							<f:convertNumber type="number" pattern="#,##0.00"/>
+						</h:outputText>
+					</p:column>
+
+					<p:column headerText="Idling Time" style="text-align:center;width:35px;">
+						<h:outputText id="idlingTimePercent"
+							value="#{workinghrlist.idlingTImePercent}" />
+					</p:column>
+				</p:dataTable>
+				<!-- 
+				 	Modified By : Aung Htay Oo.
+				 	Modified Date : 2017-11-09
+				 	Explanation : Change height of chart elements.
+				  -->
+				<table>
+					<tr>
+						<td width="800px"><p:panel id="category"
+								rendered="#{WorkingHourManageBean.detailLnkVisible}">
+								<p:chart id="categoryLineChart" type="line" yaxisAngle="60"
+									model="#{WorkingHourManageBean.categoryLineChart}"
+									style="height:350px;" />
+							</p:panel></td>
+						<td width="800px"><p:panel id="task"
+								rendered="#{WorkingHourManageBean.detailLnkVisible}">
+								<p:chart id="taskLineChart" type="line" yaxisAngle="60"
+									model="#{WorkingHourManageBean.taskLineChart}"
+									style="height:350px;" />
+							</p:panel></td>
+					</tr>
+				</table>
+			</h:form>
+		</h:body>
+		<script type="text/javascript">
+			history.pushState(null, null, document.URL);
+			window.addEventListener('popstate', function() {
+				history.pushState(null, null, document.URL);
+			});
+			function disableF5(e) {
+				if ((e.which || e.keyCode) == 116
+						|| (e.which || e.keyCode) == 82) {
+					e.preventDefault();
+				}
+			};
+			$(document).bind("load", disableF5);
+		</script>
+	</ui:define>
+</ui:composition>

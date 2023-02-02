@@ -1,0 +1,108 @@
+<!-- 
+	Created By: Kyi Saw Win,Ye Thu Naing
+	Created Date : 2017/09/25
+	Explanation : Created for Phase III.
+ -->
+ <!-- 
+	Modified By: Aung Htay Oo
+	Modified Date : 2017/11/08
+	Explanation : Display numbers in '#,##0.00' pattern.
+ -->
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:p="http://primefaces.org/ui"
+	template="/common/commonLayout.xhtml">
+	<ui:param name="leftMenu" value="/common/adminLeft.xhtml" />
+	<ui:param name="rendered" value="true" />
+	<ui:define name="content">
+		<h:form id="workinghrManagementForm" styleClass="form-horizontal">
+			<h:outputText value="Working Hour Management (Detail)"
+				style="margin-top: 0px; margin-bottom: 10px;font-size:20px;" />
+			<p:separator style="height:5px;margin-top: 2px;margin-bottom: 2px;" />
+			<p:commandButton id="backBtn" process="@form"
+				value="#{label['COMMON_BACK_BTN']}"
+				action="#{WorkingHourManageDetailBean.back}" style="font-size:13px;"
+				ajax="false">
+			</p:commandButton>
+			<table class="weeklyRptTbl" style="width: 100%" id="dataTable">
+				<tr>
+					<ui:repeat var="column"
+						value="#{WorkingHourManageDetailBean.columnList}">
+						<th>#{column}</th>
+					</ui:repeat>
+				</tr>
+				<ui:repeat var="data"
+					value="#{WorkingHourManageDetailBean.viewDataList}">
+					<tr>
+						<td
+							style="border-bottom: 1px solid #d4ccb0; border-right: 1px solid #d4ccb0; border-left: 1px solid #d4ccb0;">#{data.summary}</td>
+						<td
+							style="border-bottom: 1px solid #d4ccb0; border-right: 1px solid #d4ccb0; border-left: 1px solid #d4ccb0;">#{data.mainCategory}</td>
+						<td
+							style="border-bottom: 1px solid #d4ccb0; border-right: 1px solid #d4ccb0; border-left: 1px solid #d4ccb0;">#{data.category}</td>
+						<ui:repeat var="detailData" value="#{data.dataList}">
+							<td style="border-bottom: 1px solid #d4ccb0; border-right: 1px solid #d4ccb0; border-left: 1px solid #d4ccb0;">
+								<h:outputText value="#{detailData}" id="detailDataText">
+									<f:convertNumber type="number" pattern="#,##0.00"/>
+								</h:outputText>
+							</td>
+						</ui:repeat>
+					</tr>
+				</ui:repeat>
+				<tr>
+					<td colspan="3"
+						style="border-bottom: 1px solid #d4ccb0; border-right: 1px solid #d4ccb0; border-left: 1px solid #d4ccb0; text-align: right; font-size: medium; font-weight: bold;">Total</td>
+					<ui:repeat var="totalData"
+						value="#{WorkingHourManageDetailBean.totalList}">
+						<td style="border-bottom: 1px solid #d4ccb0; border-right: 1px solid #d4ccb0; border-left: 1px solid #d4ccb0; font-size: medium; font-weight: bold;">	
+							<h:outputText value="#{totalData}" id="totalDataText">
+								<f:convertNumber type="number" pattern="#,##0.00"/>
+							</h:outputText>
+						</td>
+					</ui:repeat>
+				</tr>
+			</table>
+		</h:form>
+		<script type="text/javascript">
+			history.pushState(null, null, document.URL);
+			window.addEventListener('popstate', function() {
+				history.pushState(null, null, document.URL);
+			});
+			function disableF5(e) {
+				if ((e.which || e.keyCode) == 116
+						|| (e.which || e.keyCode) == 82) {
+					e.preventDefault();
+				}
+			};
+			$(document).bind("load", disableF5);
+			function MergeCommonRows(table, columnIndexToMerge) {
+				previous = null;
+				cellToExtend = null;
+				table.find("td:nth-child(" + columnIndexToMerge + ")").each(
+						function() {
+							jthis = $(this);
+							content = jthis.text()
+							if (previous == content) {
+								jthis.remove();
+								if (cellToExtend.attr("rowspan") == undefined) {
+									cellToExtend.attr("rowspan", 2);
+								} else {
+									currentrowspan = parseInt(cellToExtend
+											.attr("rowspan"));
+									cellToExtend.attr("rowspan",
+											currentrowspan + 1);
+								}
+							} else {
+								previous = content;
+								cellToExtend = jthis;
+							}
+						});
+			};
+
+			MergeCommonRows($("#dataTable"), 2);
+			MergeCommonRows($("#dataTable"), 1);
+		</script>
+	</ui:define>
+</ui:composition>

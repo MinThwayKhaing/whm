@@ -1,0 +1,203 @@
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:p="http://primefaces.org/ui">
+<h:head>
+	<title>Daily Activity Record</title>
+</h:head>
+<h:body onload="#{DailyActivityManageBean.changeActivity()}">
+	<h:form id="activityEntryForm">
+		<p:scrollPanel mode="native" style="width:450px;height:600px">
+			<table>
+				<tr>
+					<td></td>
+					<td><p:message for="project" display="text" /></td>
+				</tr>
+				<tr>
+					<td><label>Project ID</label></td>
+					<td><p:selectOneMenu id="project"
+							value="#{DailyActivityManageBean.dailyActivity.project}"
+							converter="omnifaces.SelectItemsConverter" style="width:280px;"
+							filter="true" filterMatchMode="contains">
+							<f:selectItem itemLabel="-" itemValue="#{null}" />
+							<f:selectItems var="project"
+								value="#{DailyActivityManageBean.projects}"
+								itemLabel="#{project.id}" itemValue="#{project}" />
+							<p:ajax listener="#{DailyActivityManageBean.changeProject()}"
+								update="projectName" />
+						</p:selectOneMenu></td>
+				</tr>
+				<tr>
+					<td><label>Project Name:</label></td>
+					<td><h:outputText id="projectName"
+							value="#{DailyActivityManageBean.projectName}" /></td>
+				</tr>
+				<tr>
+					<td></td>
+					<td><p:message for="task" display="text" /></td>
+				</tr>
+				<tr>
+					<td><label>Task</label></td>
+					<td><p:selectOneMenu id="task"
+							value="#{DailyActivityManageBean.dailyActivity.task}"
+							converter="omnifaces.SelectItemsConverter" style="width:280px;">
+							<f:selectItems var="task"
+								value="#{DailyActivityManageBean.tasks}"
+								itemLabel="#{task.description}" itemValue="#{task}" />
+						</p:selectOneMenu></td>
+				</tr>
+				<tr>
+					<td></td>
+					<td><p:message for="activity" display="text" /></td>
+				</tr>
+				<tr>
+					<td><label>Activity</label></td>
+					<td><p:selectOneMenu id="activity"
+							value="#{DailyActivityManageBean.dailyActivity.taskActivity}"
+							converter="omnifaces.SelectItemsConverter" style="width:280px;">
+							<f:selectItems var="taskActivity"
+								value="#{DailyActivityManageBean.taskActivities}"
+								itemLabel="#{taskActivity.description}"
+								itemValue="#{taskActivity}" />
+						</p:selectOneMenu></td>
+				</tr>
+				<tr>
+					<td></td>
+					<td><p:message for="wbs" display="text" /></td>
+				</tr>
+				<tr>
+					<td><label>WBS No</label></td>
+					<td><p:inputText id="wbs"
+							value="#{DailyActivityManageBean.dailyActivity.wbs}"
+							maxlength="15" style="width:320px;">
+						</p:inputText></td>
+				</tr>
+				<tr>
+					<td></td>
+					<td><p:message for="wbsFunction" display="text" /></td>
+				</tr>
+				<tr>
+					<td><label>Function ID</label></td>
+					<td><p:inputText id="wbsFunction"
+							value="#{DailyActivityManageBean.dailyActivity.wbsFunction}"
+							maxlength="15" style="width:320px;">
+						</p:inputText></td>
+				</tr>
+				<tr>
+					<td></td>
+					<td><p:message for="description" display="text" /></td>
+				</tr>
+				<tr>
+					<td><label>Description</label><span style="color: red;">*</span></td>
+					<td><p:inputTextarea id="description"
+							value="#{DailyActivityManageBean.dailyActivity.taskDescription}"
+							rows="5" cols="30" maxlength="250" style="width:320px;"
+							required="true" /></td>
+				</tr>
+				<tr>
+					<td></td>
+					<td><p:message for="delivery" display="text" /></td>
+				</tr>
+				<tr>
+					<td><label>Deliverables</label></td>
+					<td><p:inputTextarea id="delivery"
+							value="#{DailyActivityManageBean.dailyActivity.deliveryOutput}"
+							rows="5" cols="30" maxlength="250" style="width:320px;" /></td>
+				</tr>
+				<tr>
+					<td></td>
+					<td><p:message for="activityHours" display="text" /></td>
+				</tr>
+				<tr>
+					<td><label>Hours</label><span style="color: red;">*</span></td>
+					<td><p:inputText id="activityHours"
+							value="#{DailyActivityManageBean.dailyActivity.activityHours}"
+							placeholder="0.1 to 24" required="true" style="width:320px;">
+							<f:validateDoubleRange minimum="0.1" maximum="24.0" />
+						</p:inputText></td>
+				</tr>
+				<tr>
+					<td></td>
+					<td><p:message for="progress" display="text" size="100" /></td>
+				</tr>
+				<tr>
+					<td><label>Progress %</label></td>
+					<td><p:inputText id="progress"
+							value="#{DailyActivityManageBean.dailyActivity.progressPercentage}"
+							placeholder="0 to 100" style="width:320px;">
+							<f:validateDoubleRange minimum="0.0" maximum="100.0" />
+						</p:inputText></td>
+				</tr>
+				<tr>
+					<td></td>
+					<td><p:message for="beginDate" /></td>
+				</tr>
+				<tr>
+					<td width="120px;"><span class="cmms-label">Begin Date</span></td>
+					<td><p:calendar id="beginDate"
+							value="#{DailyActivityManageBean.dailyActivity.beginDate}"
+							pattern="yyyy/MM/dd" widgetVar="calendarWidget">
+						</p:calendar></td>
+				</tr>
+				<tr>
+					<td></td>
+					<td><p:message for="endDate" /></td>
+				</tr>
+				<tr>
+					<td width="120px;"><span class="cmms-label">End Date</span></td>
+					<td><p:calendar id="endDate"
+							value="#{DailyActivityManageBean.dailyActivity.endDate}"
+							pattern="yyyy/MM/dd" widgetVar="calendarWidget">
+						</p:calendar></td>
+				</tr>
+				<tr>
+					<td></td>
+					<td><p:message for="status" display="text" size="100" /></td>
+				</tr>
+				<tr>
+					<td><label>Status</label></td>
+					<td><p:selectOneMenu id="status"
+							value="#{DailyActivityManageBean.dailyActivity.taskStatus}"
+							converter="omnifaces.SelectItemsConverter" style="width:280px;">
+							<f:selectItem itemLabel="-" itemValue="#{null}" />
+							<f:selectItems value="#{DailyActivityManageBean.taskStatuses}" />
+							   <f:ajax render="count" />
+						</p:selectOneMenu></td>
+				</tr>
+				<tr>
+					<td></td>
+					<td><p:message for="count" display="text" size="100" /></td>
+				</tr>
+				<tr>
+					<td><label>Task Status Count</label></td>
+					<td><p:inputText id="count" disabled="#{DailyActivityManageBean.dailyActivity.taskStatus==null}"
+							value="#{DailyActivityManageBean.dailyActivity.taskStatusCount}"
+							placeholder="Number of days for Delay/Forward" style="width:320px;">
+						</p:inputText></td>
+				</tr>
+				<tr>
+					<td></td>
+					<td><p:message for="reason" display="text" /></td>
+				</tr>
+				<tr>
+					<td><label>Reason</label></td>
+					<td><p:inputTextarea id="reason"
+							value="#{DailyActivityManageBean.dailyActivity.reason}" rows="5"
+							cols="30" maxlength="250" style="width:320px;" /></td>
+				</tr>
+				<tr>
+					<td colspan="5"><p:commandButton value="Add"
+							actionListener="#{DailyActivityManageBean.closeForm(DailyActivityManageBean.dailyActivity)}"
+							update="activityEntryForm" /></td>
+				</tr>
+				<tr>
+					<td></td>
+				</tr>
+				<tr>
+					<td></td>
+				</tr>
+			</table>
+		</p:scrollPanel>
+	</h:form>
+</h:body>
+</html>

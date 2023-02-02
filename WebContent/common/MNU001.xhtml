@@ -1,0 +1,94 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:p="http://primefaces.org/ui">
+	<style type="text/css">
+.ui-layout-north {
+	z-index: 20 !important;
+	overflow: visible !important;;
+}
+
+.ui-layout-north .ui-layout-unit-content {
+	overflow: visible !important;
+}
+
+ul.ui-widget-content.ui-menu-list.ui-menu-child {
+	width: 270px;
+}
+
+</style>
+	<h:form>
+		<!-- 
+			Revised By : Sai Kyaw Ye Myint
+			Revised Date : 2017/09/04
+			Explanation: Modify screen id and added new menu link.
+		-->
+		<div class="whmMenu">
+			<p:menubar>
+						<p:submenu rendered="true" label="Daily Activity" style="color : #ffffff;">
+							<p:menuitem value="Registration" action="register"
+								icon="ui-icon-pencil" ajax="false"></p:menuitem>
+								<p:menuitem value="RegistrationTest" action="registerTest"
+								icon="ui-icon-pencil" ajax="false"></p:menuitem>
+							<p:menuitem value="Daily Inquiry" action="dailyReportInquiry"
+								icon="ui-icon-search" ajax="false"></p:menuitem>
+							<p:menuitem value="Weekly Inquiry"
+								rendered="#{sessionScope.loginUser.authorities.size() != 0 or sessionScope.loginUser.role=='ADMIN'}"
+								action="weeklyReportInquiry" icon="ui-icon-calendar"
+								ajax="false"></p:menuitem>
+							<p:menuitem value="Export" action="dailyReportExcelExport"
+								icon="ui-icon-arrowthickstop-1-s" ajax="false"></p:menuitem>
+								<p:submenu label="Daily Report Registration Status" icon="ui-icon-document" style="color : #ffffff;">
+								<p:menuitem value="Admin and Manager" action="dRRegStatusAdminManager" icon="ui-icon-person" ajax="false" rendered="#{sessionScope.loginUser.role=='ADMIN' or sessionScope.loginUser.role=='MANAGEMENT'?true:false}"></p:menuitem>
+								<p:menuitem value="Individual" action="dailyReportStatusIndividual" icon="ui-icon-person" ajax="false"></p:menuitem>
+							</p:submenu>
+							</p:submenu>
+						<p:submenu label="Report" style="color : #ffffff;"
+							rendered="#{sessionScope.loginUser.role=='ADMIN' or sessionScope.loginUser.role=='MANAGEMENT'?true:false}">
+							<p:menuitem value="Actual Project Working Hour"
+								action="actualProject" icon="ui-icon-document" ajax="false"></p:menuitem>
+							<p:submenu label="Working Hour Management" icon="ui-icon-document-b" style="color : #ffffff;">
+								<p:menuitem value="Team" action="workinghrManagementTeam" icon="ui-icon-contact" ajax="false"></p:menuitem>	
+								<p:menuitem value="Individual" action="workingHourManagementIndividual" icon="ui-icon-person" ajax="false"></p:menuitem>	
+								<p:menuitem value="Project" action="workinghrManagementProject" icon="ui-icon-suitcase" ajax="false"></p:menuitem>
+							</p:submenu>
+							<p:menuitem value="Project Status Summary"
+								action="projectSummary" icon="ui-icon-flag" ajax="false"></p:menuitem>
+						</p:submenu>
+						<p:submenu style="color : #ffffff;"
+							rendered="#{sessionScope.loginUser.role=='ADMIN' or sessionScope.loginUser.role=='MANAGEMENT'?true:false}"
+							toggleable="true" label="Administration">
+							<p:menuitem value="Users" action="manageUser"
+								icon="ui-icon-person" ajax="false" rendered="#{sessionScope.loginUser.role=='ADMIN'?true:false}">
+							</p:menuitem>
+							<p:menuitem value="Teams"
+								action="manageTeam" icon="ui-icon-contact" ajax="false" rendered="#{sessionScope.loginUser.role=='ADMIN'?true:false}">
+							</p:menuitem>
+							<p:submenu icon="ui-icon-suitcase" label="Projects" rendered="#{sessionScope.loginUser.role=='ADMIN' or sessionScope.loginUser.role=='MANAGEMENT'?true:false}">
+								<p:menuitem value="Project Information Form"
+								action="projectInformation" icon="ui-icon-document-b" ajax="false"></p:menuitem>
+							</p:submenu>
+							<p:menuitem value="Holidays" icon="ui-icon-calendar"
+								action="manageHoliday" ajax="false" rendered="#{sessionScope.loginUser.role=='ADMIN'?true:false}">
+							</p:menuitem>
+							<p:menuitem value="Working Hour" icon="ui-icon-clock"
+								action="manageWorkingHour" ajax="false" rendered="#{sessionScope.loginUser.role=='ADMIN'?true:false}">
+							</p:menuitem>				
+							<p:menuitem value="HR Overhead Cost Management" icon="ui-icon-calculator"
+								action="HRCost" ajax="false" rendered="#{sessionScope.loginUser.role=='ADMIN'?true:false}">
+							</p:menuitem>
+						</p:submenu>
+					</p:menubar>
+		</div>
+		<div class="whmRightMenu">
+			<p:menuButton value="#{sessionScope.loginUser.fullName}"
+				rendered="#{!empty sessionScope.loginUser}">
+				<p:menuitem value="Password Change" icon="ui-icon-gear" action="passwordChange"  ajax="false"/>
+				<p:menuitem value="#{label['LOOUT_LABEL']}" icon="ui-icon-power" action="#{LoginBean.logout}" immediate="true"
+				rendered="#{!empty sessionScope.loginUser}"/>
+			</p:menuButton>
+			<p:spacer width="20"/>
+		</div>
+	</h:form>
+</ui:composition>

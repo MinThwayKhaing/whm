@@ -1,0 +1,217 @@
+<!-- 
+	Created By: Sai Kyaw Ye Myint
+	Created Date : 2018/04/30
+	Explanation : Created for Phase IV.
+ -->
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:p="http://primefaces.org/ui"
+	template="/common/commonLayout.xhtml">
+	<ui:define name="content">
+		<h:body >
+			<table width="100%">
+				<tr>
+					<td></td>
+					<td width="70%" align="center">
+						<div
+							style="z-index: 100; position: fixed; margin-top: -30px; width: 700px;">
+							<p:messages showDetail="true" id="messages"
+								closable="true" />
+						</div>
+					</td>
+				</tr>
+			</table>
+			
+			<h:outputText value="Working Hour Management Report (Team)" style="margin-top: 0px; margin-bottom: 10px;font-size:20px;" />
+			<p:separator style="height:5px;margin-top: 2px;margin-bottom: 2px;" />
+			
+			<h:form id="workingHourMgtTeamEntryForm">
+				<table>
+					
+					<tr>
+						<td width="120px;"><span class="cmms-label">Team ID</span><span style="color: red;">*</span></td>
+						<td>:</td>
+						<td>
+							<p:message id="teamIDMsg" for="teamID"/>
+							<p:selectOneMenu id="teamID"
+									value="#{WorkingHourManagementTeamBean.selectTeam}"
+									converter="omnifaces.SelectItemsConverter" style="width:120px;"
+									filter="true" filterMatchMode="contains">
+									<f:selectItem itemLabel="-" itemValue="#{null}" />
+									<f:selectItems var="team"
+									value="#{WorkingHourManagementTeamBean.teams}"
+									itemLabel="#{team.teamName}" itemValue="#{team}" />
+									<p:ajax update="workingHourMgtTeamEntryForm :serachResultForm startYear startMonth teamName endYear endMonth messages" 
+									event="change" listener="#{WorkingHourManagementTeamBean.teamSelect}" />									
+									<p:ajax update="workingHourMgtTeamEntryForm :serachResultForm startYear startMonth teamName endYear endMonth messages" 
+									event="blur" listener="#{WorkingHourManagementTeamBean.teamSelect}" />
+							</p:selectOneMenu></td>
+						<td></td>
+						<td></td>
+						<td width="120px;"><span class="cmms-label">Start Year</span><span style="color: red;">*</span></td>
+						<td>:</td>
+						<td>
+							<p:message id="startYearMsg" for="startYear"/>
+							<p:selectOneMenu id="startYear"
+									value="#{WorkingHourManagementTeamBean.startYear}" style="width:120px;"
+									filter="true" filterMatchMode="contains">
+									<f:selectItem itemLabel="-" itemValue="#{null}" />
+									<f:selectItems var="year"
+									value="#{WorkingHourManagementTeamBean.years}"
+									itemLabel="#{year}" itemValue="#{year}" />
+								</p:selectOneMenu></td>
+						<td></td>
+						<td></td>
+						<td width="120px;"><span class="cmms-label">Start Month</span><span style="color: red;">*</span></td>
+						<td>:</td>
+						<td>
+							<p:message id="startMonthMsg" for="startMonth"/>
+							<p:selectOneMenu id="startMonth"
+									value="#{WorkingHourManagementTeamBean.startMonth}"
+									converter="omnifaces.SelectItemsConverter" style="width:120px;"
+									filter="true" filterMatchMode="contains">
+									<f:selectItem itemLabel="-" itemValue="#{null}" />
+									<f:selectItems var="month"
+									value="#{WorkingHourManagementTeamBean.months}"
+									itemLabel="#{month}" itemValue="#{month}" />
+								</p:selectOneMenu></td>
+					</tr>
+					<tr>
+						<td width="120px;"><span class="cmms-label">Team Name</span></td>
+						<td>:</td>
+						<td><h:outputText id="teamName"
+							style="display:block;width:200px; word-wrap:break-word;font-size:12px;"
+							value="${empty WorkingHourManagementTeamBean.selectTeam.fullName 
+									or WorkingHourManagementTeamBean.selectTeam.fullName eq null? '--------'
+									: WorkingHourManagementTeamBean.selectTeam.fullName}" />
+						</td>
+						<td></td>
+						<td></td>
+						<td width="120px;"><span class="cmms-label">End Year</span><span style="color: red;">*</span></td>
+						<td>:</td>
+						<td>
+							<p:message id="endYearMsg" for="endYear"/>
+							<p:selectOneMenu id="endYear"
+									value="#{WorkingHourManagementTeamBean.endYear}" style="width:120px;"
+									filter="true" filterMatchMode="contains">
+									<f:selectItem itemLabel="-" itemValue="#{null}" />
+									<f:selectItems var="year"
+									value="#{WorkingHourManagementTeamBean.years}"
+									itemLabel="#{year}" itemValue="#{year}" />
+								</p:selectOneMenu></td>
+						<td></td>
+						<td></td>
+						<td width="120px;"><span class="cmms-label">End Month</span><span style="color: red;">*</span></td>
+						<td>:</td>
+						<td>
+							<p:message id="endMonthMsg" for="endMonth"/>
+							<p:selectOneMenu id="endMonth"
+									value="#{WorkingHourManagementTeamBean.endMonth}"
+									converter="omnifaces.SelectItemsConverter" style="width:120px;"
+									filter="true" filterMatchMode="contains">
+									<f:selectItem itemLabel="-" itemValue="#{null}" />
+									<f:selectItems var="month"
+									value="#{WorkingHourManagementTeamBean.months}"
+									itemLabel="#{month}" itemValue="#{month}" />
+							</p:selectOneMenu></td>
+					</tr>
+				</table>
+				<p:commandButton id="showBtn" value="Show"
+						process="@form" ajax="true" actionListener="#{WorkingHourManagementTeamBean.show()}" disabled="#{WorkingHourManagementTeamBean.searchBtnCtl}"
+						update=":serachResultForm :messages :workingHourMgtTeamEntryForm" />
+				<p:spacer width="5px"/>
+				<p:commandButton id="exportBtn" value="Export" icon="ui-icon-arrowthick-1-s"
+						actionListener="#{WorkingHourManagementTeamBean.export}" disabled="#{WorkingHourManagementTeamBean.exportBtnCtl}"
+						onclick="PrimeFaces.monitorDownload(start, stop);">
+						<p:fileDownload value="#{WorkingHourManagementTeamBean.download}" />
+				</p:commandButton>
+			</h:form>
+			
+			<p:separator style="height:5px;margin-top: 2px;margin-bottom: 2px;" />
+
+			<h:form id="serachResultForm">
+				
+				<h:commandLink id="detailLink" action="#{WorkingHourManagementTeamBean.detail()}" rendered="#{WorkingHourManagementTeamBean.searchResultCtl}">
+					<h:outputText id="detailLnk" value="Go To Detail Information"
+						style="text-decoration:none;color:green;" />
+				</h:commandLink>
+				
+				<div class="workingHoruManagemntTeamTable">
+					<p:panelGrid id="resultTable" rendered="#{WorkingHourManagementTeamBean.searchResultCtl}">
+						<f:facet name="header">
+							<ui:repeat var="rowRepeat" value="#{WorkingHourManagementTeamBean.rowRepeat}">
+								<p:row>
+									<p:column rowspan="2">Team</p:column>
+									<p:column rowspan="2">Members</p:column>
+									<p:column rowspan="2">Project ID</p:column>
+									<p:column rowspan="2">Project Name</p:column>
+									<ui:repeat var="yearMonth" value="#{WorkingHourManagementTeamBean.yearMonth}">
+										<p:column colspan="3">#{yearMonth}</p:column>
+									</ui:repeat>
+								</p:row>
+								<p:row>
+									<ui:repeat var="yearMonth" value="#{WorkingHourManagementTeamBean.yearMonth}">
+										<p:column>Members</p:column>
+										<p:column>Hour</p:column>
+										<p:column>M-M</p:column>
+									</ui:repeat>
+								</p:row>
+							</ui:repeat>
+						</f:facet>
+						<ui:repeat var="workingHourManagementTeamView" value="#{WorkingHourManagementTeamBean.viewData}">
+							<p:row>
+								<p:column rowspan="#{workingHourManagementTeamView.projectDivision.size() + 2}"><h:outputText value="#{workingHourManagementTeamView.teamId}"/></p:column>
+								<p:column rowspan="#{workingHourManagementTeamView.projectDivision.size() + 2}"><h:outputText value="#{workingHourManagementTeamView.members}"/></p:column>
+							</p:row>
+							<ui:repeat var="projectDivision" value="#{workingHourManagementTeamView.projectDivision}">
+									<p:row>
+										<p:column><h:outputText value="#{projectDivision.projectId}"/></p:column>
+										<p:column><h:outputText value="#{projectDivision.projectName}"/></p:column>
+										<ui:repeat var="yearMonthDivision" value="#{projectDivision.yearMonthDivision}">
+											<p:column><h:outputText value="#{yearMonthDivision.member}" /></p:column>
+											<p:column>
+													  <h:outputText value="#{yearMonthDivision.hour}" >
+													  	<f:convertNumber type="number" groupingUsed="true" minFractionDigits="2" pattern="#0.000"/>
+													  </h:outputText>
+											</p:column>
+											<p:column>
+													  <h:outputText value="#{yearMonthDivision.manMonth}" >
+													  	<f:convertNumber type="number" groupingUsed="true" minFractionDigits="2" pattern="#0.000"/>
+													  </h:outputText>
+											</p:column>
+										</ui:repeat>
+									</p:row>
+							</ui:repeat>
+							<p:row>
+									<p:column colspan="2"><h:outputText value="Total"/></p:column>
+									<ui:repeat var="yearMonthDivision" value="#{WorkingHourManagementTeamBean.totalRow.yearMonthDivision}">
+										<p:column><h:outputText value="#{yearMonthDivision.member}" /></p:column>
+										<p:column>
+												  <h:outputText value="#{yearMonthDivision.hour}" >
+												  	<f:convertNumber type="number" groupingUsed="true" minFractionDigits="2" pattern="#0.000"/>
+												  </h:outputText>
+										</p:column>
+										<p:column>
+												  <h:outputText value="#{yearMonthDivision.manMonth}" >
+												  	<f:convertNumber type="number" groupingUsed="true" minFractionDigits="2" pattern="#0.000"/>
+												  </h:outputText>
+										</p:column>
+									</ui:repeat>
+							</p:row>
+						</ui:repeat>
+					</p:panelGrid>
+				</div>
+			</h:form>
+			
+		</h:body>
+		<style>
+			.ui-widget-header {
+			    border: 1px solid #327e04;
+			    background: #63b175;
+			    color: #FFFF;
+			}
+		</style>
+	</ui:define>
+</ui:composition>

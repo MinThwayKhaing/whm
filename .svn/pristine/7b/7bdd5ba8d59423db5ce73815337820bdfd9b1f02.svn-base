@@ -1,0 +1,30 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:h="http://java.sun.com/jsf/html">
+	<ui:param name="contentTitle" value="Oh! 500 Error" />
+	<form style="background-color: #dfd9c3">
+		<table width="100%">
+			<tr>
+				<td>
+					<h1>
+						<font class="cmms-title">Server Error</font>
+					</h1>
+				</td>
+			</tr>
+			<tr>
+				<td>
+					<h3>
+						<font class="cmms-title">Please contact to Administrator!</font>
+					</h3>
+				</td>
+				<td></td>
+				<td></td>
+				<td></td>
+				<td><p:commandButton value="#{label['LOOUT_LABEL']}"
+						action="#{LoginBean.logout}" immediate="true"
+						rendered="#{!empty sessionScope.loginUser}" /></td>
+			</tr>
+		</table>
+	</form>
+</ui:composition>

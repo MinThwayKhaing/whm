@@ -1,0 +1,142 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<diagram model-entity="SeamPagesDiagram">
+ <item ID="*" NAME="*" PATH="*" SHAPE="24,17,0,0" TYPE="page" model-entity="SeamPagesDiagramItem">
+  <output ID="/view/dashboard.xhtml" NAME="output"
+   PATH="/view/dashboard.xhtml" TARGET="#xview#xdashboard.xhtml" model-entity="SeamPagesDiagramItemOutput"/>
+  <output ID="/view/dashboard.xhtml" NAME="output1"
+   PATH="/view/dashboard.xhtml" TARGET="#xview#xdashboard.xhtml" model-entity="SeamPagesDiagramItemOutput"/>
+  <output ID="/view/dashboard.xhtml" NAME="output2"
+   PATH="/view/dashboard.xhtml" TARGET="#xview#xdashboard.xhtml" model-entity="SeamPagesDiagramItemOutput"/>
+  <output ID="/view/todelete.xhtml" NAME="output3"
+   PATH="/view/todelete.xhtml" TARGET="#xview#xtodelete.xhtml" model-entity="SeamPagesDiagramItemOutput"/>
+  <output ID="/view/login.xhtml" NAME="output4" PATH="/view/login.xhtml"
+   TARGET="#xview#xlogin.xhtml" model-entity="SeamPagesDiagramItemOutput"/>
+  <output ID="/view/changePassword.xhtml" NAME="output5"
+   PATH="/view/changePassword.xhtml"
+   TARGET="#xview#xchangePassword.xhtml" model-entity="SeamPagesDiagramItemOutput"/>
+  <output ID="/manage/managementSetting.xhtml" NAME="output6"
+   PATH="/manage/managementSetting.xhtml"
+   TARGET="#xmanage#xmanagementSetting.xhtml" model-entity="SeamPagesDiagramItemOutput"/>
+ </item>
+ <item ID="#manage#managementSetting.xhtml"
+  NAME="#xmanage#xmanagementSetting.xhtml"
+  PATH="/manage/managementSetting.xhtml" SHAPE="728,145,0,0" TYPE="page" model-entity="SeamPagesDiagramItem">
+  <output ID="/manage/manageResource.xhtml" NAME="output"
+   PATH="/manage/manageResource.xhtml"
+   TARGET="#xmanage#xmanageResource.xhtml" model-entity="SeamPagesDiagramItemOutput"/>
+  <output ID="/manage/manageGroups.xhtml" NAME="output1"
+   PATH="/manage/manageGroups.xhtml"
+   TARGET="#xmanage#xmanageGroups.xhtml" model-entity="SeamPagesDiagramItemOutput"/>
+  <output ID="/manage/manageUsers.xhtml" NAME="output2"
+   PATH="/manage/manageUsers.xhtml" TARGET="#xmanage#xmanageUsers.xhtml" model-entity="SeamPagesDiagramItemOutput"/>
+  <output ID="/manage/manageAccessories.xhtml" NAME="output3"
+   PATH="/manage/manageAccessories.xhtml"
+   TARGET="#xmanage#xmanageAccessories.xhtml" model-entity="SeamPagesDiagramItemOutput"/>
+  <output ID="/manage/resourcePermission.xhtml" NAME="output4"
+   PATH="/manage/resourcePermission.xhtml"
+   TARGET="#xmanage#xresourcePermission.xhtml" model-entity="SeamPagesDiagramItemOutput"/>
+  <output ID="/manage/configuration.xhtml" NAME="output5"
+   PATH="/manage/configuration.xhtml"
+   TARGET="#xmanage#xconfiguration.xhtml" model-entity="SeamPagesDiagramItemOutput"/>
+ </item>
+ <item ID="org.jboss.seam.framework.EntityNotFoundException"
+  NAME="exception:org.jboss.seam.framework.EntityNotFoundException"
+  PATH="org.jboss.seam.framework.EntityNotFoundException"
+  SHAPE="24,377,0,0" TYPE="exception" model-entity="SeamPagesDiagramItem">
+  <output ID="/common/error.xhtml" NAME="output"
+   PATH="/common/error.xhtml" TARGET="#xcommon#xerror.xhtml" model-entity="SeamPagesDiagramItemOutput"/>
+ </item>
+ <item ID="javax.persistence.EntityNotFoundException"
+  NAME="exception:javax.persistence.EntityNotFoundException"
+  PATH="javax.persistence.EntityNotFoundException" SHAPE="24,481,0,0"
+  TYPE="exception" model-entity="SeamPagesDiagramItem">
+  <output ID="/common/error.xhtml" NAME="output"
+   PATH="/common/error.xhtml" TARGET="#xcommon#xerror.xhtml" model-entity="SeamPagesDiagramItemOutput"/>
+ </item>
+ <item ID="javax.persistence.EntityExistsException"
+  NAME="exception:javax.persistence.EntityExistsException"
+  PATH="javax.persistence.EntityExistsException" SHAPE="24,585,0,0"
+  TYPE="exception" model-entity="SeamPagesDiagramItem">
+  <output ID="/common/error.xhtml" NAME="output"
+   PATH="/common/error.xhtml" TARGET="#xcommon#xerror.xhtml" model-entity="SeamPagesDiagramItemOutput"/>
+ </item>
+ <item ID="javax.persistence.OptimisticLockException"
+  NAME="exception:javax.persistence.OptimisticLockException"
+  PATH="javax.persistence.OptimisticLockException" SHAPE="24,689,0,0"
+  TYPE="exception" model-entity="SeamPagesDiagramItem">
+  <output ID="/common/error.xhtml" NAME="output"
+   PATH="/common/error.xhtml" TARGET="#xcommon#xerror.xhtml" model-entity="SeamPagesDiagramItemOutput"/>
+ </item>
+ <item ID="org.jboss.seam.security.AuthorizationException"
+  NAME="exception:org.jboss.seam.security.AuthorizationException"
+  PATH="org.jboss.seam.security.AuthorizationException"
+  SHAPE="24,793,0,0" TYPE="exception" model-entity="SeamPagesDiagramItem">
+  <output ID="/common/error.xhtml" NAME="output"
+   PATH="/common/error.xhtml" TARGET="#xcommon#xerror.xhtml" model-entity="SeamPagesDiagramItemOutput"/>
+ </item>
+ <item ID="org.jboss.seam.security.NotLoggedInException"
+  NAME="exception:org.jboss.seam.security.NotLoggedInException"
+  PATH="org.jboss.seam.security.NotLoggedInException"
+  SHAPE="24,1105,0,0" TYPE="exception" model-entity="SeamPagesDiagramItem">
+  <output ID="/login.xhtml" NAME="output" PATH="/login.xhtml"
+   TARGET="#xlogin.xhtml" model-entity="SeamPagesDiagramItemOutput"/>
+ </item>
+ <item ID="javax.faces.application.ViewExpiredException"
+  NAME="exception:javax.faces.application.ViewExpiredException"
+  PATH="javax.faces.application.ViewExpiredException" SHAPE="24,897,0,0"
+  TYPE="exception" model-entity="SeamPagesDiagramItem">
+  <output ID="/common/error.xhtml" NAME="output"
+   PATH="/common/error.xhtml" TARGET="#xcommon#xerror.xhtml" model-entity="SeamPagesDiagramItemOutput"/>
+ </item>
+ <item ID="org.jboss.seam.ConcurrentRequestTimeoutException"
+  NAME="exception:org.jboss.seam.ConcurrentRequestTimeoutException"
+  PATH="org.jboss.seam.ConcurrentRequestTimeoutException"
+  SHAPE="24,1209,0,0" TYPE="exception" model-entity="SeamPagesDiagramItem"/>
+ <item NAME="exception:" SHAPE="24,1001,0,0" TYPE="exception" model-entity="SeamPagesDiagramItem">
+  <output ID="/common/error.xhtml" NAME="output"
+   PATH="/common/error.xhtml" TARGET="#xcommon#xerror.xhtml" model-entity="SeamPagesDiagramItemOutput"/>
+ </item>
+ <item NAME="#xlogin.xhtml" PATH="/login.xhtml" SHAPE="344,1105,0,0"
+  TYPE="page" model-entity="SeamPagesDiagramItem"/>
+ <item NAME="#xcommon#xerror.xhtml" PATH="/common/error.xhtml"
+  SHAPE="472,377,0,0" TYPE="page" model-entity="SeamPagesDiagramItem"/>
+ <item ID="#manage#configuration.xhtml"
+  NAME="#xmanage#xconfiguration.xhtml"
+  PATH="/manage/configuration.xhtml" SHAPE="472,697,0,0" TYPE="page" model-entity="SeamPagesDiagramItem"/>
+ <item ID="#manage#manageGroups.xhtml"
+  NAME="#xmanage#xmanageGroups.xhtml" PATH="/manage/manageGroups.xhtml"
+  SHAPE="472,1009,0,0" TYPE="page" model-entity="SeamPagesDiagramItem"/>
+ <item ID="#manage#manageUsers.xhtml" NAME="#xmanage#xmanageUsers.xhtml"
+  PATH="/manage/manageUsers.xhtml" SHAPE="664,1297,0,0" TYPE="page" model-entity="SeamPagesDiagramItem"/>
+ <item ID="#manage#manageAccessories.xhtml"
+  NAME="#xmanage#xmanageAccessories.xhtml"
+  PATH="/manage/manageAccessories.xhtml" SHAPE="1336,241,0,0"
+  TYPE="page" model-entity="SeamPagesDiagramItem"/>
+ <item ID="#manage#resourcePermission.xhtml"
+  NAME="#xmanage#xresourcePermission.xhtml"
+  PATH="/manage/resourcePermission.xhtml" SHAPE="1304,241,0,0"
+  TYPE="page" model-entity="SeamPagesDiagramItem"/>
+ <item ID="#view#todelete.xhtml" NAME="#xview#xtodelete.xhtml"
+  PATH="/view/todelete.xhtml" SHAPE="1272,241,0,0" TYPE="page" model-entity="SeamPagesDiagramItem"/>
+ <item ID="#view#login.xhtml" NAME="#xview#xlogin.xhtml"
+  PATH="/view/login.xhtml" SHAPE="472,17,0,0" TYPE="page" model-entity="SeamPagesDiagramItem"/>
+ <item NAME="#xview#xchangePassword.xhtml"
+  PATH="/view/changePassword.xhtml" SHAPE="472,241,0,0" TYPE="page" model-entity="SeamPagesDiagramItem"/>
+ <item ID="#manage#manageResource.xhtml"
+  NAME="#xmanage#xmanageResource.xhtml"
+  PATH="/manage/manageResource.xhtml" SHAPE="1240,241,0,0" TYPE="page" model-entity="SeamPagesDiagramItem"/>
+ <item ID="#view#dashboard.xhtml" NAME="#xview#xdashboard.xhtml"
+  PATH="/view/dashboard.xhtml" SHAPE="472,241,0,0" TYPE="page" model-entity="SeamPagesDiagramItem">
+  <output ID="/manage/reservation.xhtml" NAME="output"
+   PATH="/manage/reservation.xhtml" TARGET="#xmanage#xreservation.xhtml" model-entity="SeamPagesDiagramItemOutput"/>
+ </item>
+ <item ID="#manage#reservation.xhtml" NAME="#xmanage#xreservation.xhtml"
+  PATH="/manage/reservation.xhtml" SHAPE="792,489,0,0" TYPE="page" model-entity="SeamPagesDiagramItem"/>
+ <item ID="#pageOne.xhtml" NAME="#xpageOne.xhtml" PATH="/pageOne.xhtml"
+  SHAPE="24,1425,0,0" TYPE="page" model-entity="SeamPagesDiagramItem">
+  <output ID="/pageTwo.xhtml" NAME="output" PATH="/pageTwo.xhtml"
+   TARGET="#xpageTwo.xhtml" model-entity="SeamPagesDiagramItemOutput"/>
+ </item>
+ <item ID="#pageTwo.xhtml" NAME="#xpageTwo.xhtml" PATH="/pageTwo.xhtml"
+  SHAPE="344,1425,0,0" TYPE="page" model-entity="SeamPagesDiagramItem"/>
+</diagram>

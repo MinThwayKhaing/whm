@@ -1,0 +1,1007 @@
+<!-- 
+	Created By: Sai Kyaw Ye Myint
+	Created Date : 2017/09/13
+	Explanation : Created for Phase III.
+ -->
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:p="http://primefaces.org/ui"
+	template="/common/commonLayout.xhtml">
+	<ui:define name="content">
+		<h:body onload="#{ProjectInformationManageBean.controlForm()})" update=":projectInfoEntryForm">
+			<h:outputStylesheet library="css" name="default.css"></h:outputStylesheet>
+			<table class="whmPageStatus"><tr><td><h:outputText value="Project Information" style="padding:7px;"/></td></tr></table>
+			
+			<table width="100%">
+				<tr>
+					<td></td>
+					<td width="70%" align="center">
+						<div style="z-index: 100; position: fixed; margin-top: -30px; width: 700px;">
+							<p:messages globalOnly="true" showDetail="true" id="messages" closable="true" />
+						</div>
+					</td>
+				</tr>
+			</table>
+			<!--
+				Revised By : Sai Kyaw Ye Myint
+				Revised Date : 2018/07/20
+				Explanation: (1) Removed unnecessary mandatory check.
+							 (2) Modify for project schedule updating problem.
+			-->
+			<h:form class="whmBackStyle" id="projectInfoEntryForm">
+				<table>
+					<tr>
+						<td>
+							<span class="cmms-label">
+								<h:outputText value="Project ID" /><span style="color: red"> *</span>
+							</span>
+						</td>
+						<td>:</td>
+						<td>
+							<p:message id="projectIdMsg" for="projectID"/>
+							<p:inputText id="projectID" value="#{ProjectInformationManageBean.project.id}"
+										 maxlength="255" required="true" validator="noBlankSpaceValidator" disabled="#{ProjectInformationManageBean.editFlag}">
+								<p:ajax listener="#{ProjectInformationManageBean.changeProjectID}"
+									update="projectID projectIdMsg messages :projectInfoEntryForm:btnSubmit" event="change" />
+							</p:inputText>
+						</td>
+					</tr>
+					<tr>
+						<td>
+							<span class="cmms-label">
+								<h:outputText value="Project Name" /><span style="color: red"> *</span>
+							</span>
+						</td>
+						<td >:</td>
+						<td>
+							<p:message id="projectNameMsg" for="projectName"/>
+							<p:inputText id="projectName" value="#{ProjectInformationManageBean.project.projectName}" maxlength="255" validator="noBlankSpaceValidator" required="true" >
+								<p:ajax event="change" update="@this,projectNameMsg"></p:ajax>
+							</p:inputText>
+						</td>
+					</tr>
+					<tr>
+						<td style="vertical-align: 0">
+							<span class="cmms-label">
+								<h:outputText value="Project Background" />
+							</span>
+						</td>
+						<td style="vertical-align: 0">:</td>
+						<td>
+							<p:inputTextarea style="background:#ffffff;" autoResize="false" id="projetBackground" value="#{ProjectInformationManageBean.project.projectBackground}" rows="3" cols="40" >
+								<p:ajax event="change" update="@this"></p:ajax>
+							</p:inputTextarea>
+						</td>
+					</tr>
+					<tr>
+						<td style="vertical-align: 0">
+							<span class="cmms-label">
+								<h:outputText value="Purpose" />
+							</span>
+						</td>
+						<td style="vertical-align: 0">:</td>
+						<td>
+							<p:inputTextarea style="background:#ffffff;" autoResize="false" id="pupose" value="#{ProjectInformationManageBean.project.purpose}" rows="3" cols="40" >
+								<p:ajax event="change" update="@this"></p:ajax>
+							</p:inputTextarea>
+						</td>
+					</tr>
+					<tr>
+						<td style="vertical-align: 0">
+							<span class="cmms-label">
+								<h:outputText value="Objectives" />
+							</span>
+						</td>
+						<td style="vertical-align: 0">:</td>
+						<td>
+							<p:inputTextarea style="background:#ffffff;" autoResize="false" id="objectives" value="#{ProjectInformationManageBean.project.objectives}" rows="3" cols="40" >
+								<p:ajax event="change" update="@this"></p:ajax>
+							</p:inputTextarea>
+						</td>
+					</tr>
+					<tr>
+						<td>
+							<span class="cmms-label">
+								<h:outputText value="Duration" />
+							</span>
+						</td>
+						<td >:</td>
+						<td>
+							<p:message id="durationMsg" for="duration"/>
+							<p:inputText id="duration" style="margin-right : 5px;" value="#{ProjectInformationManageBean.project.duration}" converterMessage="Value must be number format." >
+								<p:ajax event="change" update="@this,durationMsg"></p:ajax>
+								<f:convertNumber type="number" pattern="#0.0" />
+								<f:validateDoubleRange minimum="0.000000001"/>
+							</p:inputText>
+							<h:outputText value="month(s)" />
+						</td>
+					</tr>
+					<tr>
+						<td style="vertical-align: 0">
+							<span class="cmms-label">
+								<h:outputText value="Start Date" /><span style="color: red"> *</span>
+							</span>
+						</td>
+						<td style="vertical-align: 0">:</td>
+						<td>
+							 <p:message id="startDateMsg" for="startDate"/>
+							 <p:calendar id="startDate" pattern="yyyy/MM/dd"
+								value="#{ProjectInformationManageBean.project.startDate}">
+								<p:ajax event="change" update="@this,startDateMsg messages projectInfoEntryForm:scheduleLayout" listener="#{ProjectInformationManageBean.startDateChange}"></p:ajax>
+								<p:ajax event="dateSelect" update="@this,startDateMsg messages projectInfoEntryForm:scheduleLayout" listener="#{ProjectInformationManageBean.startDateChange}"/>
+							</p:calendar>
+						</td>
+					</tr>
+					<tr>
+						<td style="vertical-align: 0">
+							<span class="cmms-label">
+								<h:outputText value="End Date" /><span style="color: red"> *</span>
+							</span>
+						</td>
+						<td style="vertical-align: 0">:</td>
+						<td>
+							 <p:message id="endDateMsg" for="endDate"/>
+							 <p:calendar id="endDate" pattern="yyyy/MM/dd"
+								value="#{ProjectInformationManageBean.project.endDate}">
+								<p:ajax event="change" update="@this,endDateMsg messages projectInfoEntryForm:scheduleLayout" listener="#{ProjectInformationManageBean.endDateChange}"></p:ajax>
+								<p:ajax event="dateSelect" update="@this,endDateMsg messages projectInfoEntryForm:scheduleLayout" listener="#{ProjectInformationManageBean.endDateChange}"/>
+							</p:calendar>
+						</td>
+					</tr>
+					<tr>
+						<td style="vertical-align: 0">
+							<span class="cmms-label">
+								<h:outputText value="Budget" />
+							</span>
+						</td>
+						<td style="vertical-align: 0">:</td>
+						<td>
+							<p:message id="budgetMsg" for="budget"/>
+							<p:inputText id="budget" style="vertical-align:top;margin-right : 5px;" maxlength="255" value="#{ProjectInformationManageBean.project.budget}" converterMessage="Value must be number format.">
+								<p:ajax event="change" update="@this,budgetMsg"></p:ajax>
+								<f:convertNumber type="currency" pattern="#,##0.00" />
+								<f:validateDoubleRange minimum="0.000000001"/>
+							</p:inputText>
+							<p:selectOneMenu id="currency" style="vertical-align:top" value="#{ProjectInformationManageBean.project.currency}">
+								<f:selectItems value="#{ProjectInformationManageBean.currencyList}"/>
+								<p:ajax event="change" update="@this"/>
+							</p:selectOneMenu>
+						</td>
+					</tr>
+					<tr>
+						<td style="vertical-align: 0">
+							<span class="cmms-label">
+								<h:outputText value="Project Summary" /><span style="color: red"> *</span>
+							</span>
+						</td>
+						<td style="vertical-align: 0">:</td>
+						<td>
+							<p:message id="summaryMsg" for="summary"/>
+							<p:inputTextarea style="background:#ffffff;" autoResize="false" id="summary" value="#{ProjectInformationManageBean.project.projectSummary}" validator="noBlankSpaceValidator" required="true" rows="3" cols="40" >
+								<p:ajax event="change" update="@this,summaryMsg"></p:ajax>
+							</p:inputTextarea>
+						</td>
+					</tr>
+					<tr>
+						<td style="vertical-align: 0">
+							<span class="cmms-label">
+								<h:outputText value="Project Manager" /><span style="color: red"> *</span>
+							</span>
+						</td>
+						<td style="vertical-align: 0">:</td>
+						<td>
+							<p:message id="projectManagerMsg" for="projectManager"/>
+							<p:inputText id="projectManager" value="#{ProjectInformationManageBean.project.projectManager}" maxlength="255" validator="noBlankSpaceValidator" required="true" >
+								<p:ajax event="change" update="@this,projectManagerMsg"></p:ajax>
+							</p:inputText>
+						</td>
+					</tr>
+				</table>
+				<div class="proInfoContantBody">
+					<div class="proInfoContantHeader">Client Information</div>
+					<table style="margin-left: 10px;">
+						<tr>
+							<td>
+								<span class="cmms-label">
+									<h:outputText value="Organization" /><span style="color: red"> *</span>
+								</span>
+							</td>
+							<td>:</td>
+							<td>
+								<p:message id="clientOrganizationMsg" for="clientOrganization"/>
+								<p:inputText id="clientOrganization" value="#{ProjectInformationManageBean.project.clientOrganization}" maxlength="255" required="true" validator="noBlankSpaceValidator" >
+									<p:ajax event="change" update="projectControlTable projectDeliverableTable clientOrganizationMsg" listener="#{ProjectInformationManageBean.getPersonInchargeList()}" />
+								</p:inputText>
+							</td>
+							<td>
+								<span class="cmms-label">
+									<h:outputText value="Person In Charge" />
+								</span>
+							</td>
+							<td>:</td>
+							<td>
+								<p:inputText id="clientIncharge" value="#{ProjectInformationManageBean.project.clientIncharge}" maxlength="255" >
+									<p:ajax event="change" update="@this"></p:ajax>
+								</p:inputText>
+							</td>
+						</tr>
+						<tr>
+							<td>
+								<span class="cmms-label">
+									<h:outputText value="Department" />
+								</span>
+							</td>
+							<td>:</td>
+							<td>
+								<p:inputText id="clientDept" value="#{ProjectInformationManageBean.project.clientDept}" maxlength="255" >
+									<p:ajax event="change" update="@this"></p:ajax>
+								</p:inputText>
+							</td>
+							<td></td>
+							<td></td>
+							<td></td>
+						</tr>
+					</table>
+					<p:dataTable id="clientContactPersonTable" var="contactPerson"
+						styleClass="whmBackStyle proInfoContantTable"
+						value="#{ProjectInformationManageBean.clientContactPersonList}">
+						<f:facet name="header">
+	           							Contact Person:
+	           						</f:facet>
+						<p:column style="width : 50px" >
+							<p:selectOneMenu id="clientEmailType" style="width : 40%"
+								value="#{contactPerson.emailType}">
+								<f:selectItems value="#{ProjectInformationManageBean.emailType}" />
+								<p:ajax event="change" update="@this"/>
+							</p:selectOneMenu>
+						</p:column>
+						<p:column headerText="Name">
+							<p:message id="clientNameMsg" for="clientName" />
+							<p:inputText id="clientName" value="#{contactPerson.name}" maxlength="255">
+								<p:ajax event="change" update="@this,clientNameMsg"></p:ajax>
+							</p:inputText>
+						</p:column>
+						<p:column headerText="Email Address">
+							<p:message id="clientEmailMsg" for="clientEmail" />
+							<p:inputText id="clientEmail" value="#{contactPerson.email}"
+								validator="emailValidator"  maxlength="255">
+								<p:ajax event="change" update="@this,clientEmailMsg"></p:ajax>
+							</p:inputText>
+						</p:column>
+						<p:column headerText="Phone No">
+							<p:inputText id="clientPhone" value="#{contactPerson.phone}"  maxlength="255">
+								<p:ajax event="change" update="@this" ></p:ajax>
+							</p:inputText>
+						</p:column>
+						<p:column headerText="Fax">
+							<p:inputText id="clientFax" value="#{contactPerson.fax}" maxlength="255">
+								<p:ajax event="change" update="@this" ></p:ajax>
+							</p:inputText>
+						</p:column>
+						<p:column headerText="Delete" style="width : 60px">
+							<p:commandLink id="lbtnclientDelete" process="@this"
+								actionListener="#{ProjectInformationManageBean.deleteClientInfo(contactPerson)}"
+								update="clientContactPersonTable">
+								<h:outputText value="Delete"
+									style="text-align:center;width:50px; display:block;" />
+								<p:confirm header="Confirmation" message="Are you sure?"
+									icon="ui-icon-alert" />
+							</p:commandLink>
+							<p:confirmDialog global="true" showEffect="fade"
+								hideEffect="fade">
+								<p:commandButton value="Yes" styleClass="ui-confirmdialog-yes" />
+								<p:commandButton value="No" styleClass="ui-confirmdialog-no" />
+							</p:confirmDialog>
+						</p:column>
+					</p:dataTable>
+					<div align="right" class="proInfoContantAddClearBtn">
+						<p:commandButton value="Add" id="btnclientAdd"
+							process="@this"
+							actionListener="#{ProjectInformationManageBean.addClientInfo}"
+							update="clientContactPersonTable"></p:commandButton>
+						<p:commandButton value="Clear" rendered="false" id="btnclientClear" process="@this"
+							actionListener="#{ProjectInformationManageBean.clearClientInfo}"
+							update="clientContactPersonTable"></p:commandButton>
+					</div>
+				</div>
+				<div class="proInfoContantBody">
+					<div class="proInfoContantHeader">Service Provider Information</div>
+					<table style="margin-left: 10px;">
+						<tr>
+							<td>
+								<span class="cmms-label">
+									<h:outputText value="Organization" /><span style="color: red"> *</span>
+								</span>
+							</td>
+							<td>:</td>
+							<td>
+								<p:message id="serviceOrganizationMsg" for="serviceOrganization"/>
+								<p:inputText id="serviceOrganization" value="#{ProjectInformationManageBean.project.spOrganization}" maxlength="255" required="true" validator="noBlankSpaceValidator" >
+									<p:ajax event="change" update="projectControlTable projectDeliverableTable serviceOrganizationMsg" listener="#{ProjectInformationManageBean.getPersonInchargeList()}" />
+								</p:inputText>
+							</td>
+							<td>
+								<span class="cmms-label">
+									<h:outputText value="Person In Charge" />
+								</span>
+							</td>
+							<td>:</td>
+							<td>
+								<p:inputText id="serviceIncharge" value="#{ProjectInformationManageBean.project.spIncharge}" maxlength="255" >
+									<p:ajax event="change" update="@this"></p:ajax>
+								</p:inputText>
+							</td>
+						</tr>
+						<tr>
+							<td>
+								<span class="cmms-label">
+									<h:outputText value="Department" />
+								</span>
+							</td>
+							<td>:</td>
+							<td>
+								<p:inputText id="serviceDept" value="#{ProjectInformationManageBean.project.spDept}" maxlength="255">
+									<p:ajax event="change" update="@this"></p:ajax>
+								</p:inputText>
+							</td>
+							<td></td>
+							<td></td>
+							<td></td>
+						</tr>
+					</table>
+					<p:dataTable id="serviceContactPersonTable" var="contactPerson" styleClass="whmBackStyle proInfoContantTable" 
+									value="#{ProjectInformationManageBean.serviceContactPersonList}">
+						<f:facet name="header">
+	           							Contact Person:
+	           			</f:facet>
+						<p:column style="width : 50px" >
+							<p:selectOneMenu id="serviceEmailType" style="width : 40%"
+								value="#{contactPerson.emailType}">
+								<f:selectItems value="#{ProjectInformationManageBean.emailType}" />
+								<p:ajax event="change" update="@this"/>
+							</p:selectOneMenu>
+						</p:column>
+						<p:column headerText="Name">
+							<p:message id="serviceNameMsg" for="serviceName" />
+							<p:inputText id="serviceName" value="#{contactPerson.name}" maxlength="255">
+								<p:ajax event="change" update="@this,serviceNameMsg"></p:ajax>
+							</p:inputText>
+						</p:column>
+						<p:column headerText="Email Address">
+							<p:message id="serviceEmailMsg" for="serviceEmail" />
+							<p:inputText id="serviceEmail" value="#{contactPerson.email}" maxlength="255" validator="emailValidator">
+								<p:ajax event="change" update="@this,serviceEmailMsg"></p:ajax>
+							</p:inputText>
+						</p:column>
+						<p:column headerText="Phone No">
+							<p:inputText id="servicePhone" value="#{contactPerson.phone}" maxlength="255">
+								<p:ajax event="change" update="@this"></p:ajax>
+							</p:inputText>
+						</p:column>
+						<p:column headerText="Fax">
+							<p:inputText id="serviceFax" value="#{contactPerson.fax}" maxlength="255">
+								<p:ajax event="change" update="@this"></p:ajax>
+							</p:inputText>
+						</p:column>
+						<p:column headerText="Delete" style="width : 60px">
+							<p:commandLink id="lbtnserviceDelete"
+								process="@this"
+								actionListener="#{ProjectInformationManageBean.deleteServiceProviderInfo(contactPerson)}"
+								update="serviceContactPersonTable">
+								<h:outputText value="Delete"
+									style="text-align:center;width:50px; display:block;" />
+								<p:confirm header="Confirmation" message="Are you sure?"
+									icon="ui-icon-alert" />
+							</p:commandLink>
+							<p:confirmDialog global="true" showEffect="fade"
+								hideEffect="fade">
+								<p:commandButton value="Yes" styleClass="ui-confirmdialog-yes" />
+								<p:commandButton value="No" styleClass="ui-confirmdialog-no" />
+							</p:confirmDialog>
+						</p:column>
+					</p:dataTable>
+					<div align="right" class="proInfoContantAddClearBtn">
+						<p:commandButton value="Add" id="btnserviceAdd"
+							process="@this"
+							actionListener="#{ProjectInformationManageBean.addServiceProviderInfo}"
+							update="serviceContactPersonTable"></p:commandButton>
+						<p:commandButton value="Clear" rendered="false" id="btnserviceClear"
+							process="@this"
+							actionListener="#{ProjectInformationManageBean.clearServiceProviderInfo}"
+							update="serviceContactPersonTable"></p:commandButton>
+					</div>
+				</div>
+				<div class="proInfoContantBody">
+					<div class="proInfoContantHeader">Communication Plan</div>
+					<p:dataTable id="communicationPlanTable" var="communicationPlan" styleClass="whmBackStyle proInfoContantTable" 
+									value="#{ProjectInformationManageBean.project.communicationPlanList}">
+						<p:column headerText="Groups/Individuals Involved">
+							<p:message for="commgroups"/>
+							<p:inputText id="commgroups"
+								value="#{communicationPlan.commgroups}">
+								<p:ajax event="change" update="@this"></p:ajax>
+							</p:inputText>
+						</p:column>
+						<p:column headerText="Type of Communication">
+							<p:inputText id="commType" maxlength="255"
+								value="#{communicationPlan.commType}">
+								<p:ajax event="change" update="@this"></p:ajax>
+							</p:inputText>
+						</p:column>
+						<p:column headerText="Frequency"  >
+							<p:selectOneMenu id="commFrequency" style="width : 85%" value="#{communicationPlan.commFrequency}">
+								<f:selectItems value="#{ProjectInformationManageBean.commFrequency}"/>
+								<p:ajax event="change" update="@this"/>
+							</p:selectOneMenu>
+						</p:column>
+						<p:column headerText="Communication Method"  >
+							<p:selectOneMenu id="commMethod" style="width : 85%" value="#{communicationPlan.commMethod}">
+								<f:selectItems value="#{ProjectInformationManageBean.commMethod}"/>
+								<p:ajax event="change" update="@this"/>
+							</p:selectOneMenu>
+						</p:column>
+						<p:column headerText="Communication Language"  >
+							<p:selectOneMenu id="commLanguage" style="width : 85%" value="#{communicationPlan.commLanguage}">
+								<f:selectItems value="#{ProjectInformationManageBean.commLanguage}"/>
+								<p:ajax event="change" update="@this"/>
+							</p:selectOneMenu>
+						</p:column>
+						<p:column headerText="Purpose">
+							<p:inputText id="commPurpose"
+								value="#{communicationPlan.commPurpose}">
+								<p:ajax event="change" update="@this"></p:ajax>
+							</p:inputText>
+						</p:column>
+						<p:column headerText="Delete" style="width : 60px">
+							<p:commandLink id="lbtncommDelete" process="@this"
+									actionListener="#{ProjectInformationManageBean.deleteCommunicationPlan(communicationPlan)}"
+									update="communicationPlanTable">
+									<h:outputText value="Delete"
+										style="text-align:center;width:50px; display:block;" />
+									<p:confirm header="Confirmation" message="Are you sure?"
+										icon="ui-icon-alert" />
+							</p:commandLink>
+							<p:confirmDialog global="true" showEffect="fade"
+									hideEffect="fade">
+									<p:commandButton value="Yes" styleClass="ui-confirmdialog-yes" />
+									<p:commandButton value="No" styleClass="ui-confirmdialog-no" />
+							</p:confirmDialog>
+						</p:column>
+					</p:dataTable>
+					<div align="right" class="proInfoContantAddClearBtn">
+						<p:commandButton value="Add" id="btncommAdd" process="@this"
+							actionListener="#{ProjectInformationManageBean.addCommunicationPlan}"
+							update="communicationPlanTable"></p:commandButton>
+						<p:commandButton value="Clear" rendered="false" id="btncommClear" process="@this,communicationPlanTable"
+							actionListener="#{ProjectInformationManageBean.clearCommunicationPlan}"
+							update="communicationPlanTable"></p:commandButton>
+					</div>
+				</div>
+				<div class="proInfoContantBody">
+					<div class="proInfoContantHeader">Project Control</div>
+					<p:dataTable id="projectControlTable" var="projectControl" styleClass="whmBackStyle proInfoContantTable" 
+									value="#{ProjectInformationManageBean.project.projectControlList}">
+						<p:column headerText="Deliverables">
+							<p:message for="prjCtlDeliverables"/>
+							<p:inputText id="prjCtlDeliverables" maxlength="255"
+								value="#{projectControl.prjCtlDeliverables}">
+								<p:ajax event="change" update="@this"></p:ajax>
+							</p:inputText>
+						</p:column>
+						<p:column headerText="Person In Charge"  >
+							<p:selectOneMenu id="prjCtlIncharge" style="width : 85%" value="#{projectControl.prjCtlIncharge}">
+								<f:selectItems value="#{ProjectInformationManageBean.getPersonInchargeList()}"/>
+								<p:ajax event="change" update="@this"/>
+							</p:selectOneMenu>
+						</p:column>
+						<p:column headerText="Language used in Document"  >
+							<p:selectOneMenu id="prjCtlLanguage" style="width : 85%" value="#{projectControl.prjCtlLanguage}">
+								<f:selectItems value="#{ProjectInformationManageBean.commLanguage}"/>
+								<p:ajax event="change" update="@this"/>
+							</p:selectOneMenu>
+						</p:column>
+						<p:column headerText="Remark">
+							<p:inputText id="prjCtlRemark" maxlength="255"
+								value="#{projectControl.prjCtlRemark}">
+								<p:ajax event="change" update="@this"></p:ajax>
+							</p:inputText>
+						</p:column>
+						<p:column headerText="Delete" style="width : 60px">
+							<p:commandLink id="lbtnprjCtlDelete" process="@this"
+									actionListener="#{ProjectInformationManageBean.deleteProjectControl(projectControl)}"
+									update="projectControlTable">
+									<h:outputText value="Delete"
+										style="text-align:center;width:50px; display:block;" />
+									<p:confirm header="Confirmation" message="Are you sure?"
+										icon="ui-icon-alert" />
+							</p:commandLink>
+							<p:confirmDialog global="true" showEffect="fade"
+									hideEffect="fade">
+									<p:commandButton value="Yes" styleClass="ui-confirmdialog-yes" />
+									<p:commandButton value="No" styleClass="ui-confirmdialog-no" />
+							</p:confirmDialog>
+						</p:column>
+					</p:dataTable>
+					<div align="right" class="proInfoContantAddClearBtn">
+						<p:commandButton value="Add" id="btnprjCtlAdd" process="@this"
+							actionListener="#{ProjectInformationManageBean.addProjectControl}"
+							update="projectControlTable"></p:commandButton>
+						<p:commandButton value="Clear" rendered="false" id="btnprjCtlClear" process="@this,projectControlTable"
+							actionListener="#{ProjectInformationManageBean.clearProjectControl}"
+							update="projectControlTable"></p:commandButton>
+					</div>
+				</div>
+				<div class="proInfoContantBody">
+					<div class="proInfoContantHeader">System Outline (Draft)</div>
+					<table style="width: 100%">
+						<tr>
+							<td>
+								<span class="cmms-label">
+									<h:outputText value="Operating System" />
+								</span>
+							</td>
+							<td>:</td>
+							<td>
+								<p:message id="operatingsystemMsg" for="operatingsystem"/>
+								<p:inputText id="operatingsystem" value="#{ProjectInformationManageBean.project.operatingSystem}" maxlength="255" >
+									<p:ajax event="change" update="@this,operatingsystemMsg"></p:ajax>
+								</p:inputText>
+							</td>
+							<td>
+								<span class="cmms-label">
+									<h:outputText value="Application Framework" />
+								</span>
+							</td>
+							<td>:</td>
+							<td>
+								<p:message for="appFramework"/>
+								<p:inputText id="appFramework" value="#{ProjectInformationManageBean.project.appFramework}" maxlength="255">
+									<p:ajax event="change" update="@this"></p:ajax>
+								</p:inputText>
+							</td>
+							<td rowspan="6" style="vertical-align: 0">
+								<span class="cmms-label">
+									<h:outputText value="Others" />
+								</span>
+							</td>
+							<td rowspan="6" style="vertical-align: 0">:</td>
+							<td rowspan="6" style="vertical-align: top">
+								<p:message for="others"/>
+								<p:inputTextarea style="background:#ffffff;" autoResize="false" id="others" cols="30" rows="10" value="#{ProjectInformationManageBean.project.others}" >
+									<p:ajax event="change" update="@this"></p:ajax>
+								</p:inputTextarea>
+							</td>
+						</tr>
+						<tr>
+							<td>
+								<span class="cmms-label">
+									<h:outputText value="Application Run-time" />
+								</span>
+							</td>
+							<td>:</td>
+							<td>
+								<p:message for="appRuntime"/>
+								<p:inputText id="appRuntime" value="#{ProjectInformationManageBean.project.appRuntime}" maxlength="255" >
+									<p:ajax event="change" update="@this"></p:ajax>
+								</p:inputText>
+							</td>
+							<td>
+								<span class="cmms-label">
+									<h:outputText value="Client Agent" />
+								</span>
+							</td>
+							<td>:</td>
+							<td>
+								<p:message for="clientAgent"/>
+								<p:inputText id="clientAgent" value="#{ProjectInformationManageBean.project.clientAgent}" maxlength="255">
+									<p:ajax event="change" update="@this"></p:ajax>
+								</p:inputText>
+							</td>
+						</tr>
+						<tr>
+							<td>
+								<span class="cmms-label">
+									<h:outputText value="Web Server" />
+								</span>
+							</td>
+							<td>:</td>
+							<td>
+								<p:message id="webserverMsg" for="webserver"/>
+								<p:inputText id="webserver" value="#{ProjectInformationManageBean.project.webServer}" maxlength="255">
+									<p:ajax event="change" update="@this,webserverMsg"></p:ajax>
+								</p:inputText>
+							</td>
+							<td rowspan="2" style="vertical-align: 0">
+								<span class="cmms-label">
+									<h:outputText value="Programming Language(s)" />
+								</span>
+							</td>
+							<td rowspan="2" style="vertical-align: 0">:</td>
+							<td rowspan="2" style="vertical-align: top">
+								<p:message id="pgmLanguageMsg" for="pgmLanguage"/>
+								<p:inputTextarea style="background:#ffffff;" autoResize="false" id="pgmLanguage" value="#{ProjectInformationManageBean.project.pgmLanguage}">
+									<p:ajax event="change" update="@this,pgmLanguageMsg"></p:ajax>
+								</p:inputTextarea>
+							</td>
+						</tr>
+						<tr>
+							<td>
+								<span class="cmms-label">
+									<h:outputText value="Application Server" />
+								</span>
+							</td>
+							<td>:</td>
+							<td>
+								<p:message id="appserverMsg" for="appserver"/>
+								<p:inputText id="appserver" value="#{ProjectInformationManageBean.project.appServer}" maxlength="255">
+									<p:ajax event="change" update="@this,appserverMsg"></p:ajax>
+								</p:inputText>
+							</td>
+						</tr>
+						<tr>
+							<td>
+								<span class="cmms-label">
+									<h:outputText value="Database Server" />
+								</span>
+							</td>
+							<td>:</td>
+							<td>
+								<p:message id="dbServerMsg" for="dbServer"/>
+								<p:inputText id="dbServer" value="#{ProjectInformationManageBean.project.dbServer}" maxlength="255">
+									<p:ajax event="change" update="@this,dbServerMsg"></p:ajax>
+								</p:inputText>
+							</td>
+							<td rowspan="2" style="vertical-align: 0">
+								<span class="cmms-label">
+									<h:outputText value="Libraries/Other Frameworks" />
+								</span>
+							</td>
+							<td rowspan="2" style="vertical-align: 0">:</td>
+							<td rowspan="2" style="vertical-align: top">
+								<p:message id="librariesMsg" for="libraries"/>
+								<p:inputTextarea style="background:#ffffff;" autoResize="false" id="libraries" value="#{ProjectInformationManageBean.project.libraries}">
+									<p:ajax event="change" update="@this,librariesMsg"></p:ajax>
+								</p:inputTextarea>
+							</td>
+						</tr>
+						<tr></tr>
+					</table>
+				</div>
+				<div class="proInfoContantBody">
+					<div class="proInfoContantHeader">Project Deliverables</div>
+					<p:dataTable id="projectDeliverableTable" var="projectDeliverable" styleClass="whmBackStyle proInfoContantTable" 
+									value="#{ProjectInformationManageBean.project.projectDeliverablesList}">
+						<p:column headerText="Phase">
+							<p:inputText id="prjDelPhase" maxlength="255"
+								value="#{projectDeliverable.prjDelPhase}">
+								<p:ajax event="change" update="@this"></p:ajax>
+							</p:inputText>
+						</p:column>
+						<p:column headerText="Design Type">
+							<p:inputText id="prjDelDesignType" maxlength="255"
+								value="#{projectDeliverable.prjDelDesignType}">
+								<p:ajax event="change" update="@this"></p:ajax>
+							</p:inputText>
+						</p:column>
+						<p:column headerText="Person In Charge"  >
+							<p:selectOneMenu id="prjDelIncharge" style="width : 85%" value="#{projectDeliverable.prjDelIncharge}">
+								<f:selectItems value="#{ProjectInformationManageBean.getPersonInchargeList()}"/>
+								<p:ajax event="change" update="@this"/>
+							</p:selectOneMenu>
+						</p:column>
+						<p:column headerText="Language used in Document"  >
+							<p:selectOneMenu id="prjDelLanguage" style="width : 85%" value="#{projectDeliverable.prjDelLanguage}">
+								<f:selectItems value="#{ProjectInformationManageBean.commLanguage}"/>
+								<p:ajax event="change" update="@this"/>
+							</p:selectOneMenu>
+						</p:column>
+						<p:column headerText="Remark">
+							<p:inputText id="prjDelRemark" maxlength="700"
+								value="#{projectDeliverable.prjDelRemark}">
+								<p:ajax event="change" update="@this"></p:ajax>
+							</p:inputText>
+						</p:column>
+						<p:column headerText="Delete" style="width : 60px">
+							<p:commandLink id="lbtnprjDelDelete" process="@this"
+									actionListener="#{ProjectInformationManageBean.deleteProjectDeliverables(projectDeliverable)}"
+									update="projectDeliverableTable">
+									<h:outputText value="Delete"
+										style="text-align:center;width:50px; display:block;" />
+									<p:confirm header="Confirmation" message="Are you sure?"
+										icon="ui-icon-alert" />
+							</p:commandLink>
+							<p:confirmDialog global="true" showEffect="fade"
+									hideEffect="fade">
+									<p:commandButton value="Yes" styleClass="ui-confirmdialog-yes" />
+									<p:commandButton value="No" styleClass="ui-confirmdialog-no" />
+							</p:confirmDialog>
+						</p:column>
+					</p:dataTable>
+					<div align="right" class="proInfoContantAddClearBtn">
+						<p:commandButton value="Add" id="btnprjDelAdd" process="@this"
+							actionListener="#{ProjectInformationManageBean.addProjectDeliverables}"
+							update="projectDeliverableTable"></p:commandButton>
+						<p:commandButton value="Clear" rendered="false" id="btnprjDelClear" process="@this,projectDeliverableTable"
+							actionListener="#{ProjectInformationManageBean.clearProjectDeliverables}"
+							update="projectDeliverableTable"></p:commandButton>
+					</div>
+				</div>
+				<div class="proInfoContantBody">
+					<div class="proInfoContantHeader">Risk Factors</div>
+					<p:dataTable id="riskFactorsTable" var="riskFactors" styleClass="whmBackStyle proInfoContantTable" 
+									value="#{ProjectInformationManageBean.project.riskFactorList}">
+						<p:column headerText="Expected Risk">
+							<p:inputTextarea style="background:#ffffff;" autoResize="false" rows="1" id="riskExpected" value="#{riskFactors.riskExpected}" >
+								<p:ajax event="change" update="@this"></p:ajax>
+							</p:inputTextarea>
+						</p:column>
+						<p:column headerText="Probability of Occurence"  >
+							<p:selectOneMenu id="riskProbability" style="width : 85%" value="#{riskFactors.riskProbability}">
+								<f:selectItems value="#{ProjectInformationManageBean.riskProbabilityList}"/>
+								<p:ajax event="change" update="@this"/>
+							</p:selectOneMenu>
+						</p:column>
+						<p:column headerText="Impact">
+							<p:inputTextarea style="background:#ffffff;" autoResize="false" rows="1" id="riskimpact" value="#{riskFactors.riskimpact}">
+								<p:ajax event="change" update="@this"></p:ajax>
+							</p:inputTextarea>
+						</p:column>
+						<p:column headerText="Countermeasure">
+							<p:inputTextarea style="background:#ffffff;" autoResize="false" rows="1" id="riskCounterMeasure" value="#{riskFactors.riskCounterMeasure}">
+								<p:ajax event="change" update="@this"></p:ajax>
+							</p:inputTextarea>
+						</p:column>
+						<p:column headerText="Delete" style="width : 60px">
+							<p:commandLink id="lbtnriskDelete" process="@this"
+									actionListener="#{ProjectInformationManageBean.deleteRisk(riskFactors)}"
+									update="riskFactorsTable">
+									<h:outputText value="Delete"
+										style="text-align:center;width:50px; display:block;" />
+									<p:confirm header="Confirmation" message="Are you sure?"
+										icon="ui-icon-alert" />
+							</p:commandLink>
+							<p:confirmDialog global="true" showEffect="fade"
+									hideEffect="fade">
+									<p:commandButton value="Yes" styleClass="ui-confirmdialog-yes" />
+									<p:commandButton value="No" styleClass="ui-confirmdialog-no" />
+							</p:confirmDialog>
+						</p:column>
+					</p:dataTable>
+					<div align="right" class="proInfoContantAddClearBtn">
+						<p:commandButton value="Add" id="btnriskAdd" process="@this"
+							actionListener="#{ProjectInformationManageBean.addRisk}"
+							update="riskFactorsTable"></p:commandButton>
+						<p:commandButton value="Clear" rendered="false" id="btnriskClear" process="@this,riskFactorsTable"
+							actionListener="#{ProjectInformationManageBean.clearRisk}"
+							update="riskFactorsTable"></p:commandButton>
+					</div>
+				</div>
+				<div class="proInfoContantBody">
+					<div class="proInfoContantHeader">Project Volume</div>
+					<table id="projectInfoTable" style="margin-left: 10px;">
+						<tr>
+							<td><h:outputText value="Project Period" /></td>
+							<td>:</td>
+							<td><h:outputText id="prjPeroid" value="#{ProjectInformationManageBean.project.prjPeroid}" /></td>
+							<td><h:outputText value="months" /></td>
+						</tr>
+						<tr>
+							<td><h:outputText value="Total Man-Month" /></td>
+							<td>:</td>
+							<td><h:outputText id="totalManMonth" value="#{ProjectInformationManageBean.project.totalManMonth}"/></td>
+							<td><h:outputText value="(without risk)" /></td>
+						</tr>
+					</table>
+					<p:dataTable id="phaseInfoTable" var="projectVolume" styleClass="whmBackStyle proInfoContantTable"  
+								value="#{ProjectInformationManageBean.project.projectVolumeList}" rowIndexVar="rowIndex">
+						<p:columnGroup type="header">
+							<p:row>
+								<p:column rowspan="2" headerText="Phase"/>
+								<p:column colspan="3" headerText="Man-Month"/>
+								<p:column colspan="3" headerText="Man-Day"/>
+								<p:column rowspan="2" headerText="Delete" style="width : 60px;"/>
+							</p:row>
+							<p:row>
+								<p:column headerText="Work"/>
+								<p:column headerText="Review"/>
+								<p:column headerText="Total"/>
+								<p:column headerText="Work"/>
+								<p:column headerText="Review"/>
+								<p:column headerText="Total"/>
+							</p:row>
+						</p:columnGroup>
+						
+						<p:column>
+							<p:message id="phaseMsg" for="phase"/>
+							<p:inputText id="phase" maxlength="255" required="true"
+								value="#{projectVolume.phase}"  >
+								<p:ajax event="change" listener="#{ProjectInformationManageBean.phaseChange(projectVolume.phase, rowIndex)}" update="@this,phaseMsg projectInfoEntryForm:scheduleLayout"></p:ajax>
+							</p:inputText>
+						</p:column>
+						
+						<!-- Man-Month -->
+						<p:column>
+							 <h:outputText value="#{projectVolume.workManMonth}" />
+						</p:column>
+						<p:column>
+							 <h:outputText value="#{projectVolume.reviewManMonth}" />
+						</p:column>
+						<p:column>
+							 <h:outputText value="#{projectVolume.totalManMonth}" />
+						</p:column>
+						
+						<!-- Man-Day -->
+						<p:column>
+							<p:message id="workManDayMsg" for="workManDay"/>
+							 <p:inputText id="workManDay"
+								value="#{projectVolume.workManDay}" converterMessage="Value must be number format.">
+								<p:ajax event="change" update="phaseInfoTable :projectInfoEntryForm:prjPeroid :projectInfoEntryForm:totalManMonth workManDayMsg" listener="#{ProjectInformationManageBean.calculateWork(ProjectInformationManageBean.project)}"></p:ajax>
+								<f:convertNumber type="number" pattern="#0.00" />
+								<f:validateDoubleRange minimum="0"/>
+							</p:inputText>
+						</p:column>
+						<p:column>
+							<p:message id="reviewManDayMsg" for="reviewManDay"/>
+							 <p:inputText id="reviewManDay"
+								value="#{projectVolume.reviewManDay}" converterMessage="Value must be number format.">
+								<p:ajax event="change" update="phaseInfoTable :projectInfoEntryForm:prjPeroid :projectInfoEntryForm:totalManMonth reviewManDayMsg" listener="#{ProjectInformationManageBean.calculateReview(ProjectInformationManageBean.project)}"></p:ajax>
+								<f:convertNumber type="number" pattern="#0.00" />
+								<f:validateDoubleRange minimum="0"/>
+							</p:inputText>
+						</p:column>
+						<p:column>
+							 <h:outputText value="#{projectVolume.totalManDay}" />
+						</p:column>
+						
+						<p:column>
+							<p:commandLink id="lbtnphaseDelete" process="@this"
+									actionListener="#{ProjectInformationManageBean.deletePhaseInfo(projectVolume, rowIndex)}"
+									update="phaseInfoTable :projectInfoEntryForm:prjPeroid :projectInfoEntryForm:totalManMonth projectInfoEntryForm:scheduleLayout">
+									<h:outputText value="Delete"
+										style="text-align:center;width:60px; display:block;" />
+									<p:confirm header="Confirmation" message="Are you sure?"
+										icon="ui-icon-alert" />
+							</p:commandLink>
+							<p:confirmDialog global="true" showEffect="fade"
+									hideEffect="fade">
+									<p:commandButton value="Yes" styleClass="ui-confirmdialog-yes" />
+									<p:commandButton value="No" styleClass="ui-confirmdialog-no" />
+							</p:confirmDialog>
+						</p:column>
+						
+						<p:columnGroup type="footer">
+				            <p:row>
+				                <p:column style="text-align:right" footerText="Sub Total(Man-Month)" />
+				                <p:column footerText="#{ProjectInformationManageBean.project.workSManMonth}" />
+				                <p:column footerText="#{ProjectInformationManageBean.project.reviewSManMonth}" />
+				                <p:column footerText="#{ProjectInformationManageBean.project.totalSManMonth}" />
+				                
+				                <p:column footerText="#{ProjectInformationManageBean.project.workSManDay}" />
+				                <p:column footerText="#{ProjectInformationManageBean.project.reviewSManDay}" />
+				                <p:column footerText="#{ProjectInformationManageBean.project.totalSManDay}" />
+				            </p:row>
+				            <p:row>
+				                <p:column style="text-align:right" footerText="Risk(10%)" />
+				                <p:column footerText="" />
+				                <p:column footerText="" />
+				                <p:column footerText="#{ProjectInformationManageBean.project.totalRManMonth}" />
+				                
+				                <p:column footerText="" />
+				                <p:column footerText="" />
+				                <p:column footerText="#{ProjectInformationManageBean.project.totalRManDay}" />
+				            </p:row>
+				            <p:row>
+				                <p:column style="text-align:right" footerText="Total(Man-Month)" />
+				                <p:column footerText="" />
+				                <p:column footerText="" />
+				                <p:column footerText="#{ProjectInformationManageBean.project.totalTManMonth}" />
+				                
+				                <p:column footerText="" />
+				                <p:column footerText="" />
+				                <p:column footerText="#{ProjectInformationManageBean.project.totalTManDay}" />
+				            </p:row>
+				        </p:columnGroup>
+					</p:dataTable>
+					<div align="right" class="proInfoContantAddClearBtn">
+						<p:commandButton value="Add" id="btnphaseAdd" process="@this"
+							actionListener="#{ProjectInformationManageBean.addPhaseInfo}"
+							update="phaseInfoTable :projectInfoEntryForm:prjPeroid :projectInfoEntryForm:totalManMonth"></p:commandButton>
+						<p:commandButton value="Clear" rendered="false" id="btnphaseClear" process="@this"
+							actionListener="#{ProjectInformationManageBean.clearPhaseInfo}"
+							update="phaseInfoTable :projectInfoEntryForm:prjPeroid :projectInfoEntryForm:totalManMonth"></p:commandButton>
+					</div>
+				</div>
+				<div style="margin-top: 10px;">
+					<p:commandButton id="btnAddSchedule" value="Add Schedule" process="@this"
+									actionListener="#{ProjectInformationManageBean.addSchedule}"
+									update="@this messages projectInfoEntryForm:scheduleLayout">
+					</p:commandButton>
+				</div>
+				<p:outputPanel id="scheduleLayout">
+					<p:outputPanel widgetVar="scheduleWig"  rendered="#{ProjectInformationManageBean.scheduleTableVisible}">
+					
+						<div class="proInfoContantBody">
+							<div class="proInfoContantHeader">Schedule</div>
+							<div class="scheduleViewContainer">
+								<p:panelGrid id="scheduleGrid" >
+									<f:facet name="header">
+									<ui:repeat var="rowName" value="#{ProjectInformationManageBean.rowRepeat}">
+										<p:row>
+									        <p:column colspan="30" rowspan="2">#{rowName}</p:column>
+									        <ui:repeat var="scheduleYM" value="#{ProjectInformationManageBean.scheduleYMList}">
+										        <p:column colspan="#{ProjectInformationManageBean.workingWeekPerMonth * ProjectInformationManageBean.workingDayPerWeek}">#{scheduleYM}</p:column>
+										    </ui:repeat>
+									    </p:row>
+									    <p:row>
+										    <ui:repeat var="scheduleYM" value="#{ProjectInformationManageBean.scheduleYMList}">
+										    	<ui:repeat var="weekPerMonth" value="#{ProjectInformationManageBean.weekPerMonthList}">
+										    		<p:column colspan="#{ProjectInformationManageBean.workingDayPerWeek}">#{weekPerMonth}</p:column>
+										    	</ui:repeat>
+										    </ui:repeat>
+									    </p:row>
+									    <p:row>
+									    	<p:column colspan="30"> Phase </p:column>
+								        	<ui:repeat var="scheduleYM" value="#{ProjectInformationManageBean.scheduleYMList}">
+										            <ui:repeat var="weekPerMonth" value="#{ProjectInformationManageBean.weekPerMonthList}">
+											    		<p:column colspan="#{ProjectInformationManageBean.workingDayPerWeek}">  </p:column>
+											    	</ui:repeat>
+									       </ui:repeat>
+									    </p:row>
+									    </ui:repeat>
+									</f:facet>
+									<ui:repeat var="projectSchedule" varStatus="myVarStatus" value="#{ProjectInformationManageBean.project.projectScheduleList}">
+							        	<p:row id="phases" style="width: 30em;overflow-x: auto;white-space: nowrap;">
+							        		<p:column colspan="30">#{projectSchedule.phase}</p:column>
+								        		<ui:repeat var="workDay" value="#{projectSchedule.workingList}">
+								            		<p:column style="background : ${workDay.working ? '#F1EF12' : 'white'};">
+								            			<p:commandLink actionListener="#{ProjectInformationManageBean.selectDay(workDay.daysPerWeek, myVarStatus.index)}" 
+				            						   			ajax="true" process="@this" update=":dialogForm" oncomplete="PF('eventDialog').show();" value="#{workDay.daysPerWeek}"/>
+								            		</p:column>
+								            	</ui:repeat>
+							            </p:row>
+							        </ui:repeat>
+								</p:panelGrid>
+							</div>
+							</div>
+					</p:outputPanel>
+				</p:outputPanel>
+				<div align="right" class="proInfoContantAddClearBtn">
+						<p:commandButton value="Back" id="btnBack" process="@all" immediate="true" rendered="#{ProjectInformationManageBean.btnBackVisible}"
+							action="#{ProjectInformationManageBean.editPrjInfoBack}" ajax="false">
+						</p:commandButton>
+						<p:commandButton value="Submit" id="btnSubmit" process="@all" disabled="#{ProjectInformationManageBean.btnSubmit}"
+							actionListener="#{ProjectInformationManageBean.submitProjectInfo}"
+							update="projectInfoEntryForm messages"></p:commandButton>
+						<p:commandButton value="Reset" id="btnReset" process="@this"
+							actionListener="#{ProjectInformationManageBean.resetProjectInfo}"
+							update="projectInfoEntryForm">
+							<p:resetInput target="projectInfoEntryForm" />
+						</p:commandButton>
+				</div>
+			</h:form>
+			
+			<h:form id="dialogForm">
+			    <p:dialog id="eventDialogId" widgetVar="eventDialog" header="Please Define Schedule Time Line" showEffect="clip" hideEffect="clip">
+			        <h:panelGrid id="eventDetails" columns="2">
+			            <p:outputLabel for="scheduleStartPoint" value="Start Point : " />
+				 			<p:selectOneMenu id="scheduleStartPoint" value="#{ProjectInformationManageBean.scheduleStartPoint}" required="true">
+									<f:selectItems value="#{ProjectInformationManageBean.days}" />
+									<p:ajax event="change" update="@this"></p:ajax>
+							</p:selectOneMenu>
+			            <p:outputLabel for="scheduleEndPoint" value="End Point : " />
+				            <p:selectOneMenu id="scheduleEndPoint" value="#{ProjectInformationManageBean.scheduleEndPoint}" required="true">
+									<f:selectItems value="#{ProjectInformationManageBean.days}" />
+									<p:ajax event="change" update="@this"></p:ajax>
+							</p:selectOneMenu>
+				        <p:commandButton id="btnScheduleSubmit" value="Submit" process="@this" actionListener="#{ProjectInformationManageBean.submitSchedule()}"
+				        				 update="eventDetails :projectInfoEntryForm:scheduleGrid messages" oncomplete="PF('eventDialog').hide();" />
+				        <p:commandButton id="btnScheduleCancel" value="Delete" process="@this" actionListener="#{ProjectInformationManageBean.deleteSchedule()}"
+				        				 update="eventDetails :projectInfoEntryForm:scheduleGrid messages" oncomplete="PF('eventDialog').hide();" />
+			        </h:panelGrid>
+			    </p:dialog>
+			</h:form>
+		</h:body>
+	</ui:define>
+</ui:composition>

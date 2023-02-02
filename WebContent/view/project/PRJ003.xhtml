@@ -1,0 +1,206 @@
+<!-- 
+	Created By: Sai Kyaw Ye Myint
+	Created Date : 2017/09/22
+	Explanation : Created for Phase III.
+ -->
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:p="http://primefaces.org/ui"
+	template="/common/commonLayout.xhtml">
+	<ui:define name="content">
+		<h:body onload="#{ProjectDashboardManageBean.init()}" update=":projectDashboardForm">
+			<h:outputStylesheet library="css" name="default.css"></h:outputStylesheet>
+			<table class="whmPageStatus"><tr><td><h:outputText value="Project Dashboard" style="padding:7px;"/></td></tr></table>
+			
+			<table>
+				<tr>
+					<td></td>
+					<td width="70%" align="center">
+						<div style="z-index: 100; position: fixed; margin-top: -30px; width: 700px;">
+							<p:messages globalOnly="true" showDetail="true" id="messages" closable="true" />
+						</div>
+					</td>
+				</tr>
+			</table>
+			<!-- 
+			 	Modified By : Aung Htay Oo, Kyi Saw Win
+			 	Modified Date : 2017/11/20
+			 	Explanation : Adjust the UI design. 
+			  -->
+			<h:form class="whmBackStyle" id="projectDashboardForm">
+				<h2>
+					<h:outputText id="project" value="#{ProjectDashboardManageBean.project.projectName}" />,
+					<h:outputText id="projectYear" value="#{ProjectDashboardManageBean.project.startDate}">
+						<f:convertDateTime type="date" pattern="yyyy"/>
+					</h:outputText>
+				</h2>
+				<h:panelGrid columns="2" width="100%" layout="grid">
+					<p:panel id="projectSummary" header="Project Summary" 
+							 style="margin-left:15px; width: 638px; height: 353px;">
+						<table style="width : 100%; font-size: 14px;">
+							<tr height="30px;" style="background-color: #FCD5B4;">
+								<td style="vertical-align:top; width: 125px;">Project Manager</td>
+								<td id="spInfo" style="vertical-align:top;">
+									<div style="overflow-y: auto; height: 40px;word-break: break-all;
+												display : ${ ProjectDashboardManageBean.project.spDept eq '' 
+															and ProjectDashboardManageBean.project.spIncharge eq ''
+															and ProjectDashboardManageBean.project.spOrganization eq '' ? 'none' : 'block' }">
+										<h:outputText value="#{ProjectDashboardManageBean.project.spIncharge}/#{ProjectDashboardManageBean.project.spDept} (#{ProjectDashboardManageBean.project.spOrganization})" />
+									</div>
+								</td>
+							</tr>
+							<tr height="30px;" style="background-color: #FDE9D9;">
+								<td style="vertical-align:top; width: 125px;">Client</td>
+								<td id="clientInfo">
+									<div style="overflow-y: auto; height: 40px;word-break: break-all;
+												display : ${ ProjectDashboardManageBean.project.clientDept eq '' and 
+															 ProjectDashboardManageBean.project.clientIncharge eq '' and 
+															 ProjectDashboardManageBean.project.clientOrganization eq '' ? 'none' : 'block' }">
+										<h:outputText value="#{ProjectDashboardManageBean.project.clientIncharge}/#{ProjectDashboardManageBean.project.clientDept} (#{ProjectDashboardManageBean.project.clientOrganization})" /> 
+									</div>
+								</td>
+							</tr>
+							<tr height="30px;" style="background-color: #FCD5B4;">
+								<td style="vertical-align:top; width: 125px;">Start Date</td>
+								<td>
+									<h:outputText id="startDate" value="#{ProjectDashboardManageBean.project.startDate}">
+										<f:convertDateTime type="date" pattern="yyyy-MM-dd"/>
+									</h:outputText>
+								</td>
+							</tr>
+							<tr height="30px;" style="background-color: #FDE9D9;">
+								<td style="vertical-align:top; width: 125px;">End Date</td>
+								<td>
+									<h:outputText id="endDate" value="#{ProjectDashboardManageBean.project.endDate}">
+										<f:convertDateTime type="date" pattern="yyyy-MM-dd"/>
+									</h:outputText>
+								</td>
+							</tr>
+							<tr height="30px;" style="background-color: #FCD5B4;">
+								<td style="vertical-align:top; width: 125px;">Duration</td>
+								<td>
+									<h:outputText id="duration" value="#{ProjectDashboardManageBean.project.duration}" />
+									<span>month(s)</span>
+								</td>
+							</tr>
+							<tr height="30px;" style="background-color: #FDE9D9;">
+								<td style="vertical-align:top; width: 125px;">Budget</td>
+								<td>
+									<h:outputText id="budget" value="#{ProjectDashboardManageBean.project.budget}">
+										<f:convertNumber type="currency" pattern="#,##0.00" />
+									</h:outputText>
+									<span></span>
+									<h:outputText id="currency" value="#{ProjectDashboardManageBean.project.currency}" />
+								</td>
+							</tr>
+							<tr style="background-color: #FCD5B4;">
+								<td style="vertical-align:top; width: 125px;">Summary</td>
+								<td>
+									<div style="overflow-y: auto; height: 60px;word-break: break-all;">
+										<h:outputText id="summary" value="#{ProjectDashboardManageBean.project.projectSummary}"/>
+									</div>
+									
+								</td>
+							</tr>
+							<tr>
+								<td colspan="2" align="right">
+									<h:commandLink id="lnkDetail" action="#{ProjectDashboardManageBean.projectInformationDetail()}" 
+													ajax="false" value="Project Information(Detail) and Export"/>
+								</td>
+							</tr>
+						</table>
+						
+					</p:panel>
+					<p:panel id="projectReview" header="Project Review"
+							 style="width: 638px; height: 353px;">
+						<table style="width: 100%; font-size: 14px;">
+							<tr height="43px;" style="background-color: #4f81bd;color: #FFFFFF;">
+								<th width="200px;"></th>
+								<th width="150px;">Expected</th>
+								<th width="150px;">Actual</th>
+								<th width="150px;">Differences</th>
+							</tr>
+							<tr height="43px;" style="background-color: #daeef3;">
+								<td>Start Date</td>
+								<td style="text-align:center;">
+									<h:outputText id="expectedStartDate" value="#{ProjectDashboardManageBean.expectedStartDate}">
+										<f:convertDateTime type="date" pattern="yyyy-MM-dd"/>
+									</h:outputText>
+								</td>
+								<td style="text-align:center;">
+									<h:outputText id="actualStartDate" value="#{ProjectDashboardManageBean.actualStartDate}">
+										<f:convertDateTime type="date" pattern="yyyy-MM-dd"/>
+									</h:outputText>
+								</td>
+								<td style="text-align:center;">
+									<h:outputText id="diffStartDate" value="#{ProjectDashboardManageBean.diffStartDate}" />
+									<span>day(s)</span>
+								</td>
+							</tr>
+							<tr height="43px;" style="background-color: #a0deee;">
+								<td>End Date</td>
+								<td style="text-align:center;">
+									<h:outputText id="expectedEndDate" value="#{ProjectDashboardManageBean.expectedEndDate}">
+										<f:convertDateTime type="date" pattern="yyyy-MM-dd"/>
+									</h:outputText>
+								</td>
+								<td style="text-align:center;">
+									<h:outputText id="actualEndDate" value="#{ProjectDashboardManageBean.actualEndDate}">
+										<f:convertDateTime type="date" pattern="yyyy-MM-dd"/>
+									</h:outputText>
+								</td>
+								<td style="text-align:center;">
+									<h:outputText id="diffEndDate" value="#{ProjectDashboardManageBean.diffEndDate}" />
+									<span>day(s)</span>
+								</td>
+							</tr>
+							<tr height="43px;" style="background-color: #daeef3;">
+								<td>Man-Month</td>
+								<td style="text-align:center;">
+									<h:outputText id="expectedManMonth" value="#{ProjectDashboardManageBean.expectedManMonth}" />
+								</td>
+								<td style="text-align:center;">
+									<h:outputText id="actualManMonth" value="#{ProjectDashboardManageBean.actualManMonth}" />
+								</td>
+								<td style="text-align:center;">
+									<h:outputText id="diffManMonth" value="#{ProjectDashboardManageBean.diffManMonth}" />
+								</td>
+							</tr>
+							<tr height="43px;" style="background-color: #a0deee;">
+								<td>HR Cost<br/>(Based on man-month)</td>
+								<td style="text-align:center;">
+									<h:outputText id="expectedHRCost" value="#{ProjectDashboardManageBean.expectedHRCost}">
+										<f:convertNumber type="currency" pattern="#,##0.00" />
+									</h:outputText>
+									<span></span>
+									<h:outputText value="#{ProjectDashboardManageBean.project.currency}" />
+								</td>
+								<td style="text-align:center;">
+									<h:outputText id="actualHRCost" value="#{ProjectDashboardManageBean.actualHRCost}">
+										<f:convertNumber type="currency" pattern="#,##0.00" />
+									</h:outputText>
+									<span></span>
+									<h:outputText value="#{ProjectDashboardManageBean.project.currency}" />
+								</td>
+								<td style="text-align:center;">
+									<h:outputText id="diffHRCost" value="#{ProjectDashboardManageBean.diffHRCost}">
+										<f:convertNumber type="currency" pattern="#,##0.00" />
+									</h:outputText>
+									<span></span>
+									<h:outputText value="#{ProjectDashboardManageBean.project.currency}" />
+								</td>
+							</tr>
+						</table>
+					</p:panel>
+				</h:panelGrid>
+				<div align="right" class="proInfoContantAddClearBtn">
+						<p:commandButton value="Back" id="btnBack" process="@all"
+							action="#{ProjectDashboardManageBean.back()}" ajax="false">
+						</p:commandButton>
+				</div>
+			</h:form>
+		</h:body>
+	</ui:define>
+</ui:composition>

@@ -1,0 +1,270 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:p="http://primefaces.org/ui"
+	template="/common/commonLayout.xhtml">
+	<ui:param name="leftMenu" value="/common/adminLeft.xhtml" />
+	<ui:param name="rendered" value="true" />
+	<ui:define name="content">
+		<h:form id="userEntryForm" styleClass="form-horizontal">
+			<h:outputText value="User Management"
+				style="margin-top: 0px; margin-bottom: 10px;font-size:20px;" />
+			<p:separator style="height:5px;margin-top: 2px;margin-bottom: 2px;" />
+			<table width="100%">
+				<tr>
+					<td></td>
+					<td width="70%" align="center">
+						<div
+							style="z-index: 100; position: fixed; margin-top: -30px; width: 700px;">
+							<p:messages globalOnly="true" showDetail="true" id="messages" closable="true" />
+						</div>
+					</td>
+				</tr>
+			</table>
+			<table  class="whmBackStyle">
+				<tr>
+					<td></td>
+					<td></td>
+					<td><p:message for="username" /></td>
+				</tr>
+				<tr>
+					<td width="120px;"><span class="cmms-label">Staff ID</span> <span
+						style="color: red;">*</span></td>
+						<td>:</td>
+					<td><p:inputText value="#{ManageUserActionBean.user.username}"
+							id="username" required="true" style="width:200px;">
+							<f:validateLength minimum="3" maximum="20" />
+						</p:inputText></td>
+				</tr>
+				<tr>
+					<td></td>
+					<td></td>
+					<td><p:message for="fullName" /></td>
+				</tr>
+				<tr>
+					<td><span class="cmms-label">Staff Name</span> <span
+						style="color: red;">*</span></td>
+						<td>:</td>
+					<td><p:inputText value="#{ManageUserActionBean.user.fullName}"
+							id="fullName" required="true" style="width:200px;">
+							<f:validateLength minimum="3" maximum="60" />
+						</p:inputText></td>
+				</tr>
+				<tr>
+					<td></td>
+					<td></td>
+					<td></td>
+				</tr>
+				<tr>
+					<td colspan="3"><span style="color: red;display:#{ManageUserActionBean.displayPsw};" class="cmms-output">*Password
+							is same as Staff ID.</span></td>
+				</tr>
+				<tr>
+					<td><span class="cmms-label">Role</span></td>
+					<td>:</td>
+					<td><p:selectOneMenu value="#{ManageUserActionBean.user.role}"
+							converter="omnifaces.SelectItemsConverter">
+							<f:selectItems value="#{ManageUserActionBean.roles}" />
+						</p:selectOneMenu></td>
+				</tr>
+				<!-- 
+					Revised By		: Sai Kyaw Ye Myint
+					Revised Date	: 2018/04/26
+					Explanation		: Added Mainly Belong Team for select box.
+				-->
+				<tr>
+					<td></td>
+					<td></td>
+					<td><p:message for="mainlyBelongTeam" /></td>
+				</tr>
+				<tr>
+					<td><span class="cmms-label" >Mainly Belong Team</span><span
+						style="color: red;">*</span>
+					</td>
+					<td>:</td>
+					<td><p:selectOneMenu id="mainlyBelongTeam"
+							converter="omnifaces.SelectItemsConverter" style="width:68px"
+							value="#{ManageUserActionBean.user.mainlyBelongTeam}" label="Teams"
+							filter="true" filterMatchMode="startsWith" required="true"
+							panelStyle="width:250px">
+							<f:selectItem itemLabel="Teams" itemValue="#{null}" />
+							<f:selectItems var="team" value="#{ManageUserActionBean.teams}"
+								itemLabel="#{team.teamName}" itemValue="#{team}" />
+						</p:selectOneMenu>
+					</td>
+				</tr>
+				<tr>
+					<td></td>
+					<td></td>
+					<td></td>
+				</tr>
+				<tr>
+					<td><span class="cmms-label" >Project Team</span></td>
+					<td>:</td>
+					<td><p:selectCheckboxMenu id="team"
+							converter="omnifaces.SelectItemsConverter"
+							value="#{ManageUserActionBean.user.teams}" label="Teams"
+							multiple="true" filter="true" filterMatchMode="startsWith"
+							panelStyle="width:250px">
+							<f:selectItems var="team" value="#{ManageUserActionBean.teams}"
+								itemLabel="#{team.teamName}" itemValue="#{team}" />
+						</p:selectCheckboxMenu></td>
+				</tr>
+				<tr>
+					<td></td>
+					<td></td>
+					<td></td>
+				</tr>
+				<tr>
+					<td><span class="cmms-label" >Authority</span></td>
+					<td>:</td>
+					<td><p:selectCheckboxMenu id="authority"
+							converter="omnifaces.SelectItemsConverter"
+							value="#{ManageUserActionBean.user.authorities}" label="Authorities"
+							multiple="true" filter="true" filterMatchMode="startsWith"
+							panelStyle="width:250px">
+							<f:selectItems var="team" value="#{ManageUserActionBean.teams}"
+								itemLabel="#{team.teamName}" itemValue="#{team}" />
+						</p:selectCheckboxMenu></td>
+				</tr>
+				<tr>
+					<td><span class="cmms-label" style="display:#{ManageUserActionBean.displayDefaultPsw};">Reset Password</span></td>
+					<td><span style="display:#{ManageUserActionBean.displayDefaultPsw};">:</span></td>
+					<td><p:selectBooleanCheckbox rendered="#{!ManageUserActionBean.createNew}"
+							value="#{ManageUserActionBean.checkedValue}"/></td>
+				</tr>
+				<tr>
+					<td colspan="3"><span style="color: red;display:#{ManageUserActionBean.displayDefaultPsw};" class="cmms-output">*Default Password
+							is "password".</span></td>
+				</tr>
+				<tr>
+					<td><p:commandButton id="addBtn"
+							value="#{label['COMMON_ADDNEW_BTN']}"
+							action="#{ManageUserActionBean.addNewUser}"
+							rendered="#{ManageUserActionBean.createNew}"
+							update="userEntryForm :userTableForm" style="font-size:13px;" />
+						<p:commandButton id="editBtn"
+							value="#{label['COMMON_UPDATE_BTN']}"
+							action="#{ManageUserActionBean.updateUser}"
+							rendered="#{!ManageUserActionBean.createNew}"
+							update="userEntryForm :userTableForm" oncomplete="PF('usrWidget').filter()" style="font-size:13px;" />
+					</td>
+					<td></td>
+				</tr>
+			</table>
+		</h:form>
+		<p:separator style="height:5px;margin-top: 2px;margin-bottom: 2px;" />
+		<h:form id="userTableForm">
+			<p:commandLink action="#{ManageUserActionBean.createNewUser}"
+				update=":userEntryForm userTableForm">
+				<h:panelGrid columns="2">
+					<h:graphicImage value="/images/add.png" styleClass="command-image" />
+					<h:outputText value="#{label['COMMON_ADDNEW_LINK']}"
+						styleClass="command-link" />
+				</h:panelGrid>
+			</p:commandLink>
+			<p:dataTable var="user" value="#{ManageUserActionBean.userList}" styleClass="whmBackStyle"
+				id="userTable" paginator="true" rows="30" style="width:100%;"
+				paginatorTemplate="{CurrentPageReport}  {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"
+				rowsPerPageTemplate="30,50, 100" rowIndexVar="index" widgetVar="usrWidget">
+				<p:column headerText="No" style="width:35px; text-align : center;">
+					<h:outputText value="#{index + 1}" />
+				</p:column>
+				<p:column headerText="Staff Id" sortBy="#{user.username}"
+					filterBy="#{user.username}" filterMatchMode="contains" style="width:150px;text-align : center;">
+					<h:outputText value="#{user.username}" />
+				</p:column>
+				<p:column headerText="Staff Name" sortBy="#{user.fullName}"
+					filterBy="#{user.fullName}" filterMatchMode="contains" style="width:200px;">
+					<h:outputText value="#{user.fullName}"/>
+				</p:column>
+				<p:column headerText="Role" sortBy="#{user.role}"
+					filterBy="#{user.role}" filterMatchMode="contains" style="width:150px;text-align : center;">
+					<h:outputText value="#{user.role}" />
+				</p:column>
+				<!-- 
+					Revised By		: Sai Kyaw Ye Myint
+					Revised Date	: 2018/04/26
+					Explanation		: Added Mainly Belong Team column.
+				-->
+				<p:column headerText="Mainly Belong Team" sortBy="#{user.mainlyBelongTeam}"
+					filterBy="#{user.mainlyBelongTeam.teamName}" filterMatchMode="contains" style="width:150px;text-align : center;">
+					<h:outputText value="#{user.mainlyBelongTeam.teamName}" style="word-wrap:break-word;" />
+				</p:column>
+				<!-- 	
+					Modified By : Aye Myat Mon
+					Modified Date : 2018/08/20
+					Explanation : Modified Filter in Team and Authority column.
+				-->	
+				<p:column headerText="Team" sortBy="#{user.teams}"
+					filterBy="#{ManageUserActionBean.showTeams(user)}" filterMatchMode="contains">
+					<h:outputText value="#{ManageUserActionBean.showTeams(user)}" style="word-wrap:break-word;" />
+				</p:column>
+				<p:column headerText="Authority" sortBy="#{user.authorities}"
+					filterBy="#{ManageUserActionBean.showAuthorities(user)}" filterMatchMode="contains">
+					<h:outputText value="#{ManageUserActionBean.showAuthorities(user)}" style="word-wrap:break-word;" />
+				</p:column>
+				<!--
+					Revised By : Kyi Saw Win
+					Revised Date : 2017/09/13
+					Explanation: Deleted edit link image.
+				 -->
+				<p:column headerText="Edit" style="width:50px;">
+					<p:commandLink
+						action="#{ManageUserActionBean.prepareUpdateUser(user)}"
+						update=":userEntryForm">
+						<h:outputText value="Edit"
+							style="text-align:center;display:block;" />
+					</p:commandLink>
+				</p:column>
+				<!--
+					Revised By : Sai Kyaw Ye Myint
+					Revised Date : 2017/09/08
+					Explanation: Modify delete user link update action.
+				 -->
+				 <!--
+					Revised By : Kyi Saw Win
+					Revised Date : 2017/09/13
+					Explanation: Deleted delete link image.
+				 -->
+				 <!--
+					Revised By : Aung Htay Oo
+					Revised Date : 2017/11/15
+					Explanation: Deleted update userEntryForm in delete user.
+				 -->
+				 <p:column headerText="Delete" style="width:50px;">
+					<p:commandLink id="deleteuserLink"
+						actionListener="#{ManageUserActionBean.deleteUser(user)}"
+						update=":userTableForm:userTable :userEntryForm @this" >
+						<h:outputText value="Delete"
+							style="text-align:center;display:block;" />
+						<p:confirm header="Confirmation" message="Are you sure?"
+							icon="ui-icon-alert" />
+					</p:commandLink>
+					<p:confirmDialog global="true" showEffect="fade"
+						hideEffect="fade">
+						<p:commandButton value="Yes" type="button"
+							styleClass="ui-confirmdialog-yes"
+							oncomplete="PF('usrWidget').filter()" />
+						<p:commandButton value="No" type="button"
+							styleClass="ui-confirmdialog-no" />
+					</p:confirmDialog>
+				</p:column>
+			</p:dataTable>
+		</h:form>
+		<script type="text/javascript">
+			history.pushState(null, null, document.URL);
+			window.addEventListener('popstate', function() {
+				history.pushState(null, null, document.URL);
+			});
+			function disableF5(e) {
+				if ((e.which || e.keyCode) == 116
+						|| (e.which || e.keyCode) == 82) {
+					e.preventDefault();
+				}
+			};
+			$(document).bind("load", disableF5);
+		</script>
+	</ui:define>
+</ui:composition>

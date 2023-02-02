@@ -1,0 +1,9 @@
+<ui:composition template="/error/errorPage.xhtml"
+				xmlns="http://www.w3.org/1999/xhtml"
+				xmlns:ui="http://java.sun.com/jsf/facelets"
+				xmlns:p="http://primefaces.org/ui">
+	<ui:param name="contentTitle" value="Oh! 500 Error" />
+	<p>
+		<p:commandButton id="submit" value="Back To Login" action="login" immediate="true" ajax="false" style="font-size:13px;"/>
+	</p>
+</ui:composition>

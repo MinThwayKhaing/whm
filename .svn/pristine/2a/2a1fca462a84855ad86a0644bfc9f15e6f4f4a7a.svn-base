@@ -1,0 +1,495 @@
+html {
+	font-size: 13px;
+}
+
+/* .ui-widget-content{
+	border: 1px solid #bdbfc4;
+	background : #e2e3e5 50% top repeat-x;
+} */
+.ui-state-default, .ui-widget-content .ui-state-default,
+	.ui-widget-header .ui-state-default {
+	font-weight: normal;
+	font-size: 13px;
+}
+
+/* .ui-widget-header {
+    border: 1px solid #d4ccb0;
+    background: #FFFFFF 50% 50% repeat-x;
+    color: #433f38;
+    font-weight: bold;
+}
+ */
+.body {
+	font-weight: normal;
+	font-size: 13px;
+}
+
+#login-div {
+	border: 1px solid #ccc;
+	background-color: #f3f3f3;
+}
+
+#emptyDiv {
+	position: fixed;
+	height: 50%;
+}
+
+.title-hr {
+	height: 10px;
+	background: #63B175;
+}
+
+.ui-commandlink {
+	text-decoration: none;
+	font-weight: 600;
+	color: #0088CC !important;
+}
+
+.command-image {
+	width: 24px;
+	height: 24px;
+}
+
+.edit-image {
+	margin: 0px 0px 0px 10px;
+	width: 14px;
+	height: 14px;
+}
+
+.ui-datatable-data {
+	font-size: 13px;
+}
+
+.ui-datatable thead th, .ui-datatable tbody td, .ui-datatable tfoot td,
+	.ui-datatable tfoot th {
+	padding: 4px 4px !important;
+	overflow: hidden !important;
+	border-width: 1px !important;
+	border-style: solid !important;
+	-moz-padding-start: 1px !important;
+	-moz-padding-end: 1px !important;
+}
+
+.cmms-label {
+	font: 12px Arial, Helvetica, sans-serif;
+	font-weight: 600;
+}
+
+.cmms-output {
+	font: 12px Arial, Helvetica, sans-serif;
+}
+
+.comment-bar-left {
+	font-size: 13px;
+	text-align: left;
+	padding-left: 10px;
+	font-weight: 600;
+	background-color: #0D1C23;
+	height: 30px;
+	display: table;
+}
+
+.comment-bar-center {
+	font-size: 13px;
+	text-align: center;
+	padding-left: 10px;
+	font-weight: 600;
+	background-color: #0D1C23;
+	height: 30px;
+	display: table;
+}
+
+.comment-bar-right {
+	font-size: 13px;
+	text-align: right;
+	padding-right: 10px;
+	font-weight: 600;
+	background-color: #0D1C23;
+	height: 30px;
+	display: table;
+}
+
+.comment-bar-left span {
+	vertical-align: middle;
+	display: table-cell;
+}
+
+.comment-bar-center span {
+	vertical-align: middle;
+	display: table-cell;
+}
+
+.comment-bar-right span {
+	vertical-align: middle;
+	display: table-cell;
+}
+
+table.ui-datepicker-calendar tr td a {
+	font-size: 20px!iimportant;
+}
+
+.ui-layout-unit .ui-layout-unit-content {
+	padding: 0.2em 0em;
+	border: 0px none;
+}
+
+#statusIndicator {
+	z-index: 100;
+	position: relative;
+	top: 40%;
+	left: 40%;
+}
+
+#logindiv {
+	position: fixed;
+	top: 45%;
+	left: 45%;
+	width: 30em;
+	margin-top: -9em; /*set to a negative number 1/2 of your height*/
+	margin-left: -15em; /*set to a negative number 1/2 of your width*/
+	border: 1px solid #ccc;
+	background-color: #f3f3f3;
+	padding: 10px 40px 40px 40px;
+}
+
+#fist-pw-change {
+	position: fixed;
+	top: 35%;
+	left: 45%;
+	width: 30em;
+	margin-top: -9em; /*set to a negative number 1/2 of your height*/
+	margin-left: -15em; /*set to a negative number 1/2 of your width*/
+	border: 1px solid #ccc;
+	background-color: #f3f3f3;
+	padding: 10px 40px 40px 40px;
+}
+
+.cmms-title {
+	font-family: Arial, 'Helvetica Neue', Helvetica, sans-serif;
+	font-size: 40px !important;
+	color: #63B175;
+}
+
+.login-title {
+	font-family: Arial, 'Helvetica Neue', Helvetica, sans-serif;
+	font-size: 60px !important;
+	color: #63B175;
+}
+
+.site-title {
+	font-family: Arial, 'Helvetica Neue', Helvetica, sans-serif;
+	font-size: 20px !important;
+	font-weight: 500;
+	color: #FFFFFF;
+}
+
+.site-title-div {
+	width: 100%;
+	text-align: center;
+	padding-top: 10px;
+	padding-bottom: 10px;
+	background-color: #77B838;
+}
+
+.description-div {
+	width: 100%;
+	border: 1px solid #ccc;
+	background-color: #FAFAF4;
+	min-height: 50px;
+}
+
+.label-div {
+	font-size: 13px;
+	border: 1px solid #0D1C23;
+	padding-left: 5px;
+	font-weight: 600;
+	background-color: #63B175;
+	height: 40px;
+	display: table;
+	color: #FFFFFF;
+	margin-bottom: 2px;
+}
+
+.outputtext-div {
+	font-size: 13px;
+	border: 1px solid #0D1C23;
+	padding-left: 5px;
+	font-weight: 600;
+	height: 40px;
+	display: table;
+	margin-bottom: 2px;
+}
+
+.label-div span {
+	vertical-align: middle;
+	display: table-cell;
+}
+
+.outputtext-div span {
+	vertical-align: middle;
+	display: table-cell;
+}
+
+.statusMenu .ui-panelmenu-content {
+	position: absolute !important;
+	margin-top: 35px !important;
+	width: 140px !important;
+}
+
+.envelopePanel {
+	position: relative;
+}
+
+.envelopeImage {
+	height: 25px;
+	width: 50px;
+}
+
+.numberCircle {
+	border-radius: 50%;
+	height: 10px;
+	padding: 7px;
+	background: red;
+	border: 2px solid #red;
+	color: #FFFFFF;
+	text-align: center;
+	font: 12px Arial, sans-serif;
+	font-weight: bold;
+	z-index: 100;
+	position: absolute;
+	top: 0px;
+}
+
+.field_set {
+	border: 1px solid #63B175;
+}
+
+.ui-datatable-scrollable-theadclone {
+	visibility: collapse;
+}
+
+.weeklyRptTbl {
+	table-layout: fixed;
+	border-collapse: collapse;
+	border-spacing: 0px;
+	border: 1px solid #327e04;
+	margin: 5px 0px 0px 0px;
+	padding: 0px;
+}
+
+table .weeklyRptTbl {
+	table-layout: fixed;
+}
+
+.weeklyRptTbl th {
+	background: #63B175;
+	font-weight: normal;
+	font-size: 13px;
+	color: #ffffff;
+	font-family: segoe ui, Arial, sans-serif;
+	text-align: center;
+	border-left: 1px solid #327e04;
+}
+
+.weeklyRptTbl td {
+	clear: both;
+	font-weight: normal;
+	font-size: 13px;
+	font-family: segoe ui, Arial, sans-serif;
+	text-align: center;
+}
+
+table .weeklyActivityTbl {
+	table-layout: fixed;
+}
+
+.weeklyActivityTbl {
+	width: 100%;
+	border-collapse: collapse;
+	border-spacing: 0px;
+}
+
+.weeklyActivityTbl td {
+	word-wrap: break-word;
+	clear: both;
+	font-weight: normal;
+	font-size: 13px;
+	color: #000000;
+	font-family: segoe ui, Arial, sans-serif;
+	border-right: 1px solid #d4ccb0;
+	border-bottom: 1px solid #d4ccb0;
+}
+
+.reportContainer {
+	width: 100%;
+	overflow: auto;
+	white-space: nowrap;
+	position: relative;
+}
+
+.dailyReportTableStyle td {
+	text-align: center;
+	width: 100%;
+}
+
+.ui-widget-content .ui-state-default {
+	background: #63B175;
+}
+
+.whmBackStyle input[type="text"], .whmBackStyle input[role="textbox"] {
+	background: #ffffff;
+}
+
+.ui-state-hover, .ui-widget-content .ui-state-hover, .ui-widget-header .ui-state-hover,
+	.ui-state-focus, .ui-widget-content .ui-state-focus, .ui-widget-header .ui-state-focus
+	{
+	background: #63B175;
+}
+
+.whmLogo {
+	color: #63B175;
+	font-family: Lucida Bright;
+	height: 80px;
+	margin-left: 10px;
+}
+
+.whmMenu {
+	position: absolute;
+	margin: -43px 0px 0px 290px;
+}
+
+.whmRightMenu {
+	margin-top: -40px;
+	margin-right: -20px;
+	float: right;
+}
+
+.whmPageStatus {
+	background: #63B175;
+	border-radius: 10px;
+	width: 100%;
+	color: #ffffff;
+}
+
+.whmFooterIcon {
+	margin-top: -4px;
+	margin-left: 340px;
+	position: absolute;
+	float: right;
+}
+
+.whmFooter {
+	font-family: segoe ui, Arial, sans-serif;
+	font-size: 12px;
+	margin-right: 530px;
+	float: right;
+}
+
+.whmLayoutFooter .ui-layout-unit .ui-layout-unit-content {
+	overflow: hidden;
+}
+
+.whmError {
+	font-family: segoe ui, Arial, sans-serif;
+	float: left;
+	position: absolute;
+	margin-top: -400px;
+	margin-left: 600px;
+	font-weight: bold;
+}
+
+.whmErrorBg {
+	border-radius: 10px;
+	margin: 2px 0px 0px 250px;
+}
+
+.whmHome {
+	margin-left: 300px;
+	margin-top: 45px;
+}
+
+.img-circle {
+	border-radius: 5%;
+}
+
+.homeImg {
+	border-radius: 10px;
+}
+
+.whmCustom {
+	float: right;
+	position: absolute;
+	margin-bottom: 600px;
+}
+
+.proInfoContantBody {
+	border: 2px solid #327e04;
+	border-radius: 6px;
+	margin-top: 20;
+}
+
+.proInfoContantTable {
+	width: 98%;
+	margin-left: 10px;
+	margin-Top: 10px;
+}
+
+.proInfoContantAddClearBtn {
+	margin-right: 15px;
+	margin-top: 10px;
+	margin-bottom: 5px;
+}
+
+.proInfoContantTable input[type="text"], .proInfoContantTable input[role="textbox"],
+	.proInfoContantTable textarea {
+	width: 100%;
+}
+
+.proInfoContantHeader {
+	background-color: #63b175;
+	width: -moz-fit-content;
+	width: fit-content;
+	text-align: center;
+	margin-top: -10px;
+	margin-left: 23px;
+	color: white;
+	border-radius: 6px;
+	border: 1px #327e04 solid;
+	padding-right: 10px;
+	padding-left: 10px;
+}
+
+.scheduleViewContainer {
+	width: 98%;
+	overflow-x: auto;
+	white-space: nowrap;
+	margin: 5px 0px 10px 10px;
+	padding: 5px 5px 5px 0px;
+}
+
+.verticalScollableDiv {
+	overflow-y: auto;
+}
+
+.progress-bar {
+	float: left;
+	text-align: center;
+}
+
+.ui-widget-overlay {
+	opacity: 0!Important;
+}
+
+.loginBackground {
+	background-image: url("#{ resource [ 'images/image2.png' ]
+}
+
+.workingHoruManagemntTeamTable {
+	width: 98%;
+	overflow-x: auto;
+	white-space: nowrap;
+	margin: 5px 0px 10px 10px;
+	padding: 5px 5px 5px 0px;
+}
+;
+}

@@ -1,0 +1,560 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:pe="http://primefaces.org/ui/extensions"
+	template="/common/commonLayout.xhtml">
+	<ui:param name="leftMenu" value="/common/adminLeft.xhtml" />
+	<ui:param name="rendered" value="true" />
+	<ui:define name="content">
+		<h:body onload="#{DailyActivityManageTestBean.controlForm()}"
+			onunload="#{DailyActivityManageTestBean.setEditReportFlagToFalse()}">
+			<h:form id="reportEntryForm" styleClass="form-horizontal"
+				onkeypress="if (event.keyCode == 13) { return false; }">
+				<table class="whmPageStatus"><tr><td><h:outputText value="Daily Activity Registration" style="padding:7px;"/></td></tr></table>
+				<table width="100%">
+					<tr>
+						<td></td>
+						<td width="70%" align="center">
+							<div
+								style="z-index: 100; position: fixed; margin-top: -30px; width: 700px;">
+								<p:messages globalOnly="true" showDetail="true" id="messages"
+									autoUpdate="true" closable="true" />
+							</div>
+						</td>
+					</tr>
+				</table>
+				<table class="whmBackStyle">
+					<tr>
+						<td></td>
+						<td><p:message for="userId" /></td>
+					</tr>
+					<tr>
+						<td width="120px;"><span class="cmms-label">Staff ID</span><span
+							style="color: red;">*</span></td>
+							<td>:</td>
+						<td><p:inputText value="#{DailyActivityManageTestBean.staffId}"
+								id="userId" style="width:146px;" maxlength="15" required="false"
+								disabled="#{DailyActivityManageTestBean.nameDisabled==1}"
+								rendered="#{sessionScope.loginUser.role=='ADMIN' or sessionScope.loginUser.role=='MANAGEMENT'?true:false}">
+								<p:ajax event="blur"
+									listener="#{DailyActivityManageTestBean.changeUser()}"
+									update="userId staffName addRecordBtn saveBtn copyRecordsBtn" />
+								<p:ajax event="change"
+									listener="#{DailyActivityManageTestBean.changeUser()}"
+									update="userId staffName addRecordBtn saveBtn copyRecordsBtn" />
+							</p:inputText> <h:outputText value="#{DailyActivityManageTestBean.user.username}"
+								rendered="#{sessionScope.loginUser.role=='USER'}"></h:outputText></td>
+					</tr>
+					<tr></tr>
+					<tr>
+						<td><span class="cmms-label">Staff Name</span></td>
+						<td>:</td>
+						<td><h:outputText id="staffName"
+								value="#{DailyActivityManageTestBean.staffName}"></h:outputText></td>
+					</tr>
+					<tr>
+						<td></td>
+						<td><p:message for="reportDate" /></td>
+					</tr>
+					<tr>
+						<td width="120px;"><span class="cmms-label">Report
+								Date</span><span style="color: red;">*</span></td>
+								<td>:</td>
+						<td><p:calendar id="reportDate"
+								value="#{DailyActivityManageTestBean.reportDate}"
+								pattern="yyyy/MM/dd" maxdate="#{DailyActivityManageTestBean.today}"
+								required="false" widgetVar="calendarWidget">
+								<p:ajax event="dateSelect"
+									listener="#{DailyActivityManageTestBean.checkDate(DailyActivityManageTestBean.reportDate)}"
+									update="saveBtn addRecordBtn copyRecordsBtn" />
+								<p:ajax event="change"
+									listener="#{DailyActivityManageTestBean.checkDate(DailyActivityManageTestBean.reportDate)}"
+									update="saveBtn addRecordBtn copyRecordsBtn" />
+							</p:calendar></td>
+					</tr>
+					<tr></tr>
+					<tr>
+						<td><span class="cmms-label">Attendance</span></td>
+						<td>:</td>
+						<td><p:selectOneMenu id="leaveStatus"
+								value="#{DailyActivityManageTestBean.leaveStatus}"
+								style="width:120px" rendered="true">
+								<f:selectItem itemLabel="Present" itemValue="0" />
+								<f:selectItem itemLabel="Full Leave" itemValue="1" />
+								<f:selectItem itemLabel="Half Leave" itemValue="2" />
+								<p:ajax listener="#{DailyActivityManageTestBean.checkLeaveStatus()}"
+									update="activityTable saveBtn addRecordBtn totalHrs leaveDescription copyRecordsBtn" />
+							</p:selectOneMenu></td>
+						<td colspan="2"><h:outputText id="leaveDescription"
+								value="#{DailyActivityManageTestBean.leaveDescription}"
+								style="color: red;" /></td>
+					</tr>
+				</table>
+				<p:separator style="height:5px;margin-top: 2px;margin-bottom: 2px;" />
+				<table style="width: 100%;">
+					<tr>
+						<td>Daily Progress List</td>
+						<td width="243px" align="right">Total Hours: <h:outputText
+								id="totalHrs" value="#{DailyActivityManageTestBean.totalHours}"
+								style="#{DailyActivityManageTestBean.totalHours>24?'color:red' : 'color:black'}">
+								</h:outputText></td>
+						<td width="280px" align="right"><p:commandButton
+								id="copyRecordsBtn" value="Copy Record(s)"
+								disabled="#{DailyActivityManageTestBean.leaveStatus==1 or DailyActivityManageTestBean.saveBtnDisabled==1}"
+								onclick="PF('dlg3').show();" type="button">
+							</p:commandButton> <p:commandButton id="addRecordBtn" value="Add Record"
+								disabled="#{DailyActivityManageTestBean.leaveStatus==1 or DailyActivityManageTestBean.saveBtnDisabled==1}"
+								actionListener="#{DailyActivityManageTestBean.addRow}"
+								update="activityTable totalHrs">
+							</p:commandButton> <p:commandButton id="saveBtn"
+								disabled="#{DailyActivityManageTestBean.saveBtnDisabled==1}"
+								process="@form" value="#{label['COMMON_SAVE_BTN']}"
+								actionListener="#{DailyActivityManageTestBean.checkTotalHour}"
+								style="font-size:13px;" update="reportEntryForm"
+								validateClient="false"></p:commandButton></td>
+					</tr>
+				</table>
+				<p:dataTable id="activityTable" var="dailyActivitylist" styleClass="whmBackStyle"
+					value="#{DailyActivityManageTestBean.getAllDailyActivity()}" rowIndexVar="index" tableStyle="#{empty DailyActivityManageTestBean.dailyActivityList? 'width:100%;': 'width:auto;'}" >
+					<p:columnGroup type="header" style="height:30px;">
+						<p:row>
+							<p:column rowspan="2" headerText="Copy" />
+							<p:column rowspan="2" headerText="Delete" />
+							<p:column rowspan="2" headerText="No" />
+							<p:column rowspan="2" headerText="Project ID" />
+							<p:column rowspan="2" headerText="Project Name" />
+							<p:column rowspan="2" headerText="WBS No" />
+							<p:column colspan="4" headerText="Task" />
+							<p:column rowspan="2" headerText="Deliverables /Documents" />
+							<p:column rowspan="2" headerText="Begin Date" />
+							<p:column rowspan="2" headerText="End Date" />
+							<p:column colspan="4" headerText="Plan" style="background-color: #31869b" />
+							<p:column colspan="2" headerText="Actual" style="background-color: #366092" />
+							<p:column colspan="2" headerText="Difference" style="background-color: #e26b0a" />
+							<p:column rowspan="2" headerText="Delay /Forward" />
+							<p:column rowspan="2" headerText="Task Status Count" />
+							<p:column rowspan="2" headerText="Reason" />
+							<p:column rowspan="2" headerText="Review"
+								rendered="#{DailyActivityManageTestBean.editFlag}" />
+						</p:row>
+						<p:row>
+							<p:column headerText="Function ID" />
+							<p:column headerText="Category" />
+							<p:column headerText="Activity" />
+							<p:column headerText="Description*" />
+							<p:column headerText="From*" style="background-color: #31869b" />
+							<p:column headerText="To*" style="background-color: #31869b" />
+							<p:column headerText="Progress (%)" style="background-color: #31869b" />
+							<p:column headerText="Hours*" style="background-color: #31869b" />
+							<p:column headerText="Progress (%)" style="background-color: #366092" />
+							<p:column headerText="Hours*" style="background-color: #366092"/>
+							<p:column headerText="Progress (%)" style="background-color: #e26b0a"/>
+							<p:column headerText="Hours" style="background-color: #e26b0a"/>
+						</p:row>
+					</p:columnGroup>
+					<p:column headerText="Copy">
+						<p:commandLink id="copyuserLink" process="@this"
+							actionListener="#{DailyActivityManageTestBean.copyActivity(dailyActivitylist)}"
+							update=":reportEntryForm">
+							<h:outputText value="Copy"
+								style="text-align:center;width:50px; display:block;" />
+						</p:commandLink>
+					</p:column>
+					<p:column headerText="Delete">
+						<p:commandLink id="deleteuserLink" process="@this"
+							actionListener="#{DailyActivityManageTestBean.deleteActivity(dailyActivitylist)}"
+							update=":reportEntryForm">
+							<h:outputText value="Delete"
+								style="text-align:center;width:50px; display:block;" />
+							<p:confirm header="Confirmation" message="Are you sure?"
+								icon="ui-icon-alert" />
+						</p:commandLink>
+						<p:confirmDialog global="true" showEffect="explode"
+							hideEffect="explode">
+								<p:commandButton value="Yes" styleClass="ui-confirmdialog-yes" />
+								<p:commandButton value="No" styleClass="ui-confirmdialog-no" />
+						</p:confirmDialog>
+					</p:column>
+					<p:column headerText="No">
+						<p:cellEditor>
+							<f:facet name="output">
+								<h:outputText value="#{index + 1}"
+									style="text-align : center; width:25px; display:block;" />
+							</f:facet>
+							<f:facet name="input">
+								<p:inputText value="#{dailyActivity.id}" style="width:100%" />
+							</f:facet>
+						</p:cellEditor>
+					</p:column>
+					<p:column headerText="Project ID">
+						<p:selectOneMenu id="project" value="#{dailyActivitylist.project}"
+							converter="omnifaces.SelectItemsConverter" style="width:100px;"
+							filter="true" filterMatchMode="contains">
+							<f:selectItem itemLabel="-" itemValue="#{null}" />
+							<f:selectItems var="project"
+								value="#{DailyActivityManageTestBean.projects}"
+								itemLabel="#{project.id}" itemValue="#{project}" />
+							<p:ajax update="projectName" />
+						</p:selectOneMenu>
+					</p:column>
+					<p:column headerText="Project Name">
+						<h:outputText id="projectName"
+							style="display:block;width:200px; word-wrap:break-word;"
+							value="${empty dailyActivitylist.project.projectName or dailyActivitylist.project.projectName eq null? '--------' : dailyActivitylist.project.projectName}" />
+					</p:column>
+					<p:column headerText="WBS No" style="width:100px;">
+						<p:inputText id="wbs" value="#{dailyActivitylist.wbs}"
+							maxlength="15" style="width:100px;">
+							<p:ajax event="change" update="wbs" />
+						</p:inputText>
+					</p:column>
+					<p:column headerText="Function ID">
+						<p:inputText id="wbsFunction"
+							value="#{dailyActivitylist.wbsFunction}" maxlength="100"
+							style="width:126px;">
+							<p:ajax event="change" update="wbsFunction" />
+						</p:inputText>
+					</p:column>
+					<p:column headerText="Category">
+						<p:selectOneMenu id="task" value="#{dailyActivitylist.task}"
+							converter="omnifaces.SelectItemsConverter" style="width:126px;">
+							<f:selectItems var="task"
+								value="#{DailyActivityManageTestBean.tasks}"
+								itemLabel="#{task.description}" itemValue="#{task}" />
+							<p:ajax event="change" update="task" />
+						</p:selectOneMenu>
+					</p:column>
+					<p:column headerText="Activity">
+						<p:selectOneMenu id="activity"
+							value="#{dailyActivitylist.taskActivity}"
+							converter="omnifaces.SelectItemsConverter" style="width:127px;">
+							<f:selectItems var="taskActivity"
+								value="#{DailyActivityManageTestBean.taskActivities}"
+								itemLabel="#{taskActivity.description}"
+								itemValue="#{taskActivity}" />
+							<p:ajax event="change" update="activity" />
+						</p:selectOneMenu>
+					</p:column>
+					<p:column headerText="Description*">
+						<p:inputText id="description"
+							value="#{dailyActivitylist.taskDescription}" maxlength="250"
+							style="#{empty dailyActivitylist.taskDescription or empty dailyActivitylist.taskDescription.trim()  ? 'color:black;background:#f2dede;' : 'color:black;background:White;'};width:180px;">
+							<p:ajax event="change" update="description"
+								listener="#{DailyActivityManageTestBean.descriptionValidation(dailyActivitylist.taskDescription, index)}" />
+							<p:ajax event="blur" update="description"
+								listener="#{DailyActivityManageTestBean.descriptionValidation(dailyActivitylist.taskDescription, index)}" />
+						</p:inputText>
+					</p:column>
+					<p:column headerText="Deliverables/Documents">
+						<p:inputText id="delivery"
+							value="#{dailyActivitylist.deliveryOutput}" maxlength="250"
+							style="width:200px;">
+							<p:ajax event="change" update="delivery" />
+						</p:inputText>
+					</p:column>
+					<p:column headerText="Begin Date" style="width:146px;">
+						<p:calendar id="beginDate"
+							value="#{dailyActivitylist.beginDate}" pattern="yyyy/MM/dd">
+							<p:ajax event="dateSelect" update="beginDate" />
+							<p:ajax event="change" update="beginDate" />
+						</p:calendar>
+					</p:column>
+					<p:column headerText="End Date" style="width:146px;">
+						<p:calendar id="endDate" value="#{dailyActivitylist.endDate}"
+							pattern="yyyy/MM/dd">
+							<p:ajax event="dateSelect" update="endDate" />
+							<p:ajax event="change" update="endDate" />
+						</p:calendar>
+					</p:column>
+					<p:column headerText="From Time" style="width:65px;background-color: #daeef3">
+						<p:calendar id="fromTime" value="#{dailyActivitylist.planStartTime}"
+							pattern="HH:mm" timeOnly="true"  size ="5"
+							styleClass = "#{empty dailyActivitylist.planStartTime or dailyActivitylist.planStartTime eq null ? 'calendarRedStyle':''}">
+							<p:ajax event="dateSelect" listener="#{DailyActivityManageTestBean.timeValidation(dailyActivitylist.planStartTime)}" update="fromTime" />
+							<p:ajax event="change" listener="#{DailyActivityManageTestBean.timeValidation(dailyActivitylist.planStartTime)}" update="fromTime" />
+						</p:calendar>
+					</p:column>
+					<p:column headerText="To Time" style="width:65px;background-color: #daeef3">
+						<p:calendar id="toTime" value="#{dailyActivitylist.planEndTime}"
+							pattern="HH:mm" timeOnly="true" size="5"
+							styleClass = "#{empty dailyActivitylist.planEndTime or dailyActivitylist.planEndTime eq null ? 'calendarRedStyle':''}">
+							<p:ajax event="dateSelect" listener="#{DailyActivityManageTestBean.timeValidation(dailyActivitylist.planEndTime)}" update="toTime" />
+							<p:ajax event="change" listener="#{DailyActivityManageTestBean.timeValidation(dailyActivitylist.planEndTime)}" update="toTime" />
+						</p:calendar>
+					</p:column>
+					<p:column headerText="Plan Progress %" style="width:65px;background-color: #daeef3">
+						<p:inputText id="planProgress"
+							value="#{dailyActivitylist.tempPlanProgress}" placeholder="1 to 100"
+							style="#{dailyActivitylist.progressFlag == false ? 'color:black;background:#f2dede;' : 'color:black;background:White;'};width:65px;"
+							>
+							<p:ajax event="change" update="planProgress "
+								listener="#{DailyActivityManageTestBean.progressValidation(dailyActivitylist.tempPlanProgress,index,true)}" />
+							<p:ajax event="blur" update="planProgress"
+								listener="#{DailyActivityManageTestBean.progressValidation(dailyActivitylist.tempPlanProgress,index,true)}" />
+						</p:inputText>
+					</p:column>
+					<p:column headerText="Plan Hours*" style="width:65px;background-color: #daeef3">
+						<p:inputText id="planHours"
+							value="#{dailyActivitylist.tempPlanHour}" placeholder="0 to 24"
+							style="#{empty dailyActivitylist.tempPlanHour.trim() or dailyActivitylist.hourFlag == false ? 'color:black;background:#f2dede;' : 'color:black;background:White;'};width:65px;"
+							disabled="#{DailyActivityManageBeanTest.planReport}">
+						</p:inputText>
+
+					</p:column>
+					<!-- Actual -->
+					<p:column headerText="Progress %" style="width:65px;">
+						<p:inputText id="progress"
+							value="#{dailyActivitylist.tempProgress}" placeholder="1 to 100"
+							style="#{dailyActivitylist.progressFlag == false ? 'color:black;background:#f2dede;' : 'color:black;background:White;'};width:65px;">
+							<p:ajax event="change" update="progress"
+								listener="#{DailyActivityManageTestBean.progressValidation(dailyActivitylist.tempProgress,index)}" />
+							<p:ajax event="blur" update="progress"
+								listener="#{DailyActivityManageTestBean.progressValidation(dailyActivitylist.tempProgress,index)}" />
+						</p:inputText>
+					</p:column>
+					<p:column headerText="Hours*" style="width:65px;">
+						<p:inputText id="activityHours"
+							value="#{dailyActivitylist.tempHour}" placeholder="0.1 to 24"
+							style="#{empty dailyActivitylist.tempHour.trim() or dailyActivitylist.hourFlag == false ? 'color:black;background:#f2dede;' : 'color:black;background:White;'};width:65px;">
+							<p:ajax event="change"
+								update="activityHours reportEntryForm:totalHrs"
+								listener="#{DailyActivityManageTestBean.hourValidation(dailyActivitylist.tempHour, index)}" />
+							<p:ajax event="blur"
+								update="activityHours reportEntryForm:totalHrs"
+								listener="#{DailyActivityManageTestBean.hourValidation(dailyActivitylist.tempHour, index)}" />
+						</p:inputText>
+					</p:column>
+					<p:column headerText="Diff Progress %" style="width:65px;background:#fde9da">
+						<p:inputText id="diffProgress"
+							value="#{dailyActivitylist.diffProgress}" placeholder="1 to 100" style="width:65px;"
+							disabled = "true">
+						</p:inputText>
+					</p:column>
+					<p:column headerText="DiffHours*" style="width:65px;background:#fde9da">
+						<p:inputText id="diffHours"
+							value="#{dailyActivitylist.diffActivityHours}" placeholder="0 to 24" style="width:65px;"
+							disabled = "true">
+						</p:inputText>
+
+					</p:column>
+					<p:column headerText="Delay/Forward" style="width:93px;">
+						<p:selectOneMenu id="status"
+							value="#{dailyActivitylist.taskStatus}"
+							converter="omnifaces.SelectItemsConverter" style="width:65px;">
+							<f:selectItem itemLabel="-" itemValue="#{null}" />
+							<f:selectItems value="#{DailyActivityManageTestBean.taskStatuses}" />
+							<f:ajax render="count" />
+							<p:ajax event="change" update="count"
+								listener="#{DailyActivityManageTestBean.resetTaskStatusCount(dailyActivitylist.taskStatus,index)}" />
+						</p:selectOneMenu>
+					</p:column>
+					<p:column
+						headerText="Task Status Count(Number of days for Delay/Forward)"
+						style="width:50px;">
+						<p:inputText id="count"
+							disabled="#{dailyActivitylist.taskStatus==null}"
+							value="#{dailyActivitylist.tempTaskStatusCount}"
+							style="color : ${dailyActivitylist.taskStatus eq 'DELAY' ? 'red' : dailyActivitylist.taskStatus eq 'FORWARD' ? 'blue':'blue'}; background : ${empty dailyActivitylist.taskStatus or dailyActivitylist.taskStatus eq null ? 'white': empty dailyActivitylist.tempTaskStatusCount.trim() or dailyActivitylist.countFlag==false? '#f2dede':'white'}; width:50px;">
+							<p:ajax event="change" update="count"
+								listener="#{DailyActivityManageTestBean.countValidation(dailyActivitylist.tempTaskStatusCount,index)}" />
+							<p:ajax event="blur" update="count"
+								listener="#{DailyActivityManageTestBean.countValidation(dailyActivitylist.tempTaskStatusCount,index)}" />
+						</p:inputText>
+					</p:column>
+					<p:column headerText="Reason" style="width:180px;">
+						<p:inputText id="reason" value="#{dailyActivitylist.reason}"
+							rows="5" cols="30" maxlength="250" style="width:180px;">
+							<p:ajax event="change" update="reason" />
+						</p:inputText>
+					</p:column>
+					<p:column headerText="Review"
+						rendered="#{DailyActivityManageTestBean.editFlag}">
+						<p:inputText value="#{dailyActivitylist.review}" id="review"
+							style="width:250px;" maxlength="250"
+							rendered="#{sessionScope.loginUser.authorities.size() != 0}">
+							<p:ajax event="change" update="review" />
+						</p:inputText>
+						<h:outputText value="#{dailyActivitylist.review}"
+							style="width:200px; display:block; word-wrap:break-word;"
+							rendered="#{(sessionScope.loginUser.role=='ADMIN' or sessionScope.loginUser.role=='USER') and sessionScope.loginUser.authorities.size() ==0}"></h:outputText>
+					</p:column>
+				</p:dataTable>
+				<p:commandButton id="backBtn" process="@form"
+					value="#{label['COMMON_BACK_BTN']}"
+					rendered="#{DailyActivityManageTestBean.backBtnDisabled!=1}"
+					action="#{DailyActivityManageTestBean.back}" style="font-size:13px;"
+					ajax="false">
+				</p:commandButton>
+				<p:dialog global="true" header="Report Duplication" widgetVar="dlg3" styleClass="whmBackStyle"
+					showEffect="explode" hideEffect="explode" height="50"
+					resizable="false">
+					<div>Select Date:</div>
+					<p:calendar id="duplicateDate"
+						maxdate="#{DailyActivityManageTestBean.yesterday()}"
+						value="#{DailyActivityManageTestBean.duplicateDate}"
+						pattern="yyyy/MM/dd">
+						<p:ajax event="dateSelect" update="duplicateDate" />
+						<p:ajax event="change" update="duplicateDate" />
+					</p:calendar>
+					<p:spacer width="15" />
+					<!--
+						Revised By   : Ye Phyo Ko
+						Revised Date : 2018/01/18
+						Explanation  : Modify copy activity function.
+				 	-->
+					<p:commandButton id="duplicateBtn" value="Duplicate"
+						  actionListener="#{DailyActivityManageTestBean.searchActivitiesToCopy(DailyActivityManageTestBean.duplicateDate)}" 
+						update="selectCopyDialog" >
+					</p:commandButton>
+				</p:dialog>
+				<p:dialog id="selectCopyDialog" header="Copy Activities" resizable="false"
+					widgetVar="dlg4" position="center" onShow="PF('dlg4').initPosition()">
+					<p:dataTable  id="activitiesCopyTable" var="activity" value="#{DailyActivityManageTestBean.activitesListToCopy}"
+						selection="#{DailyActivityManageTestBean.selectedActivities}" 
+						rowIndexVar="index" rowKey="#{activity.id}" scrollable="true" scrollHeight="250" scrollWidth="1200">
+					 	<p:columnGroup type="header">
+							<p:row>
+								<p:column id="selectCopyRecord" selectRow="1" selectionMode="multiple" rowspan="2" headerText="Select Copy" style="width:70px;"/>
+								<p:column rowspan="2" headerText="No" style="width:30px;"  />
+								<p:column rowspan="2" headerText="Project ID"
+										style="width:130px;" />
+								<p:column rowspan="2" headerText="Project Name"
+									style="width:200px;" />
+								<p:column rowspan="2" headerText="WBS No" style="width:100px;" />
+								<p:column colspan="5" headerText="Task" style="width:600px;" />
+								<p:column rowspan="2" headerText="Deliverables/Documents" style="width:250px;" />
+								<p:column rowspan="2" headerText="Begin Date" style="width:90px;" />
+								<p:column rowspan="2" headerText="End Date" style="width:90px;" />
+								<p:column rowspan="2" headerText="Progress (%)" style="width:55px;" />
+								<p:column rowspan="2" headerText="Hours" style="width:50px;" />
+								<p:column rowspan="2" headerText="Delay/Forward" style="width:95px;" />
+								<p:column rowspan="2" headerText="Task Status Count" style="width:50px;" />
+								<p:column rowspan="2" headerText="Reason" style="width:180px;" />
+							</p:row>
+							<p:row>
+								<p:column headerText="Function ID" style="width:100px;" />
+								<p:column headerText="Category" style="width:100px;" />
+								<p:column headerText="Activity" style="width:100px;" />
+								<p:column colspan="2" headerText="Description" style="width:250px;" />
+							</p:row>
+						</p:columnGroup>
+						
+						<p:ajax event="rowSelectCheckbox" update="reportEntryForm:copyBtn" />
+        				<p:ajax event="rowUnselectCheckbox" update="reportEntryForm:copyBtn" />
+        				<p:ajax event="toggleSelect" update="reportEntryForm:copyBtn" />
+        				
+						<p:column selectionMode="multiple" headerText="Select Copy" style="text-align : center;" />
+						<p:column headerText="No">
+							<h:outputText value="#{index + 1}" style="text-align : center; width:30px; display:block;" />
+						</p:column>
+						<p:column headerText="Project ID" style="text-align:center;">
+							<h:outputText value="#{activity.project.id}" />
+						</p:column>
+						<p:column headerText="Project Name">
+							<h:outputText value="#{activity.project.projectName}" />
+						</p:column>
+						<p:column headerText="WBS No" style="text-align:center;">
+							<h:outputText value="#{activity.wbs}" />
+						</p:column>
+						<p:column headerText="Function ID" style="text-align:center;">
+							<h:outputText value="#{activity.wbsFunction}" />
+						</p:column>
+						<p:column headerText="Category">
+							<h:outputText value="#{activity.task.description}" />
+						</p:column>
+						<p:column headerText="Activity" style="text-align:center;">
+							<h:outputText value="#{activity.taskActivity.description}" />
+						</p:column>
+						<p:column colspan="2" headerText="Description" >
+							<h:outputText value="#{activity.taskDescription}" />
+						</p:column>
+						<p:column headerText="Deliverables/Documents">
+							<h:outputText value="#{activity.deliveryOutput}" />
+						</p:column>
+						<p:column headerText="Begin Date" style="text-align:center;">
+							<h:outputText value="#{activity.beginDate}">
+								<f:convertDateTime pattern="yyyy-MM-dd" />
+							</h:outputText>
+						</p:column>
+						<p:column headerText="End Date" style="text-align:center;">
+							<h:outputText value="#{activity.endDate}">
+								<f:convertDateTime pattern="yyyy-MM-dd" />
+							</h:outputText>
+						</p:column>
+						<p:column headerText="Progress (%)" style="text-align:center;">
+							<h:outputText value="#{activity.progressPercentage}" />
+						</p:column>
+						<p:column headerText="Hours" style="text-align:center;">
+							<h:outputText value="#{activity.activityHours}" />
+						</p:column>
+						<p:column headerText="Delay/Forward" style="text-align:center;">
+							<h:outputText value="#{activity.taskStatus}" />
+						</p:column>
+						<p:column headerText="Task Status Count"
+							style="color : ${dailyActivity.taskStatus eq 'DELAY' ? 'red' : dailyActivity.taskStatus eq 'FORWARD' ? 'blue':'white'}; text-align:center;">
+							<h:outputText value="#{activity.taskStatusCount}" />
+						</p:column>
+						<p:column headerText="Reason">
+							<h:outputText value="#{activity.reason}" />
+						</p:column>
+					</p:dataTable>
+					<f:facet name="footer">
+						<div align="center">
+							<p:commandButton id="copyBtn" value="Copy" styleClass="button" style="text-align : center; width : 100px;"
+								 actionListener="#{DailyActivityManageTestBean.copySelectActivities()}" disabled="#{DailyActivityManageTestBean.selectedActivities.size() == 0}"
+								update="reportEntryForm"/>
+						</div>
+					</f:facet>
+				</p:dialog>
+				<p:dialog id="copydialoga" widgetVar="copyConfirmDlg"
+					header="Comfirmation" global="true" resizable="false"
+					severity="alert" width="200px">
+					<h:outputText value="Copy full leave will clear your current activities."/>
+					<f:facet name="footer">
+						<div align="center">
+							<p:commandButton value="Copy" update="reportEntryForm"
+								actionListener="#{DailyActivityManageTestBean.copyFullLeave()}" />
+							<p:spacer width="20px" />
+							<p:commandButton value="Cancel"
+								onclick="PF('copyConfirmDlg').hide();" />
+						</div>
+					</f:facet>
+				</p:dialog>
+				<!--
+					Revised By   : Sai Kyaw Ye Myint
+					Revised Date : 2018/04/27
+					Explanation  : Added comfirm dialog for daily activities save function.
+				 -->
+				<p:dialog  id="saveConfirmDialog" widgetVar="saveConfirmDialog" draggable="false"
+					header="Comfirmation" global="true" resizable="false" closable="false"
+					severity="alert" width="auto">
+					<h:outputText value="#{DailyActivityManageTestBean.suggestMessage}"/>
+					<f:facet name="footer">
+						<div align="center">
+							<p:commandButton value="Save" update="reportEntryForm" oncomplete="PF('saveConfirmDialog').hide();"
+								actionListener="#{DailyActivityManageTestBean.save}" />
+								<p:spacer width="20px" />
+							<p:commandButton value="Cancel"
+								onclick="PF('saveConfirmDialog').hide();" />
+						</div>
+					</f:facet>
+				</p:dialog> 
+			</h:form>
+			<script type="text/javascript">
+				history.pushState(null, null, document.URL);
+				window.addEventListener('popstate', function () {
+				    history.pushState(null, null, document.URL);
+				});
+				function disableF5(e) {
+					if ((e.which || e.keyCode) == 116  || (e.which || e.keyCode) == 82) {
+						 e.preventDefault();
+						 e.stopPropagation();
+					}
+				};
+					$(document).bind("load", disableF5);
+			</script>
+		</h:body>
+	</ui:define>
+</ui:composition>

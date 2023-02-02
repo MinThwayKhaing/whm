@@ -1,0 +1,199 @@
+<!-- 
+	Created By		: Soe Thiha Lwin
+	Created Date 	: 2018/09/25
+	Explanation 	: Created for working hour registration function. 
+ -->
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:p="http://primefaces.org/ui"
+	template="/common/commonLayout.xhtml">
+	<ui:param name="leftMenu" value="/common/adminLeft.xhtml" />
+	<ui:param name="rendered" value="true" />
+	<ui:define name="content">
+		<h:form id="workinghourEntryForm" styleClass="form-horizontal">
+			<h:outputText value="Working Hour Registration"
+				style="margin-top: 0px; margin-bottom:10px; font-size:20px;" />
+			<p:separator style="height:5px; margin-top:2px; margin-bottom: 20px;" />
+			<table style="width: 100%">
+				<tr>
+					<td></td>
+					<td width="75%" align="center">
+						<div
+							style="z-index: 100; position: fixed; margin-top: -30px; width: 850px;">
+							<p:messages globalOnly="true" showDetail="true" id="messages"
+								closable="true" escape="false" />
+						</div>
+					</td>
+				</tr>
+			</table>
+			<table class="whmBackStyle">
+				<tr>
+					<td></td>
+					<td></td>
+					<td><p:message for="startdate" /></td>
+				</tr>
+				<tr>
+					<td width="150px;"><span class="cmms-label">Financial
+							Year Start Date<span style="color: red;"> *</span>
+					</span></td>
+					<td>:</td>
+					<td><p:calendar id="startdate" pattern="yyyy/MM/dd"
+							value="#{WorkingHourRegistrationBean.workinghour.startDate}"
+							required="true">
+							<p:ajax event="change"
+								listener="#{WorkingHourRegistrationBean.checkStartDate()}"
+								update="addBtn editBtn workinghourEntryForm" />
+							<p:ajax event="dateSelect"
+								listener="#{WorkingHourRegistrationBean.checkStartDate()}"
+								update="addBtn editBtn workinghourEntryForm" />
+						</p:calendar></td>
+				</tr>
+
+				<tr>
+					<td></td>
+					<td></td>
+					<td><p:message for="enddate" /></td>
+				</tr>
+				<tr>
+					<td width="150px;"><span class="cmms-label">Financial
+							Year End Date<span style="color: red;"> *</span>
+					</span></td>
+					<td>:</td>
+					<td><p:calendar id="enddate" pattern="yyyy/MM/dd"
+							value="#{WorkingHourRegistrationBean.workinghour.endDate}"
+							required="true">
+							<p:ajax event="change"
+								listener="#{WorkingHourRegistrationBean.checkEndDate()}"
+								update="addBtn editBtn workinghourEntryForm" />
+							<p:ajax event="dateSelect"
+								listener="#{WorkingHourRegistrationBean.checkEndDate()}"
+								update="addBtn editBtn workinghourEntryForm" />
+						</p:calendar></td>
+				</tr>
+
+				<tr>
+					<td></td>
+					<td></td>
+					<td><p:message for="workinghour" /></td>
+				</tr>
+
+				<tr>
+					<td><span class="cmms-label">Working Hour<span
+							style="color: red;"> *</span></span></td>
+					<td>:</td>
+					<td><p:inputText id="workinghour"
+							value="#{WorkingHourRegistrationBean.workinghour.workingHours}"
+							validator="noBlankSpaceValidator" required="true"
+							converterMessage="Value must be a number"
+							validatorMessage="Value must not 0 and not larger than 12">
+							<f:validateDoubleRange minimum="1" maximum="12" />
+							<p:ajax event="change" process="@form"
+								update="addBtn editBtn workinghourEntryForm" />
+						</p:inputText></td>
+				</tr>
+				<tr>
+					<td><p:commandButton id="addBtn"
+							value="#{label['COMMON_ADDNEW_BTN']}"
+							action="#{WorkingHourRegistrationBean.addNewWorkingHour}"
+							rendered="#{WorkingHourRegistrationBean.createNew}"
+							update="workinghourEntryForm :workinghourTableForm"
+							style="font-size:13px;"
+							disabled="#{WorkingHourRegistrationBean.btnAdd}" /> <p:commandButton
+							id="editBtn" value="#{label['COMMON_UPDATE_BTN']}"
+							action="#{WorkingHourRegistrationBean.updateWorkingHour}"
+							rendered="#{!WorkingHourRegistrationBean.createNew}"
+							disabled="#{WorkingHourRegistrationBean.btnAdd}"
+							update="workinghourEntryForm :workinghourTableForm"
+							style="font-size:13px;" /></td>
+				</tr>
+
+
+			</table>
+		</h:form>
+		<p:separator style="height:5px;margin-top: 2px;margin-bottom: 2px;" />
+		<br />
+
+		<h:form id="workinghourTableForm">
+			<p:dataTable var="workinghour"
+				value="#{WorkingHourRegistrationBean.workinghours}"
+				styleClass="whmBackStyle" id="workinghourTable" paginator="true"
+				rows="30" style="width:100%;"
+				paginatorTemplate="{CurrentPageReport}  {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"
+				rowsPerPageTemplate="10, 20, 30" rowIndexVar="index">
+				<p:column headerText="No" style="width:50px;text-align : center;">
+					<h:outputText value="#{index + 1}" />
+				</p:column>
+				<p:column headerText="Start Year" sortBy="#{workinghour.startDate}"
+					filterBy="#{workinghour.startDate}" filterMatchMode="contains"
+					style="text-align : center;">
+					<p:spacer width="10px;" />
+					<h:outputText id="startDateLabel" value="#{workinghour.startDate}">
+						<f:convertDateTime pattern="yyyy-MM-dd" />
+					</h:outputText>
+				</p:column>
+				<p:column headerText="End Year" sortBy="#{workinghour.endDate}"
+					filterBy="#{workinghour.endDate}" filterMatchMode="contains"
+					style="text-align : center;">
+					<p:spacer width="10px;" />
+					<h:outputText id="endDateLabel" value="#{workinghour.endDate}">
+						<f:convertDateTime pattern="yyyy-MM-dd" />
+					</h:outputText>
+				</p:column>
+
+
+				<p:column headerText="Working Hour"
+					sortBy="#{workinghour.workingHours}"
+					filterBy="#{workinghour.workingHours}" filterMatchMode="contains"
+					style="text-align : center;">
+					<p:spacer width="10px;" />
+					<h:outputText id="workingHourLabel"
+						value="#{workinghour.workingHours}" />
+				</p:column>
+
+				<p:column headerText="Edit" style="width:50px;">
+					<p:commandLink
+						action="#{WorkingHourRegistrationBean.prepareUpdateWorkingHour(workinghour)}"
+						update=":workinghourEntryForm">
+						<h:outputText value="Edit"
+							style="text-align:center;display:block;" />
+					</p:commandLink>
+				</p:column>
+				<p:column headerText="Delete" style="width:50px;">
+					<p:commandLink id="deleteworkinghourLink"
+						actionListener="#{WorkingHourRegistrationBean.deleteWorkingHour(workinghour)}"
+						update=":workinghourTableForm:workinghourTable :workinghourEntryForm @this">
+						<h:outputText value="Delete"
+							style="text-align:center;display:block;" />
+						<p:confirm header="Confirmation" message="Are you sure?"
+							icon="ui-icon-alert" />
+					</p:commandLink>
+				</p:column>
+			</p:dataTable>
+			<p:confirmDialog global="true" showEffect="fade" hideEffect="explode">
+				<p:commandButton value="Yes" type="button"
+					styleClass="ui-confirmdialog-yes"
+					oncomplete="PF('vtWidget').filter()" />
+				<p:commandButton value="No" type="button"
+					styleClass="ui-confirmdialog-no" />
+			</p:confirmDialog>
+		</h:form>
+
+
+		<script type="text/javascript">
+			history.pushState(null, null, document.URL);
+			window.addEventListener('popstate', function() {
+				history.pushState(null, null, document.URL);
+			});
+			function disableF5(e) {
+				if ((e.which || e.keyCode) == 116
+						|| (e.which || e.keyCode) == 82) {
+					e.preventDefault();
+				}
+			};
+			$(document).bind("load", disableF5);
+		</script>
+
+	</ui:define>
+</ui:composition>

@@ -1,0 +1,737 @@
+
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:c="http://java.sun.com/jsp/jstl/core"
+	template="/common/commonLayout.xhtml">
+	<ui:param name="leftMenu" value="/common/adminLeft.xhtml" />
+	<ui:param name="rendered" value="true" />
+	<ui:define name="content">
+		<h:body>
+			<h:form id="weeklyReportEntryForm" styleClass="form-horizontal">
+				<h:outputText value="Working Hour Management(Project)"
+					style="margin-top: 0px; margin-bottom: 10px;font-size:20px;" />
+				<p:separator style="height:5px;margin-top: 2px;margin-bottom: 2px;" />
+				<table width="100%">
+					<tr>
+						<td></td>
+						<td width="70%" align="center">
+							<div
+								style="z-index: 100; position: fixed; margin-top: -30px; width: 700px;">
+								<p:messages showDetail="true" id="messages" autoUpdate="true"
+									closable="true" />
+							</div>
+						</td>
+					</tr>
+				</table>
+				<table class="whmBackStyle">
+					<tr>
+						<td width="120px;"><span class="cmms-label">Project ID</span></td>
+						<td>:</td>
+						<td><p:inputText id="projectID"
+								value="#{WorkingHourManagementProjectBean.projectID}">
+								<p:ajax event="blur"
+									listener="#{WorkingHourManagementProjectBean.selectProject}"
+									update="startYear startMonth endYear endMonth show export projectInfoForm" />
+							</p:inputText></td>
+						<td></td>
+						<td></td>
+						<td width="120px;"><span class="cmms-label">Start Year</span></td>
+						<td>:</td>
+						<td><p:selectOneMenu id="startYear"
+								value="#{WorkingHourManagementProjectBean.startYear}"
+								style="width:120px;">
+								<f:selectItems value="#{WorkingHourManagementProjectBean.years}" />
+								<p:ajax event="blur"
+									update="startYear startMonth endYear endMonth" />
+							</p:selectOneMenu></td>
+
+						<td></td>
+						<td></td>
+						<td width="120px;"><span class="cmms-label">Start
+								Month</span></td>
+						<td>:</td>
+						<td><p:selectOneMenu id="startMonth"
+								value="#{WorkingHourManagementProjectBean.startMonth}"
+								style="width:120px;">
+								<f:selectItems
+									value="#{WorkingHourManagementProjectBean.months}" />
+								<p:ajax event="blur"
+									update="startYear startMonth endYear endMonth" />
+							</p:selectOneMenu></td>
+					<tr>
+						<td colspan="3"><span class="cmms-label" style="color: red">*Please
+								input 'ALL' or Full Project ID or Partial Project ID or '-' to
+								'Project ID'.</span></td>
+						<td></td>
+						<td></td>
+						<td></td>
+					</tr>
+					</tr>
+
+
+					<tr height="55px;">
+						<td width="120px;"><span class="cmms-label">Customer
+								Name</span></td>
+						<td>:</td>
+						<td><p:selectOneMenu id="customer"
+								value="#{WorkingHourManagementProjectBean.customer}"
+								style="width:120px;" converter="omnifaces.SelectItemsConverter"
+								filter="true" filterMatchMode="contains">
+								<p:ajax
+									listener="#{WorkingHourManagementProjectBean.selectProject}"
+									update="startYear startMonth endYear endMonth show export projectInfoForm" />
+								<f:selectItems
+									value="#{WorkingHourManagementProjectBean.clientOrganization}"
+									var="client" itemLabel="#{client}" itemValue="#{client}" />
+							</p:selectOneMenu></td>
+						<td></td>
+						<td></td>
+						<td width="120px;"><span class="cmms-label">End Year</span></td>
+						<td>:</td>
+						<td><p:selectOneMenu id="endYear"
+								value="#{WorkingHourManagementProjectBean.endYear}"
+								style="width:120px;">
+								<f:selectItems value="#{WorkingHourManagementProjectBean.years}" />
+								<p:ajax event="blur"
+									update="startYear startMonth endYear endMonth" />
+							</p:selectOneMenu></td>
+						<td></td>
+						<td></td>
+						<td width="120px;"><span class="cmms-label">End Month</span></td>
+						<td>:</td>
+						<td><p:selectOneMenu id="endMonth"
+								value="#{WorkingHourManagementProjectBean.endMonth}"
+								style="width:120px;">
+								<f:selectItems
+									value="#{WorkingHourManagementProjectBean.months}" />
+								<p:ajax event="blur"
+									update="startYear startMonth endYear endMonth" />
+							</p:selectOneMenu></td>
+					</tr>
+				</table>
+				<table>
+					<tr>
+						<td><p:commandButton value="#{label['COMMON_SHOW_BTN']}"
+								action="#{WorkingHourManagementProjectBean.show}" id="show"
+								disabled="#{!(WorkingHourManagementProjectBean.btnShow)}"
+								update=":weeklyReportEntryForm :projectInfoForm" /></td>
+						<td></td>
+						<td><p:commandButton value="Export"
+								icon="ui-icon-arrowthick-1-s"
+								actionListener="#{WorkingHourManagementProjectBean.export}"
+								onclick="PrimeFaces.monitorDownload(start, stop);" id="export"
+								disabled="#{!(WorkingHourManagementProjectBean.btnExport)}">
+								<p:fileDownload
+									value="#{WorkingHourManagementProjectBean.download}" />
+							</p:commandButton></td>
+						<td></td>
+					</tr>
+				</table>
+			</h:form>
+			<h:form id="projectInfoForm">
+				<p:separator style="height:5px;margin-top: 2px;margin-bottom: 2px;" />
+				<p></p>
+				<h:commandLink process="@this"
+					action="#{WorkingHourManagementProjectBean.detail()}" 
+					rendered="#{WorkingHourManagementProjectBean.tableHeaderList.size() gt 0}">
+					<h:outputText id="detailLnk" value="Go To Detail Information"
+						style="text-decoration:none;color:green;" />
+						
+				</h:commandLink>
+
+
+				<p:scrollPanel mode="native" style="width:100%;height:100%;"
+					id="scrollfull"
+					rendered="#{WorkingHourManagementProjectBean.tableHeaderList.size() gt 0}">
+					<c:if test="#{WorkingHourManagementProjectBean.fullPrjFlag}">
+
+
+						<p:panelGrid>
+							<f:facet name="header">
+								<p:row>
+
+								<p:column rowspan="3" 
+										style="z-index:5;min-width:10em;position:sticky;position: -webkit-sticky;left:0;top:0;box-shadow:inset 1px 0 0 #327e04;">Project ID</p:column>
+									<p:column rowspan="3" 
+										style="z-index:5;min-width:10em;position:sticky;position: -webkit-sticky;left:11.4em;top:0;box-shadow:inset 1px 0 0 #327e04;">Project Name</p:column>
+									<p:column rowspan="3" 
+										style="z-index:5;min-width:10em;position:sticky;position: -webkit-sticky;left:22.8em;top:0;box-shadow:inset 1px 0 0 #327e04;">Customer</p:column>
+									<p:column rowspan="3" 
+										style="z-index:5;min-width:5em;position:sticky;position: -webkit-sticky;left:34.2em;top:0;box-shadow:inset 1px 0 0 #327e04;">Total Plan M-M</p:column>
+									<p:column rowspan="3" 
+										style="z-index:5;min-width:5em;position:sticky;position: -webkit-sticky;left:40.5em;top:0;box-shadow:inset 1px 0 0 #327e04;">Total Actual M-M</p:column>
+									<p:column rowspan="3"
+										style="z-index:5;min-width:10em;position:sticky;position: -webkit-sticky;left:46.9em;top:0;box-shadow:inset 1px 0 0 #327e04,1px 0 0  #327e04;">Team</p:column>
+
+								</p:row>
+
+								<p:row>
+									<c:forEach var="period"
+										items="#{WorkingHourManagementProjectBean.tableHeaderList}">
+										<p:column colspan="3" rowspan="1" style="z-index:4;min-width:15em;position:sticky;position: -webkit-sticky;top:0;box-shadow:inset 1px 0 0 #327e04,1px 0 0  #327e04;" >
+											<h:outputText value="#{period.year}-#{period.month}" />
+										</p:column>
+									</c:forEach>
+								</p:row>
+
+
+								<p:row>
+									<c:forEach var="dataByYear"
+										items="#{WorkingHourManagementProjectBean.tableHeaderList}">
+										<p:column style="z-index:4;min-width:5em;position:sticky;position: -webkit-sticky;top:28px;box-shadow:inset 1px 0 0 #327e04,inset 0 1px #327e04;" >
+											<h:outputText value="Members" />
+										</p:column>
+										<p:column style="z-index:4;min-width:5em;position:sticky;position: -webkit-sticky;top:28px;box-shadow:inset 1px 0 0 #327e04,inset 0 1px #327e04;">
+											<h:outputText value="Hour" />
+										</p:column>
+										<p:column style="z-index:4;min-width:5em;position:sticky;position: -webkit-sticky;top:28px;box-shadow:inset 1px 0 0 #327e04,inset 0 1px #327e04,1px 0 0  #327e04;">
+											<h:outputText value="Man-Month" />
+										</p:column>
+									</c:forEach>
+								</p:row>
+
+							</f:facet>
+					
+							<ui:repeat var="projectInfo"
+								value="#{WorkingHourManagementProjectBean.fullResultList}">
+								<p:row>
+									<p:column rowspan="#{projectInfo.teamInfo.size() + 2}"
+										style="z-index:3;min-width:10em;position:sticky;position: -webkit-sticky;left:0;background:inherit;box-shadow:inset 1px 1px 1px 0 #DCDCDC,0 1px 0 0 #DCDCDC;">
+										<h:outputText value="#{projectInfo.projectID}" />
+									</p:column>
+									<p:column rowspan="#{projectInfo.teamInfo.size() + 2}"
+										style="z-index:3;min-width:10em;position:sticky;position: -webkit-sticky;left:11.4em;background:inherit;box-shadow:inset 1px 1px 1px 0 #DCDCDC,0 1px 0 0 #DCDCDC;">
+										<h:outputText value="#{projectInfo.projectName}" />
+									</p:column>
+									<p:column rowspan="#{projectInfo.teamInfo.size() + 2}"
+										style="z-index:3;min-width:10em;position:sticky;position: -webkit-sticky;left:22.8em;background:inherit;box-shadow:inset 1px 1px 1px 0 #DCDCDC,0 1px 0 0 #DCDCDC;">
+										<h:outputText value="#{projectInfo.customer}" />
+									</p:column>
+									<p:column rowspan="#{projectInfo.teamInfo.size() + 2}"
+										style="z-index:3;min-width:5em;position:sticky;position: -webkit-sticky;left:34.2em;background:inherit;box-shadow:inset 1px 1px 1px 0 #DCDCDC,0 1px 0 0 #DCDCDC;">
+										<h:outputText value="#{projectInfo.totalPlanMM}">
+											<f:convertNumber type="number" groupingUsed="true"
+												minFractionDigits="2" pattern="#0.000" />
+										</h:outputText>
+									</p:column>
+									<p:column rowspan="#{projectInfo.teamInfo.size() + 2}"
+										style="z-index:3;min-width:5em;position:sticky;position: -webkit-sticky;left:40.5em;background:inherit;box-shadow:inset 1px 1px 1px 0 #DCDCDC,1px 0 0  #DCDCDC,0 1px 0 0 #DCDCDC;">
+										<h:outputText value="#{projectInfo.totalActualMM}">
+											<f:convertNumber type="number" groupingUsed="true"
+												minFractionDigits="2" pattern="#0.000" />
+										</h:outputText>
+									</p:column>	
+									
+									<ui:repeat var="teamInfo" value="#{projectInfo.teamInfo}">
+										<p:row>
+											<p:column
+												style="height:4.5em;z-index:3;min-width:5em;position:sticky;position: -webkit-sticky;left:46.9em;background:inherit;box-shadow:inset 1px 1px 1px 0 #DCDCDC,1px 0 0  #DCDCDC,0 1px 0 0 #DCDCDC;">
+												<h:outputText value="#{teamInfo.teanName}" />
+											</p:column>
+											<ui:repeat var="manmonthInfo"
+												value="#{teamInfo.manmonthList}">
+												<p:column style="z-index:3;min-width:5em;">
+													<h:outputText value="#{manmonthInfo.members}" />
+												</p:column>
+												<p:column style="z-index:3;min-width:5em;">
+													<h:outputText value="#{manmonthInfo.hour}">
+														<f:convertNumber type="number" groupingUsed="true"
+															minFractionDigits="2" pattern="#0.000" />
+													</h:outputText>
+												</p:column>
+												<p:column style="z-index:3;min-width:5em;">
+													<h:outputText value="#{manmonthInfo.manmonth}">
+														<f:convertNumber type="number" groupingUsed="true"
+															minFractionDigits="2" pattern="#0.000" />
+													</h:outputText>
+												</p:column>
+											</ui:repeat>
+										</p:row>
+									</ui:repeat>
+									<p:row>
+										<p:column
+											style="z-index:3;min-width:5em;position:sticky;position: -webkit-sticky;left:46.9em;background:inherit;box-shadow:inset 1px 1px 1px 0 #DCDCDC,1px 0 0  #DCDCDC,0 1px 0 0 #DCDCDC;">
+											<h:outputText value="Total" />
+										</p:column>
+										<ui:repeat var="totalInfo"
+											value="#{projectInfo.totalManMonthInfo}">
+											<p:column >
+												<h:outputText value="#{totalInfo.total_members}" />
+											</p:column>
+											<p:column>
+												<h:outputText value="#{totalInfo.total_hour}">
+													<f:convertNumber type="number" groupingUsed="true"
+														minFractionDigits="2" pattern="#0.000" />
+												</h:outputText>
+											</p:column>
+											<p:column>
+												<h:outputText value="#{totalInfo.total_manmonth}">
+													<f:convertNumber type="number" groupingUsed="true"
+														minFractionDigits="2" pattern="#0.000" />
+												</h:outputText>
+											</p:column>
+
+										</ui:repeat>
+									</p:row>
+								</p:row>
+							</ui:repeat>
+						</p:panelGrid>
+
+					</c:if>
+					
+					<c:if test="#{WorkingHourManagementProjectBean.partialPrjFlag}">
+
+
+						<p:panelGrid>
+							<f:facet name="header">
+								<p:row>
+
+									<p:column rowspan="3" 
+										style="z-index:5;min-width:10em;position:sticky;position: -webkit-sticky;left:0;top:0;box-shadow:inset 1px 0 0 #327e04;">Project ID</p:column>
+									<p:column rowspan="3" 
+										style="z-index:5;min-width:10em;position:sticky;position: -webkit-sticky;left:11.4em;top:0;box-shadow:inset 1px 0 0 #327e04;">Project Name</p:column>
+									<p:column rowspan="3" 
+										style="z-index:5;min-width:10em;position:sticky;position: -webkit-sticky;left:22.8em;top:0;box-shadow:inset 1px 0 0 #327e04;">Customer</p:column>
+									<p:column rowspan="3" 
+										style="z-index:5;min-width:5em;position:sticky;position: -webkit-sticky;left:34.2em;top:0;box-shadow:inset 1px 0 0 #327e04;">Total Plan M-M</p:column>
+									<p:column rowspan="3" 
+										style="z-index:5;min-width:5em;position:sticky;position: -webkit-sticky;left:40.5em;top:0;box-shadow:inset 1px 0 0 #327e04,1px 0 0  #327e04;">Total Actual M-M</p:column>
+
+
+								</p:row>
+
+								<p:row>
+									<c:forEach var="period"
+										items="#{WorkingHourManagementProjectBean.tableHeaderList}">
+										<p:column colspan="3" rowspan="1" style="z-index:4;min-width:15em;position:sticky;position: -webkit-sticky;top:0;box-shadow:inset 1px 0 0 #327e04,1px 0 0  #327e04;" >
+											<h:outputText value="#{period.year}-#{period.month}" />
+										</p:column>
+									</c:forEach>
+								</p:row>
+
+
+								<p:row>
+									<c:forEach var="dataByYear"
+										items="#{WorkingHourManagementProjectBean.tableHeaderList}">
+										<p:column style="z-index:4;min-width:5em;position:sticky;position: -webkit-sticky;top:28px;box-shadow:inset 1px 0 0 #327e04,inset 0 1px #327e04;" >
+											<h:outputText value="Members" />
+										</p:column>
+										<p:column style="z-index:4;min-width:5em;position:sticky;position: -webkit-sticky;top:28px;box-shadow:inset 1px 0 0 #327e04,inset 0 1px #327e04;">
+											<h:outputText value="Hour" />
+										</p:column>
+										<p:column style="z-index:4;min-width:5em;position:sticky;position: -webkit-sticky;top:28px;box-shadow:inset 1px 0 0 #327e04,inset 0 1px #327e04,1px 0 0  #327e04;">
+											<h:outputText value="Man-Month" />
+										</p:column>
+									</c:forEach>
+								</p:row>
+
+
+
+							</f:facet>
+						
+							<ui:repeat var="projectInfo"
+								value="#{WorkingHourManagementProjectBean.partialResultList}">
+								<p:row>
+									<p:column
+										style="z-index:3;min-width:10em;position:sticky;position: -webkit-sticky;left:0;background:inherit;box-shadow:inset 1px 1px 1px 0 #DCDCDC,0 1px 0 0 #DCDCDC;">
+										<h:outputText value="#{projectInfo.projectID}" />
+									</p:column>
+									<p:column
+										style="z-index:3;min-width:10em;position:sticky;position: -webkit-sticky;left:11.4em;background:inherit;box-shadow:inset 1px 1px 1px 0 #DCDCDC,0 1px 0 0 #DCDCDC;">
+										<h:outputText value="#{projectInfo.projectName}" />
+									</p:column>
+									<p:column
+										style="z-index:3;min-width:10em;position:sticky;position: -webkit-sticky;left:22.8em;background:inherit;box-shadow:inset 1px 1px 1px 0 #DCDCDC,0 1px 0 0 #DCDCDC;">
+										<h:outputText value="#{projectInfo.customer}" />
+									</p:column>
+									<p:column
+										style="z-index:3;min-width:5em;position:sticky;position: -webkit-sticky;left:34.2em;background:inherit;box-shadow:inset 1px 1px 1px 0 #DCDCDC,0 1px 0 0 #DCDCDC;">
+										<h:outputText value="#{projectInfo.totalPlanMM}">
+											<f:convertNumber type="number" groupingUsed="true"
+												minFractionDigits="2" pattern="#0.000" />
+										</h:outputText>
+									</p:column>
+									<p:column
+										style="z-index:3;min-width:5em;position:sticky;position: -webkit-sticky;left:40.5em;background:inherit;box-shadow:inset 1px 1px 1px 0 #DCDCDC,1px 0 0  #DCDCDC,0 1px 0 0 #DCDCDC;">
+										<h:outputText value="#{projectInfo.totalActualMM}">
+											<f:convertNumber type="number" groupingUsed="true"
+												minFractionDigits="2" pattern="#0.000" />
+										</h:outputText>
+									</p:column>
+									<ui:repeat var="totalInfo"
+										value="#{projectInfo.totalManMonthInfo}">
+										<p:column style="z-index:3;min-width:5em;">
+											<h:outputText value="#{totalInfo.total_members}" />
+										</p:column>
+										<p:column style="z-index:3;min-width:5em;">
+											<h:outputText value="#{totalInfo.total_hour}">
+												<f:convertNumber type="number" groupingUsed="true"
+													minFractionDigits="2" pattern="#0.000" />
+											</h:outputText>
+										</p:column>
+										<p:column style="z-index:3;min-width:5em;">
+											<h:outputText value="#{totalInfo.total_manmonth}">
+												<f:convertNumber type="number" groupingUsed="true"
+													minFractionDigits="2" pattern="#0.000" />
+											</h:outputText>
+										</p:column>
+
+									</ui:repeat>
+								</p:row>
+							</ui:repeat>
+						</p:panelGrid>
+
+					</c:if>
+					
+					<c:if test="#{WorkingHourManagementProjectBean.nullPrjFlag}">
+
+
+						<p:panelGrid>
+							<f:facet name="header">
+								<p:row>
+
+									<p:column rowspan="3" 
+										style="z-index:5;min-width:10em;position:sticky;position: -webkit-sticky;left:0;top:0;box-shadow:inset 1px 0 0 #327e04;">Project ID</p:column>
+									<p:column rowspan="3" 
+										style="z-index:5;min-width:10em;position:sticky;position: -webkit-sticky;left:11.4em;top:0;box-shadow:inset 1px 0 0 #327e04;">Project Name</p:column>
+									<p:column rowspan="3" 
+										style="z-index:5;min-width:10em;position:sticky;position: -webkit-sticky;left:22.8em;top:0;box-shadow:inset 1px 0 0 #327e04;">Customer</p:column>
+									<p:column rowspan="3" 
+										style="z-index:5;min-width:5em;position:sticky;position: -webkit-sticky;left:34.2em;top:0;box-shadow:inset 1px 0 0 #327e04;">Total Plan M-M</p:column>
+									<p:column rowspan="3" 
+										style="z-index:5;min-width:5em;position:sticky;position: -webkit-sticky;left:40.5em;top:0;box-shadow:inset 1px 0 0 #327e04,1px 0 0  #327e04;">Total Actual M-M</p:column>
+
+
+								</p:row>
+<p:row>
+									<c:forEach var="period"
+										items="#{WorkingHourManagementProjectBean.tableHeaderList}">
+										<p:column colspan="3" rowspan="1" style="z-index:4;min-width:15em;position:sticky;position: -webkit-sticky;top:0;box-shadow:inset 1px 0 0 #327e04,1px 0 0  #327e04;" >
+											<h:outputText value="#{period.year}-#{period.month}" />
+										</p:column>
+									</c:forEach>
+								</p:row>
+
+
+								<p:row>
+									<c:forEach var="dataByYear"
+										items="#{WorkingHourManagementProjectBean.tableHeaderList}">
+										<p:column style="z-index:4;min-width:5em;position:sticky;position: -webkit-sticky;top:28px;box-shadow:inset 1px 0 0 #327e04,inset 0 1px #327e04;" >
+											<h:outputText value="Members" />
+										</p:column>
+										<p:column style="z-index:4;min-width:5em;position:sticky;position: -webkit-sticky;top:28px;box-shadow:inset 1px 0 0 #327e04,inset 0 1px #327e04;">
+											<h:outputText value="Hour" />
+										</p:column>
+										<p:column style="z-index:4;min-width:5em;position:sticky;position: -webkit-sticky;top:28px;box-shadow:inset 1px 0 0 #327e04,inset 0 1px #327e04,1px 0 0  #327e04;">
+											<h:outputText value="Man-Month" />
+										</p:column>
+									</c:forEach>
+								</p:row>
+
+
+
+							</f:facet>
+						
+							<ui:repeat var="projectInfo"
+								value="#{WorkingHourManagementProjectBean.nullResultList}">
+								<p:row>
+									<p:column
+										style="z-index:3;min-width:10em;position:sticky;position: -webkit-sticky;left:0;background:inherit;box-shadow:inset 1px 1px 1px 0 #DCDCDC,0 1px 0 0 #DCDCDC;">
+										<h:outputText value="-" />
+									</p:column>
+									<p:column
+										style="z-index:3;min-width:10em;position:sticky;position: -webkit-sticky;left:11.4em;background:inherit;box-shadow:inset 1px 1px 1px 0 #DCDCDC,0 1px 0 0 #DCDCDC;">
+										<h:outputText value="#{projectInfo.projectName}" />
+									</p:column>
+									<p:column
+										style="z-index:3;min-width:10em;position:sticky;position: -webkit-sticky;left:22.8em;background:inherit;box-shadow:inset 1px 1px 1px 0 #DCDCDC,0 1px 0 0 #DCDCDC;">
+										<h:outputText value="#{projectInfo.customer}" />
+									</p:column>
+									<p:column
+										style="z-index:3;min-width:5em;position:sticky;position: -webkit-sticky;left:34.2em;background:inherit;box-shadow:inset 1px 1px 1px 0 #DCDCDC,0 1px 0 0 #DCDCDC;">
+										<h:outputText value="#{projectInfo.totalPlanMM}">
+											<f:convertNumber type="number" groupingUsed="true"
+												minFractionDigits="2" pattern="#0.000" />
+										</h:outputText>
+									</p:column>
+									<p:column
+										style="z-index:3;min-width:5em;position:sticky;position: -webkit-sticky;left:40.5em;background:inherit;box-shadow:inset 1px 1px 1px 0 #DCDCDC,1px 0 0  #DCDCDC,0 1px 0 0 #DCDCDC;">
+										<h:outputText value="#{projectInfo.totalActualMM}">
+											<f:convertNumber type="number" groupingUsed="true"
+												minFractionDigits="2" pattern="#0.000" />
+										</h:outputText>
+									</p:column>
+									<ui:repeat var="totalInfo"
+										value="#{projectInfo.totalManMonthInfo}">
+										<p:column style="z-index:3;min-width:5em;">
+											<h:outputText value="#{totalInfo.total_members}" />
+										</p:column>
+										<p:column style="z-index:3;min-width:5em;">
+											<h:outputText value="#{totalInfo.total_hour}">
+												<f:convertNumber type="number" groupingUsed="true"
+													minFractionDigits="2" pattern="#0.000" />
+											</h:outputText>
+										</p:column>
+										<p:column style="z-index:3;min-width:5em;">
+											<h:outputText value="#{totalInfo.total_manmonth}">
+												<f:convertNumber type="number" groupingUsed="true"
+													minFractionDigits="2" pattern="#0.000" />
+											</h:outputText>
+										</p:column>
+
+									</ui:repeat>
+								</p:row>
+							</ui:repeat>
+						</p:panelGrid>
+
+					</c:if>
+					
+					<c:if test="#{WorkingHourManagementProjectBean.customerFlag}">
+
+
+						<p:panelGrid>
+							<f:facet name="header">
+								<p:row>
+
+									<p:column rowspan="3" 
+										style="z-index:5;min-width:10em;position:sticky;position: -webkit-sticky;left:0;top:0;box-shadow:inset 1px 0 0 #327e04;">Project ID</p:column>
+									<p:column rowspan="3" 
+										style="z-index:5;min-width:10em;position:sticky;position: -webkit-sticky;left:11.4em;top:0;box-shadow:inset 1px 0 0 #327e04;">Project Name</p:column>
+									<p:column rowspan="3" 
+										style="z-index:5;min-width:10em;position:sticky;position: -webkit-sticky;left:22.8em;top:0;box-shadow:inset 1px 0 0 #327e04;">Customer</p:column>
+									<p:column rowspan="3" 
+										style="z-index:5;min-width:5em;position:sticky;position: -webkit-sticky;left:34.2em;top:0;box-shadow:inset 1px 0 0 #327e04;">Total Plan M-M</p:column>
+									<p:column rowspan="3" 
+										style="z-index:5;min-width:5em;position:sticky;position: -webkit-sticky;left:40.5em;top:0;box-shadow:inset 1px 0 0 #327e04,1px 0 0  #327e04;">Total Actual M-M</p:column>
+
+
+								</p:row>
+
+								<p:row>
+									<c:forEach var="period"
+										items="#{WorkingHourManagementProjectBean.tableHeaderList}">
+										<p:column colspan="3" rowspan="1" style="z-index:4;min-width:15em;position:sticky;position: -webkit-sticky;top:0;box-shadow:inset 1px 0 0 #327e04,1px 0 0  #327e04;" >
+											<h:outputText value="#{period.year}-#{period.month}" />
+										</p:column>
+									</c:forEach>
+								</p:row>
+
+
+								<p:row>
+									<c:forEach var="dataByYear"
+										items="#{WorkingHourManagementProjectBean.tableHeaderList}">
+										<p:column style="z-index:4;min-width:5em;position:sticky;position: -webkit-sticky;top:28px;box-shadow:inset 1px 0 0 #327e04,inset 0 1px #327e04;" >
+											<h:outputText value="Members" />
+										</p:column>
+										<p:column style="z-index:4;min-width:5em;position:sticky;position: -webkit-sticky;top:28px;box-shadow:inset 1px 0 0 #327e04,inset 0 1px #327e04;">
+											<h:outputText value="Hour" />
+										</p:column>
+										<p:column style="z-index:4;min-width:5em;position:sticky;position: -webkit-sticky;top:28px;box-shadow:inset 1px 0 0 #327e04,inset 0 1px #327e04,1px 0 0  #327e04;">
+											<h:outputText value="Man-Month" />
+										</p:column>
+									</c:forEach>
+								</p:row>
+
+
+
+							</f:facet>
+						
+							<ui:repeat var="projectInfo"
+								value="#{WorkingHourManagementProjectBean.customerResultList}">
+								<p:row>
+									<p:column
+										style="z-index:3;min-width:10em;position:sticky;position: -webkit-sticky;left:0;background:inherit;box-shadow:inset 1px 1px 1px 0 #DCDCDC,0 1px 0 0 #DCDCDC;">
+										<h:outputText value="#{projectInfo.projectID}" />
+									</p:column>
+									<p:column
+										style="z-index:3;min-width:10em;position:sticky;position: -webkit-sticky;left:11.4em;background:inherit;box-shadow:inset 1px 1px 1px 0 #DCDCDC,0 1px 0 0 #DCDCDC;">
+										<h:outputText value="#{projectInfo.projectName}" />
+									</p:column>
+									<p:column
+										style="z-index:3;min-width:10em;position:sticky;position: -webkit-sticky;left:22.8em;background:inherit;box-shadow:inset 1px 1px 1px 0 #DCDCDC,0 1px 0 0 #DCDCDC;">
+										<h:outputText value="#{projectInfo.customer}" />
+									</p:column>
+									<p:column
+										style="z-index:3;min-width:5em;position:sticky;position: -webkit-sticky;left:34.2em;background:inherit;box-shadow:inset 1px 1px 1px 0 #DCDCDC,0 1px 0 0 #DCDCDC;">
+										<h:outputText value="#{projectInfo.totalPlanMM}">
+											<f:convertNumber type="number" groupingUsed="true"
+												minFractionDigits="2" pattern="#0.000" />
+										</h:outputText>
+									</p:column>
+									<p:column
+										style="z-index:3;min-width:5em;position:sticky;position: -webkit-sticky;left:40.5em;background:inherit;box-shadow:inset 1px 1px 1px 0 #DCDCDC,1px 0 0  #DCDCDC,0 1px 0 0 #DCDCDC;">
+										<h:outputText value="#{projectInfo.totalActualMM}">
+											<f:convertNumber type="number" groupingUsed="true"
+												minFractionDigits="2" pattern="#0.000" />
+										</h:outputText>
+									</p:column>
+									<ui:repeat var="totalInfo"
+										value="#{projectInfo.totalManMonthInfo}">
+										<p:column style="z-index:3;min-width:5em;">
+											<h:outputText value="#{totalInfo.total_members}" />
+										</p:column>
+										<p:column style="z-index:3;min-width:5em;">
+											<h:outputText value="#{totalInfo.total_hour}">
+												<f:convertNumber type="number" groupingUsed="true"
+													minFractionDigits="2" pattern="#0.000" />
+											</h:outputText>
+										</p:column>
+										<p:column style="z-index:3;min-width:5em;">
+											<h:outputText value="#{totalInfo.total_manmonth}">
+												<f:convertNumber type="number" groupingUsed="true"
+													minFractionDigits="2" pattern="#0.000" />
+											</h:outputText>
+										</p:column>
+
+									</ui:repeat>
+								</p:row>
+							</ui:repeat>
+						</p:panelGrid>
+
+					</c:if>
+					
+					<c:if test="#{WorkingHourManagementProjectBean.allPrjFlag}">
+
+
+						<p:panelGrid>
+							<f:facet name="header">
+								<p:row>
+
+									<p:column rowspan="3" 
+										style="z-index:5;min-width:10em;position:sticky;position: -webkit-sticky;left:0;top:0;box-shadow:inset 1px 0 0 #327e04;">Project ID</p:column>
+									<p:column rowspan="3" 
+										style="z-index:5;min-width:10em;position:sticky;position: -webkit-sticky;left:11.4em;top:0;box-shadow:inset 1px 0 0 #327e04;">Project Name</p:column>
+									<p:column rowspan="3" 
+										style="z-index:5;min-width:10em;position:sticky;position: -webkit-sticky;left:22.8em;top:0;box-shadow:inset 1px 0 0 #327e04;">Customer</p:column>
+									<p:column rowspan="3" 
+										style="z-index:5;min-width:5em;position:sticky;position: -webkit-sticky;left:34.2em;top:0;box-shadow:inset 1px 0 0 #327e04;">Total Plan M-M</p:column>
+									<p:column rowspan="3" 
+										style="z-index:5;min-width:5em;position:sticky;position: -webkit-sticky;left:40.5em;top:0;box-shadow:inset 1px 0 0 #327e04,1px 0 0  #327e04;">Total Actual M-M</p:column>
+
+
+								</p:row>
+
+								<p:row>
+									<c:forEach var="period"
+										items="#{WorkingHourManagementProjectBean.tableHeaderList}">
+										<p:column colspan="3" rowspan="1" style="z-index:4;min-width:15em;position:sticky;position: -webkit-sticky;top:0;box-shadow:inset 1px 0 0 #327e04,1px 0 0  #327e04;" >
+											<h:outputText value="#{period.year}-#{period.month}" />
+										</p:column>
+									</c:forEach>
+								</p:row>
+
+
+								<p:row>
+									<c:forEach var="dataByYear"
+										items="#{WorkingHourManagementProjectBean.tableHeaderList}">
+										<p:column style="z-index:4;min-width:5em;position:sticky;position: -webkit-sticky;top:28px;box-shadow:inset 1px 0 0 #327e04,inset 0 1px #327e04;" >
+											<h:outputText value="Members" />
+										</p:column>
+										<p:column style="z-index:4;min-width:5em;position:sticky;position: -webkit-sticky;top:28px;box-shadow:inset 1px 0 0 #327e04,inset 0 1px #327e04;">
+											<h:outputText value="Hour" />
+										</p:column>
+										<p:column style="z-index:4;min-width:5em;position:sticky;position: -webkit-sticky;top:28px;box-shadow:inset 1px 0 0 #327e04,inset 0 1px #327e04,1px 0 0  #327e04;">
+											<h:outputText value="Man-Month" />
+										</p:column>
+									</c:forEach>
+								</p:row>
+
+
+							</f:facet>
+						
+							<ui:repeat var="projectInfo"
+								value="#{WorkingHourManagementProjectBean.allResultList}">
+								<p:row>
+									<p:column
+										style="z-index:3;min-width:10em;position:sticky;position: -webkit-sticky;left:0;background:inherit;box-shadow:inset 1px 1px 1px 0 #DCDCDC,0 1px 0 0 #DCDCDC;">
+										<h:outputText value="#{projectInfo.projectID}" />
+									</p:column>
+									<p:column
+										style="z-index:3;min-width:10em;position:sticky;position: -webkit-sticky;left:11.4em;background:inherit;box-shadow:inset 1px 1px 1px 0 #DCDCDC,0 1px 0 0 #DCDCDC;">
+										<h:outputText value="#{projectInfo.projectName}" />
+									</p:column>
+									<p:column
+										style="z-index:3;min-width:10em;position:sticky;position: -webkit-sticky;left:22.8em;background:inherit;box-shadow:inset 1px 1px 1px 0 #DCDCDC,0 1px 0 0 #DCDCDC;">
+										<h:outputText value="#{projectInfo.customer}" />
+									</p:column>
+									<p:column
+										style="z-index:3;min-width:5em;position:sticky;position: -webkit-sticky;left:34.2em;background:inherit;box-shadow:inset 1px 1px 1px 0 #DCDCDC,0 1px 0 0 #DCDCDC;">
+										<h:outputText value="#{projectInfo.totalPlanMM}">
+											<f:convertNumber type="number" groupingUsed="true"
+												minFractionDigits="2" pattern="#0.000" />
+										</h:outputText>
+									</p:column>
+									<p:column
+										style="z-index:3;min-width:5em;position:sticky;position: -webkit-sticky;left:40.5em;background:inherit;box-shadow:inset 1px 1px 1px 0 #DCDCDC,1px 0 0  #DCDCDC,0 1px 0 0 #DCDCDC;">
+										<h:outputText value="#{projectInfo.totalActualMM}">
+											<f:convertNumber type="number" groupingUsed="true"
+												minFractionDigits="2" pattern="#0.000" />
+										</h:outputText>
+									</p:column>
+									<ui:repeat var="totalInfo"
+										value="#{projectInfo.totalManMonthInfo}">
+										<p:column style="z-index:3;min-width:5em;">
+											<h:outputText value="#{totalInfo.total_members}" />
+										</p:column>
+										<p:column style="z-index:3;min-width:5em;">
+											<h:outputText value="#{totalInfo.total_hour}">
+												<f:convertNumber type="number" groupingUsed="true"
+													minFractionDigits="2" pattern="#0.000" />
+											</h:outputText>
+										</p:column>
+										<p:column style="z-index:3;min-width:5em;">
+											<h:outputText value="#{totalInfo.total_manmonth}">
+												<f:convertNumber type="number" groupingUsed="true"
+													minFractionDigits="2" pattern="#0.000" />
+											</h:outputText>
+										</p:column>
+
+									</ui:repeat>
+								</p:row>
+							</ui:repeat>
+						</p:panelGrid>
+
+					</c:if>
+
+				
+				</p:scrollPanel>
+
+
+			</h:form>
+
+			<script type="text/javascript">
+				history.pushState(null, null, document.URL);
+				window.addEventListener('popstate', function() {
+					history.pushState(null, null, document.URL);
+				});
+				function disableF5(e) {
+					if ((e.which || e.keyCode) == 116
+							|| (e.which || e.keyCode) == 82) {
+						e.preventDefault();
+						e.stopPropagation();
+					}
+				};
+				$(document).bind("load", disableF5);
+				
+			</script>
+
+			<style>
+td.foo {
+	background-color: red;
+}
+
+.ui-widget-header {
+	border: 1px solid #327e04;
+	background: #63b175;
+	color: #FFFF;
+	
+}
+
+
+</style>
+		</h:body>
+	</ui:define>
+</ui:composition>

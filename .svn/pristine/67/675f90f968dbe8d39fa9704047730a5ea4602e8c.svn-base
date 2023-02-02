@@ -1,0 +1,7 @@
+<ui:composition template="/error/errorPage.xhtml" xmlns="http://www.w3.org/1999/xhtml" xmlns:ui="http://java.sun.com/jsf/facelets">
+	<ui:param name="contentTitle" value="Oops! DB fail!" >
+		<p>
+			<p:commandButton id="submit" value="Back To Login" action="login" immediate="true" ajax="false" style="font-size:13px;"/>
+		</p>
+	</ui:param>
+</ui:composition>

@@ -1,0 +1,292 @@
+<!-- 
+	Created By: Aye Thida Phyo
+	Created Date : 2018/10/09
+	Explanation : Created for Phase IV.
+ -->
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:c="http://java.sun.com/jsp/jstl/core"
+	template="/common/commonLayout.xhtml">
+	<ui:param name="leftMenu" value="/common/adminLeft.xhtml" />
+	<ui:param name="rendered" value="true" />
+	<ui:define name="content">
+		<h:body>
+			<table width="100%">
+				<tr>
+					<td></td>
+					<td width="70%" align="center">
+						<div
+							style="z-index: 100; position: fixed; margin-top: -30px; width: 700px;">
+							<p:messages showDetail="true" id="messages" closable="true" />
+						</div>
+					</td>
+				</tr>
+			</table>
+
+			<h:outputText value="Working Hour Management Report (Individual)"
+				style="margin-top: 0px; margin-bottom: 10px;font-size:20px;" />
+			<p:separator style="height:5px;margin-top: 2px;margin-bottom: 2px;" />
+
+			<h:form id="workingHourMgtIndividualEntryForm">
+				<table>
+					<tr>
+						<td width="120px;"><span class="cmms-label">Staff ID</span><span
+							style="color: red;">*</span></td>
+						<td>:</td>
+						<td><p:message id="staffIDMsg" for="staffID" /> <p:selectOneMenu
+								id="staffID"
+								value="#{WorkingHourManagementIndividualBean.selectStaff}"
+								converter="omnifaces.SelectItemsConverter" style="width:120px;"
+								filter="true" filterMatchMode="contains">
+								<f:selectItem itemLabel="-" itemValue="#{null}" />
+								<f:selectItems var="staff"
+									value="#{WorkingHourManagementIndividualBean.users}"
+									itemLabel="#{staff.username}" itemValue="#{staff}" />
+								<p:ajax
+									update="workingHourMgtIndividualEntryForm individualReportTableForm startYear startMonth staffName endYear endMonth messages"
+									event="change"
+									listener="#{WorkingHourManagementIndividualBean.userSelect}" />
+								<p:ajax
+									update="workingHourMgtIndividualEntryForm individualReportTableForm startYear startMonth staffName endYear endMonth messages"
+									event="blur"
+									listener="#{WorkingHourManagementIndividualBean.userSelect}" />
+							</p:selectOneMenu></td>
+						<td></td>
+						<td></td>
+						<td width="120px;">
+									<span class="cmms-label">Start Year</span>
+									<span style="color: red;">*</span></td>
+						<td>:</td>
+						<td><p:message id="startYearMsg" for="startYear" /> <p:selectOneMenu
+								id="startYear"
+								value="#{WorkingHourManagementIndividualBean.startYear}"
+								style="width:120px;" filter="true" filterMatchMode="contains">
+								<f:selectItem itemLabel="-" itemValue="#{null}" />
+								<f:selectItems var="year"
+									value="#{WorkingHourManagementIndividualBean.years}"
+									itemLabel="#{year}" itemValue="#{year}" />
+							</p:selectOneMenu></td>
+						<td></td>
+						<td></td>
+						<td width="120px;"><span class="cmms-label">Start
+								Month</span><span style="color: red;">*</span></td>
+						<td>:</td>
+						<td><p:message id="startMonthMsg" for="startMonth" /> <p:selectOneMenu
+								id="startMonth"
+								value="#{WorkingHourManagementIndividualBean.startMonth}"
+								converter="omnifaces.SelectItemsConverter" style="width:120px;"
+								filter="true" filterMatchMode="contains">
+								<f:selectItem itemLabel="-" itemValue="#{null}" />
+								<f:selectItems var="month"
+									value="#{WorkingHourManagementIndividualBean.months}"
+									itemLabel="#{month}" itemValue="#{month}" />
+							</p:selectOneMenu></td>
+					</tr>
+					<tr>
+						<td width="120px;"><span class="cmms-label">Staff Name</span></td>
+						<td>:</td>
+						<td><h:outputText id="staffName"
+								style="display:block;width:200px; word-wrap:break-word;font-size:12px;"
+								value="${empty WorkingHourManagementIndividualBean.selectStaff.fullName 
+									or WorkingHourManagementIndividualBean.selectStaff.fullName eq null? '-------------------------'
+									: WorkingHourManagementIndividualBean.selectStaff.fullName}" />
+						</td>
+						<td></td>
+						<td></td>
+						<td width="120px;"><span class="cmms-label">End Year</span><span
+							style="color: red;">*</span></td>
+						<td>:</td>
+						<td><p:message id="endYearMsg" for="endYear" /> <p:selectOneMenu
+								id="endYear"
+								value="#{WorkingHourManagementIndividualBean.endYear}"
+								style="width:120px;" filter="true" filterMatchMode="contains">
+								<f:selectItem itemLabel="-" itemValue="#{null}" />
+								<f:selectItems var="year"
+									value="#{WorkingHourManagementIndividualBean.years}"
+									itemLabel="#{year}" itemValue="#{year}" />
+							</p:selectOneMenu></td>
+						<td></td>
+						<td></td>
+						<td width="120px;"><span class="cmms-label">End Month</span><span
+							style="color: red;">*</span></td>
+						<td>:</td>
+						<td><p:message id="endMonthMsg" for="endMonth" /> <p:selectOneMenu
+								id="endMonth"
+								value="#{WorkingHourManagementIndividualBean.endMonth}"
+								converter="omnifaces.SelectItemsConverter" style="width:120px;"
+								filter="true" filterMatchMode="contains">
+								<f:selectItem itemLabel="-" itemValue="#{null}" />
+								<f:selectItems var="month"
+									value="#{WorkingHourManagementIndividualBean.months}"
+									itemLabel="#{month}" itemValue="#{month}" />
+							</p:selectOneMenu></td>
+					</tr>
+				</table>
+				<p:commandButton id="showBtn" value="Show" disabled="#{!(WorkingHourManagementIndividualBean.showbtn)}"			
+				action="#{WorkingHourManagementIndividualBean.show}"
+				update=":workingHourMgtIndividualEntryForm :individualReportTableForm messages" />
+				<p:spacer width="5px" />
+				<p:commandButton id="exportBtn" value="Export"
+					icon="ui-icon-arrowthick-1-s"
+					actionListener="#{WorkingHourManagementIndividualBean.export}"
+						onclick="PrimeFaces.monitorDownload(start, stop);" disabled="#{!(WorkingHourManagementIndividualBean.exportflag)}">
+						<p:fileDownload value="#{WorkingHourManagementIndividualBean.download}" />
+					</p:commandButton>
+				
+			</h:form>
+
+			<p:separator style="height:5px;margin-top: 2px;margin-bottom: 2px;" />
+			<h:form id="individualReportTableForm">
+<p:scrollPanel mode="native" style="width: 100%;height:100%;"
+					id="scrollfull"
+					rendered="#{WorkingHourManagementIndividualBean.periodHeaderList.size() gt 0}">
+			
+
+					<c:if test="#{WorkingHourManagementIndividualBean.showTable}">
+						<p:panelGrid>
+						<f:facet name="header">
+
+							<p:row>
+								<p:column rowspan="2" style="z-index:5;min-width:10em;position:sticky;position: -webkit-sticky;left:0;top:0;box-shadow:inset 1px 0 0 #327e04;">Staff ID</p:column>
+								<p:column rowspan="2" style="z-index:5;min-width:10em;position:sticky;position: -webkit-sticky;left:11.4em;top:0;box-shadow:inset 1px 0 0 #327e04;">Staff Name</p:column>
+								<p:column rowspan="2" style="z-index:5;min-width:10em;position:sticky;position: -webkit-sticky;left:22.8em;top:0;box-shadow:inset 1px 0 0 #327e04;">Project ID</p:column>
+								<p:column rowspan="2" style="z-index:5;min-width:10em;position:sticky;position: -webkit-sticky;left:34.2em;top:0;box-shadow:inset 1px 0 0 #327e04,1px 0 0  #327e04;">Project Name</p:column>
+
+
+								<c:forEach var="period"
+									items="#{WorkingHourManagementIndividualBean.periodHeaderList}">
+									<p:column colspan="2" rowspan="1" style="z-index:4;min-width:10em;position:sticky;position: -webkit-sticky;top:0;box-shadow:inset 1px 0 0 #327e04;">
+										<h:outputText value="#{period.year}-#{period.month}" />
+									</p:column>
+								</c:forEach>
+
+							</p:row>
+
+							<p:row>
+								<c:forEach var="dataByYear"
+									items="#{WorkingHourManagementIndividualBean.periodHeaderList}">
+									<p:column style="z-index:4;min-width:5em;position:sticky;position: -webkit-sticky;top:28px;box-shadow:inset 1px 0 0 #327e04,inset 0 1px #327e04;">
+										<h:outputText value="Hour" />
+									</p:column>
+									<p:column style="z-index:4;min-width:5em;position:sticky;position: -webkit-sticky;top:28px;box-shadow:inset 1px 0 0 #327e04,inset 0 1px #327e04;">
+										<h:outputText value="Man-Month" />
+									</p:column>
+
+								</c:forEach>
+							</p:row>
+
+						</f:facet>
+						
+						<p:row style="height:2px;">
+							<p:column style="z-index:3;min-width:10em;position:sticky;position: -webkit-sticky;left:0;background:inherit;box-shadow:inset 1px 1px 1px 0 #DCDCDC,0 1px 0 0 #DCDCDC;"
+								rowspan="#{WorkingHourManagementIndividualBean.projectIDList.size()+2}">
+								<h:outputText
+									value="#{WorkingHourManagementIndividualBean.selectStaff.username}" />
+							</p:column>
+							<p:column style="z-index:3;min-width:10em;position:sticky;position: -webkit-sticky;left:11.4em;background:inherit;box-shadow:inset 1px 1px 1px 0 #DCDCDC,0 1px 0 0 #DCDCDC;"
+								rowspan="#{WorkingHourManagementIndividualBean.projectIDList.size()+2}">
+								<h:outputText
+									value="#{WorkingHourManagementIndividualBean.selectStaff.fullName}" />
+							</p:column>
+						</p:row>
+
+
+						<c:forEach var="summaryInfo"
+							items="#{WorkingHourManagementIndividualBean.staffSummaryInfoList}">
+							<p:row>
+
+								<p:column style="z-index:3;min-width:10em;position:sticky;position: -webkit-sticky;left:22.8em;background:inherit;box-shadow:inset 1px 1px 1px 0 #DCDCDC,0 1px 0 0 #DCDCDC;">
+									<h:outputText value="#{summaryInfo.projectID}" />
+								</p:column>
+								<p:column style="z-index:3;min-width:10em;position:sticky;position: -webkit-sticky;left:34.2em;background:inherit;box-shadow:inset 1px 1px 1px 0 #DCDCDC,1px 0 0  #DCDCDC,0 1px 0 0 #DCDCDC;">
+									<h:outputText value="#{summaryInfo.projectName}" />
+								</p:column>
+
+								<c:forEach var="details"
+									items="#{summaryInfo.staffDetailInfoList}">
+
+									<c:if test="#{details.projectID eq summaryInfo.projectID}">
+
+										<p:column style="min-width:5em;">
+											<h:outputText value="#{details.total_hours}">
+												<f:convertNumber pattern="#0.000" />
+											</h:outputText>
+										</p:column>
+
+										<p:column style="min-width:5em;">
+											<h:outputText value="#{details.total_mm}">
+												<f:convertNumber pattern="#0.000" />
+											</h:outputText>
+										</p:column>
+									</c:if>
+								</c:forEach>
+							</p:row>
+
+						</c:forEach>
+
+						<p:row>
+
+							<p:column colspan="2" style="z-index:3;min-width:10em;position:sticky;position: -webkit-sticky;left:22.8em;background:inherit;box-shadow:inset 1px 1px 1px 0 #DCDCDC,0 1px 0 0 #DCDCDC,1px 0 0  #DCDCDC;">
+								<div align="center">
+									<h:outputText value="Total" />
+								</div>
+							</p:column>
+
+							<c:forEach var="totalInfo"
+								items="#{WorkingHourManagementIndividualBean.staffTotalInfoList}">
+								<p:column>
+									<h:outputText value="#{totalInfo.totalHours}">
+										<f:convertNumber pattern="#0.000" />
+									</h:outputText>
+								</p:column>
+								<p:column>
+									<h:outputText value="#{totalInfo.totalMM}">
+										<f:convertNumber pattern="#0.000" />
+									</h:outputText>
+								</p:column>
+
+							</c:forEach>
+						</p:row>
+					</p:panelGrid>
+					</c:if>
+				
+				</p:scrollPanel>
+			</h:form>
+
+			<script type="text/javascript">
+				history.pushState(null, null, document.URL);
+				window.addEventListener('popstate', function() {
+					history.pushState(null, null, document.URL);
+				});
+				function disableF5(e) {
+					if ((e.which || e.keyCode) == 116
+							|| (e.which || e.keyCode) == 82) {
+						e.preventDefault();
+						e.stopPropagation();
+					}
+				};
+
+				$(document).bind("load", disableF5);
+			</script>
+
+		</h:body>
+		<style>
+.ui-widget-header {
+	border: 1px solid #327e04;
+	background: #63b175;
+	color: #FFFF;
+}
+
+.fixed-class {
+	background: #327e04;
+	color: #FFFF;
+	position: -webkit-sticky;
+	position: sticky;
+	top: 0;
+}
+</style>
+	</ui:define>
+</ui:composition>

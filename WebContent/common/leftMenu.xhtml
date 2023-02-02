@@ -1,0 +1,47 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:p="http://primefaces.org/ui">
+	<h:form>
+		<p:tab title="#{label['MANAGEMENT_SETTING_LABEL']}">
+			<p:panelMenu style="width:241px">
+				<p:submenu rendered="true" label="Daily Activity Management" style="margin-top: 5px;margin-bottom: 5px;">
+					<p:menuitem value="Daily Activity Registration" action="register"
+						icon="ui-icon-pencil" ajax="false"></p:menuitem>
+					<p:menuitem value="Daily Activity Inquiry"
+						action="dailyReportInquiry" icon="ui-icon-search"
+						ajax="false"></p:menuitem>
+					<p:menuitem value="Weekly Activity Inquiry" rendered="#{sessionScope.loginUser.role=='ADMIN' or sessionScope.loginUser.role=='MANAGEMENT'?true:false}"
+						action="weeklyReportInquiry" icon="ui-icon-calendar"
+						ajax="false"></p:menuitem>
+				</p:submenu>
+				<p:submenu rendered="true" label="Daily Report Export" style="margin-top: 5px;margin-bottom: 5px;">
+					<p:menuitem value="Daily Report Export"
+						action="dailyReportExcelExport" icon="ui-icon-arrowthickstop-1-s" ajax="false"></p:menuitem>
+				</p:submenu>
+				<p:submenu label="Monthly Report" style="margin-top: 5px;margin-bottom: 5px;"
+					rendered="#{sessionScope.loginUser.role=='ADMIN' or sessionScope.loginUser.role=='MANAGEMENT'?true:false}">
+					<p:menuitem value="Actual Project Working Hour"
+						action="monthlyReport" icon="ui-icon-document" ajax="false"></p:menuitem>
+				</p:submenu>
+				</p:panelMenu>
+				<p:separator style="height:2px;margin-top: 8px;margin-bottom: 8px;" />
+				<p:panelMenu style="width:241px">
+				<p:submenu rendered="true" label="User Profile">
+					<p:menuitem value="Password Change" action="passwordChange"
+						icon="ui-icon-gear" ajax="false"></p:menuitem>
+				</p:submenu>
+				</p:panelMenu>
+				<p:separator style="height:2px;margin-top: 8px;margin-bottom: 8px;" />
+				<p:panelMenu style="width:241px">
+				<p:submenu
+					rendered="#{sessionScope.loginUser.role=='ADMIN'?true:false}"
+					style="width:241px" toggleable="true" label="User Management">
+					<p:menuitem value="User Management" action="manageUser"
+						icon="ui-icon-person" ajax="false"></p:menuitem>
+				</p:submenu>
+			</p:panelMenu>
+		</p:tab>
+	</h:form>
+</ui:composition>

@@ -1,0 +1,289 @@
+<html>
+<head>
+<title>${application.getFullName()}</title>
+<style type="text/css">
+/*<![CDATA[*/
+html {
+	font-size: 13px;
+}
+
+p.pagebreakhere {
+	page-break-before: always
+}
+
+.default-label {
+	color: #002E3F;
+	font-family: "Calisto MT";
+	font-size: 14px;
+	font-weight: bold;
+}
+
+.default-font {
+	color: #262A30;
+	font-family: "Calisto MT";
+	font-size: 14px;
+}
+
+.default-title {
+	color: #312F94;
+	font-family: "Calisto MT";
+	font-size: 18px;
+	font-weight: bold;
+}
+.default-title2 {
+	color: #312F94;
+	font-family: "Calisto MT";
+	font-size: 14px;
+	font-weight: bold;
+}
+li {
+	font-size: 13px;
+}
+hr {
+	height:3px;
+	background-color:#3C81EF;
+}
+/*]]>*/
+</style>
+</head>
+<body>
+	<div id="logo2" class="media" data-src="${headerImage}" style="width: 700px;"/>
+	<table cellpadding="5" style="width: 700px;">
+		<tbody>
+			<tr valign="top">
+				<td align="right" colspan="3">
+					<span style="font-size: 16px;" class="default-title">${application.appCode}</span>
+				</td>
+			</tr>
+			<tr valign="top">
+				<td colspan="3" style="width: 100px;">
+					<span style="font-size: 20px;" class="default-title">${application.getFullName()}</span>
+					<hr />
+				</td>
+			</tr>
+			<tr valign="top">
+				<td width="40%">
+					<table cellpadding="5">
+						<tbody>
+							<tr valign="top">
+								<td>
+									<span class="default-label">First Name</span>
+								</td>
+								<td>
+									<span class="default-font">: ${application.firstName}</span>
+								</td>
+							</tr>
+							<tr valign="top">
+								<td>
+									<span class="default-label">Last Name</span>
+								</td>
+								<td>
+									<span class="default-font">: ${application.lastName}</span>
+								</td>
+							</tr>
+							<tr valign="top">
+								<td>
+									<span class="default-label">N.R.C</span>
+								</td>
+								<td>
+									<span class="default-font">: ${application.nrc}</span>
+								</td>
+							</tr>
+							<tr valign="top">
+								<td>
+									<span class="default-label">Passport No.</span>
+								</td>
+								<td>
+#if($application.passportNo != $null && !$application.passportNo.isEmpty())
+									<span class="default-font">: ${application.passportNo}</span>
+#else
+									-
+#end									
+								</td>
+							</tr>
+							<tr valign="top">
+								<td>
+									<span class="default-label">Passport Exp Date</span>
+								</td>
+								<td>
+#if($application.expDateString != $null && !$application.expDateString.isEmpty())
+									<span class="default-font">: ${application.expDateString}</span>
+#else
+									-
+#end									
+								
+								</td>
+							</tr>
+							<tr valign="top">
+								<td>
+									<span class="default-label">Height</span>
+								</td>
+								<td>
+									<span class="default-font">: ${application.height}</span>
+								</td>
+							</tr>
+							<tr valign="top">
+								<td>
+									<span class="default-label">Weight</span>
+								</td>
+								<td>
+#if($application.weight != $null && !$application.weight.isEmpty())
+									<span class="default-font">: ${application.weight}</span>
+#else
+									-
+#end									
+								
+								</td>
+							</tr>
+						</tbody>
+					</table>
+				</td>
+				<td width="40%" align="left">
+					<table cellpadding="5">
+						<tbody>
+							<tr valign="top">
+								<td>
+									<span class="default-label">Apply Position</span>
+								</td>
+								<td>
+									<span class="default-font">: ${application.post.name}</span>
+								</td>
+							</tr>
+							<tr valign="top">
+								<td>
+									<span class="default-label">Language</span>
+								</td>
+								<td>
+									<span class="default-font">: ${application.language}</span>
+								</td>
+							</tr>
+							<tr valign="top">
+								<td>
+									<span class="default-label">Gender</span>
+								</td>
+								<td>
+									<span class="default-font">: ${application.gender}</span>
+								</td>
+							</tr>
+							<tr valign="top">
+								<td>
+									<span class="default-label">MaritalStatus</span>
+								</td>
+								<td>
+									<span class="default-font">: ${application.maritalStatus}</span>
+								</td>
+							</tr>
+						</tbody>
+					</table>
+				</td>
+				<td width="20%" align="right">
+					<div id="logo" class="media" data-src="${imagePath}" style="width: 120px;"/>
+				</td>
+			</tr>
+			<tr>
+				<td colspan="3" width="100%">
+					<table cellpadding="5" style="width:100%">
+						<tbody>
+#if($application.carrier != $null && !$application.carrier.isEmpty())						
+							<tr valign="top">
+								<td colspan="2">
+									<span class="default-title">Carrier Objective</span>
+									<hr />
+								</td>
+							</tr>
+							<tr valign="top">
+								<td colspan="2">
+									<span class="default-font">${application.carrier}</span>
+								</td>
+							</tr>
+#end							
+#if($application.historyList != $null && !$application.historyList.isEmpty())
+							<tr valign="top">
+								<td colspan="2">
+									<span class="default-title">Employment</span>
+									<hr />
+								</td>
+							</tr>
+#foreach($employment in $application.historyList)							
+							<tr valign="top">
+								<td valign="top" style="width:150px;">
+									<span class="default-title2">${employment.getFromDate()} - ${employment.getToDate()}</span>
+								</td>
+								<td>
+									<b><span class="default-font">${employment.employment}</span></b>
+								</td>
+							</tr>
+							<tr valign="top">
+								<td valign="top">
+									<span class="default-title2">Key Responsibilities</span>
+								</td>
+								<td>
+								</td>
+							</tr>
+							<tr valign="top">
+								<td colspan="2">
+									<span class="default-font">${employment.responsibilities}</span>
+								</td>
+							</tr>
+#end
+#end
+#if($application.educationList != $null && !$application.educationList.isEmpty())
+							<tr valign="top">
+								<td colspan="2">
+									<span class="default-title">Education</span>
+									<hr />
+								</td>
+							</tr>
+#foreach($education in $application.educationList)								
+							<tr valign="top">
+								<td valign="top" style="width:150px;">
+									<span class="default-title2">${education.getFromDate()} - ${education.getToDate()}</span>
+								</td>
+								<td>
+									<span class="default-font">
+										${education.education}
+									</span>
+								</td>
+							</tr>
+#end
+#end
+#if($application.otherSkill != $null && !$application.otherSkill.isEmpty())
+							<tr valign="top">
+								<td colspan="2">
+									<span class="default-title">Other Skills and Qualification</span>
+									<hr />
+								</td>
+							</tr>
+							<tr valign="top">
+								<td colspan="2">
+									<span class="default-font">
+										${application.otherSkill}
+									</span>
+								</td>
+							</tr>
+#end							
+						</tbody>
+					</table>
+				</td>
+			</tr>
+		</tbody>
+	</table>
+<div style="page-break-before:always">
+	<table cellpadding="5" style="width: 700px;">
+#if($application.fullPhoto != $null)			
+		<tr valign="top">
+			<td colspan="2">
+				<span class="default-title">Full Photo</span>
+				<hr />
+			</td>
+		</tr>
+		<tr valign="top">
+			<td colspan="2" align="center">
+				<div id="logo2" class="media" data-src="${fullImagePath}" style="width: 500px;"/>
+			</td>
+		</tr>
+#end			
+	</table>
+</div>	
+</body>
+</html>

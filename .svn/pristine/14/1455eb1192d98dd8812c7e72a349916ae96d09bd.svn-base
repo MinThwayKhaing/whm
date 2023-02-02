@@ -1,0 +1,74 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:p="http://primefaces.org/ui"
+	template="/common/commonLayout.xhtml">
+	<ui:param name="leftMenu" value="/common/adminLeft.xhtml" />
+	<ui:param name="rendered" value="true" />
+	<ui:define name="content">
+		<h:form id="passwordChangeForm" styleClass="form-horizontal">
+		<script type="text/javascript">
+			history.pushState(null, null, document.URL);
+			window.addEventListener('popstate', function () {
+				history.pushState(null, null, document.URL);
+			});
+			function disableF5(e) {
+				if ((e.which || e.keyCode) == 116  || (e.which || e.keyCode) == 82) {
+					e.preventDefault();
+				}
+			};
+			$(document).bind("load", disableF5);
+		</script>
+			<table class="whmPageStatus"><tr><td><h:outputText value="Password Change" style="padding:7px;"/></td></tr></table>
+			<table width="100%">
+				<tr>
+					<td><p:messages globalOnly="true" showDetail="true" id="messages" closable="true" /></td>
+				</tr>
+			</table>
+			<table class="whmBackStyle">
+				<tr>
+					<td width="150px;"><span class="cmms-label">Current
+							Password</span><span style="color: red;">*</span></td>
+					<td>:</td>
+					<td><p:password
+							value="#{PasswordManagementBean.currentPassword}"
+							id="currentPassword" required="true">
+						</p:password></td>
+					<td><p:message for="currentPassword" /></td>
+				</tr>
+				<tr>
+					<td><span class="cmms-label">New Password</span><span
+						style="color: red;">*</span></td>
+					<td>:</td>
+					<td><p:password id="newPassword" label="newPassword"
+							value="#{PasswordManagementBean.newPassword}"
+							match="confirmPassword" required="true">
+							<f:validateLength minimum="6" maximum="15"/>
+						</p:password></td>
+					<td><p:message for="newPassword" /></td>
+				</tr>
+				<tr>
+					<td><span class="cmms-label">Confirm New Password</span><span
+						style="color: red;">*</span></td>
+					<td>:</td>
+					<td><p:password id="confirmPassword" label="confirmPassword"
+							value="#{PasswordManagementBean.newPassword}" required="true" />
+					</td>
+					<td><p:message for="confirmPassword" /></td>
+				</tr>
+				<tr></tr>
+				<tr></tr>
+				<tr></tr>
+				<tr>
+					<td><p:commandButton id="changeBtn"
+							value="#{label['COMMON_CHANGE_BTN']}"
+							action="#{PasswordManagementBean.changePassword}"
+							update=":passwordChangeForm" style="font-size:13px;" /></td>
+					<td></td>
+				</tr>
+			</table>
+		</h:form>
+
+	</ui:define>
+</ui:composition>

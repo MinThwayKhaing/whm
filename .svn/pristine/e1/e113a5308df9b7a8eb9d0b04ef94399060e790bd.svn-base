@@ -1,0 +1,166 @@
+<!-- 
+	Created By: Sai Kyaw Ye Myint
+	Created Date : 2017/09/28
+	Explanation : Created for Phase III.
+ -->
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:p="http://primefaces.org/ui"
+	template="/common/commonLayout.xhtml">
+	<ui:define name="content">
+		<h:body onload="#{ProjectSummaryManageBean.controlForm()}"
+				update=":projectSummaryEntryForm :projectSummaryTableForm">
+			<h:outputStylesheet library="css" name="default.css"></h:outputStylesheet>
+			<table class="whmPageStatus"><tr><td><h:outputText value="Project Summary" style="padding:7px;"/></td></tr></table>
+			<table width="100%">
+				<tr>
+					<td></td>
+					<td width="70%" align="center">
+						<div style="z-index: 100; position: fixed; margin-top: -30px; width: 700px;">
+							<p:messages globalOnly="true" showDetail="true" id="messages" closable="true" />
+						</div>
+					</td>
+				</tr>
+			</table>
+			<h:form id="projectSummaryEntryForm">
+				<table class="whmBackStyle" style="width: atuo; margin: 10px 10px 10px 0px;">
+					<tr>
+						<td>
+							<span class="cmms-label"> 
+								<h:outputText value="Project ID" />
+							</span>
+						</td>
+						<td>:</td>
+						<td>
+							<p:selectOneMenu id="projectID" value="#{ProjectSummaryManageBean.projcetId}"
+								converter="omnifaces.SelectItemsConverter" style="width : 120px;"
+								filter="true" filterMatchMode="contains">
+								<f:selectItem itemLabel="-" itemValue="#{null}" />
+								<f:selectItems var="project"
+									value="#{ProjectSummaryManageBean.projectIDList}"
+									itemLabel="#{project.id}" itemValue="#{project.id}" />
+							</p:selectOneMenu>
+						</td>
+						<td width="20px;"></td>
+						<td>
+							<span class="cmms-label"> 
+								<h:outputText value="Project Name" />
+							</span>
+						</td>
+						<td>:</td>
+						<td>
+							<p:inputText id="projectName" value="#{ProjectSummaryManageBean.projcetName}">
+							</p:inputText>
+						</td>
+						<td width="20px;"></td>
+						<td>
+							<span class="cmms-label"> 
+								<h:outputText value="Project Manager" />
+							</span>
+						</td>
+						<td>:</td>
+						<td>
+							<p:inputText id="projectManager" value="#{ProjectSummaryManageBean.projcetManager}">
+							</p:inputText>
+						</td>
+					</tr>
+				</table>
+				<p:commandButton id="btnSearch" value="Search"
+						action="#{ProjectSummaryManageBean.searchProjects()}" process="@form"
+						update=":projectSummaryTableForm :messages" /> 
+				<p:commandButton id="btnReset" value="Reset" action="#{ProjectSummaryManageBean.reset()}"
+						update=":projectSummaryTableForm :projectSummaryEntryForm" />
+				<p:separator style="height:5px;margin-top: 2px;margin-bottom: 2px;" />
+			</h:form>
+			<h:form id="projectSummaryTableForm">
+				<table style="width: 100%;">
+					<tr>
+						<td colspan="2"><h:outputText
+								value="Total search result count : " /> <h:outputText
+								value="#{ProjectSummaryManageBean.projectResultList.size()}"></h:outputText></td>
+						<td width="650px" align="right"></td>
+						<td><div style="width: 15px;height : 15px ;background-color: red;border-radius: 5px;"></div></td>
+						<td><span style="font-size: 13px;">Late Finished</span></td>
+						<td><div style="width: 15px;height : 15px ;background-color: blue;border-radius: 5px;"></div></td>
+						<td><span style="font-size: 13px;">Early Finished</span></td>
+						<td><div style="width: 15px;height : 15px ;background-color: orange;border-radius: 5px;"></div></td>
+						<td><span style="font-size: 13px;">Over Deadline</span></td>
+						<td><div style="width: 15px;height : 15px ;background-color: green;border-radius: 5px;"></div></td>
+						<td><span style="font-size: 13px;">Finished</span></td>
+					</tr>
+				</table>
+				<p:dataTable id="projectSummaryTable" value="#{ProjectSummaryManageBean.projectResultList}" var="project"
+							 paginator="true"  rows="30" emptyMessage="There is no record!" 
+							 paginatorTemplate="{CurrentPageReport}  {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"
+							 rowsPerPageTemplate="30,50, 100" rowIndexVar="index"
+							 styleClass="dailyReportTableStyle whmBackStyle">
+							 <p:column headerText="Project ID">
+							 	<h:outputText value="#{project.id}" />
+							 </p:column>
+							 <p:column headerText="Project Name">
+							 	<h:outputText value="#{project.projectName}" />
+							 </p:column>
+							 <p:column headerText="Project Manager">
+							 	<h:outputText value="#{project.projectManager}" />
+							 </p:column>
+							 <p:column headerText="Deadline">
+							 	<div class="ui-progressbar ui-widget ui-corner-all" style="width: 100%; border: 1px solid #dfd9c3; text-align: right;
+							 		background-color : ${project.deadline.bgColor} ;display : ${project.deadline eq null? 'none' : 'block' }">
+							 		<div class="progress-bar ui-corner-all " style="height: 100%; background-color: green;width: ${project.deadline.percentage}% ;" >
+							 			<h:outputText style="color :  ${project.deadline.bgColor eq 'white' ? 'black' : 'white'};" value="${project.deadline.actLabel}%"/>
+							 		</div>
+							 		<div style="display: ${project.deadline.percentage eq '100' ? 'none' : 'flex'} ;direction: rtl;">
+							 			<h:outputText style="color :  ${project.deadline.bgColor eq 'white' ? 'black' : 'white'};" value="${project.deadline.expLabel}%"/>
+							 		</div>
+							 	</div>
+							 </p:column>
+							 <p:column headerText="Dashboard">
+							 	<p:commandLink action="#{ProjectSummaryManageBean.dashboard(project)}"
+							 		process="projectSummaryTable" ajax="false">
+							 		<h:outputText value="Dashboard" />
+							 	</p:commandLink>
+							 </p:column>
+							 <p:column headerText="Edit">
+							 	<p:commandLink action="#{ProjectSummaryManageBean.projectsummaryEdit(project)}"
+							 		process="projectSummaryTable" ajax="false" disabled="${project.projectStatusDiv eq 'END'}">
+							 		<h:outputText value="Edit" />
+							 	</p:commandLink>
+							 </p:column>
+							 <p:column headerText="End the Project">
+							 	<p:commandLink id="endLink"
+									actionListener="#{ProjectSummaryManageBean.projectEnd(project)}"
+									update=":projectSummaryTableForm :projectSummaryEntryForm:projectID messages" disabled="${project.projectStatusDiv eq 'END'}" >
+									<h:outputText value="End the Project" />
+									<p:confirm header="Confirmation" message="Are you sure?"
+										icon="ui-icon-alert" />
+								</p:commandLink>
+							 </p:column>
+							  <!-- 
+								 	Modified By : Aung Htay Oo
+								 	Modified Date : 2107/11/24
+								 	Explanation : Update component with "messages" id after deletion is confirmed. 
+								  -->
+							 <p:column headerText="Delete">
+							 	<p:commandLink id="deleteLink"
+									actionListener="#{ProjectSummaryManageBean.projectsummaryDelete(project)}"
+									update=":projectSummaryTableForm :messages :projectSummaryEntryForm:projectID" disabled="${project.projectStatusDiv eq 'END'}" >
+									<h:outputText value="Delete" />
+									<p:confirm header="Confirmation" message="Are you sure?"
+										icon="ui-icon-alert" />
+								</p:commandLink>
+								<p:confirmDialog global="true" showEffect="fade"
+									hideEffect="fade">
+									<p:commandButton value="Yes" type="button"
+										styleClass="ui-confirmdialog-yes" />
+									<p:commandButton value="No" type="button"
+										styleClass="ui-confirmdialog-no" />
+								</p:confirmDialog>
+							 </p:column>
+				</p:dataTable>
+				
+			</h:form>
+		</h:body>
+	</ui:define>
+</ui:composition>

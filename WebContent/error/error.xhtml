@@ -1,0 +1,28 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:p="http://primefaces.org/ui" template="/common/errorLayout.xhtml">
+	<ui:define name="content">
+		<h:body onload="#{ErrorMesssageBean.controlForm()}"
+			update=":errorPageForm">
+			
+			<h:form id="errorPageForm">
+				<h:graphicImage value="/images/error.png" styleClass="whmErrorBg" />
+				<div class="whmError">
+					<h1 style="color: maroon;">Opps Error is occurred.......</h1>
+					<h:outputText id="errorMessage"
+						value="#{ErrorMesssageBean.errorMessage}" />
+					<p/>
+					<h:outputText value="Please Login Again." style="margin-right:20px;" />
+					<p:commandButton value="#{label['LOGIN_LABEL']}"
+						action="#{LoginBean.logout}" immediate="true" />
+					<p/>
+					<h:outputText value="If you need more information, please contact to Administrator!"/>
+				</div>
+
+			</h:form>
+			
+		</h:body>
+	</ui:define>
+</ui:composition>

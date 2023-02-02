@@ -1,0 +1,247 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:p="http://primefaces.org/ui"
+	template="/common/commonLayout.xhtml">
+	<ui:param name="leftMenu" value="/common/adminLeft.xhtml" />
+	<ui:param name="rendered" value="true" />
+	<ui:define name="content">
+
+		<h:form id="dailyReportExportForm" styleClass="form-horizontal">
+			<table class="whmPageStatus"><tr><td><h:outputText value="Daily Report Exporting" style="padding:7px;"/></td></tr></table>
+			<table width="100%">
+				<tr>
+					<td></td>
+					<td width="70%" align="center">
+						<div
+							style="z-index: 100; position: fixed; margin-top: -30px; width: 700px;">
+							<p:messages globalOnly="true" showDetail="true" id="messages"
+								closable="true" />
+						</div>
+					</td>
+				</tr>
+			</table>
+			<table  class="whmBackStyle">
+				<!-- <tr>
+					<td colspan="6"><p:messages globalOnly="true" showDetail="true" id="messages" closable="true"/></td>
+
+				</tr> -->
+				<tr>
+					<td></td>
+					<td colspan="3"><p:message for="staffID" id="message" /><span
+						class="cmms-label"></span></td>
+					<td></td>
+					<td></td>
+					<td></td>
+					<td></td>
+				</tr>
+				<tr
+					style="display: ${DailyReportExcelExportBean.display== false? 'none': ''}">
+					<td width="120px;"><span class="cmms-label"><h:outputText
+								value="Staff ID" /></span><span style="color: red;">*</span></td>					
+					<!-- <td><span style="color: red;">*</span>:</td>  -->
+					<td>:</td>
+					<!-- 
+						Revised By : Aye Thida Phyo  
+						Revised Date : 2017/06/28
+						Explanation: Remove Regex Pattern Validation Checking.
+					 -->
+					<td><p:inputText
+							value="#{DailyReportExcelExportBean.dailyReport.staffID.username}"
+							label="Staff ID" id="staffID" style="width:146px;" maxlength="8"
+							validatorMessage="StaffID does not match with pattern">
+							<p:ajax process="@this" update="messages message" />
+						</p:inputText></td>
+					<td></td>
+					<td></td>
+					<td></td>
+				</tr>
+
+				<tr>
+					<td></td>
+					<td colspan="2"><p:message for="reportDateFrom" /></td>
+					<td></td>
+					<td colspan="2"><p:message for="reportDateTo" /></td>
+					<td></td>
+					
+				</tr>
+				<tr>
+				    <td><span class="cmms-label">Report Date From</span><span style="color: red;">*</span></td>
+					<td>:</td>
+					<td><p:calendar pattern="yyyy/MM/dd"
+							value="#{DailyReportExcelExportBean.searchDate.fromDate}"
+							maxdate="#{DailyActivityManageBean.today}" id="reportDateFrom"
+							required="true" label="From Date">
+							<p:ajax event="dateSelect" update="messages message" />
+						</p:calendar></td>
+					<td><span class="cmms-label">Report Date To</span><span style="color: red;">*</span></td>
+					<td>:</td>
+					<td><p:calendar pattern="yyyy/MM/dd"
+							value="#{DailyReportExcelExportBean.searchDate.toDate}"
+							maxdate="#{DailyActivityManageBean.today}" id="reportDateTo"
+							required="true" label="To Date">
+							<p:ajax event="dateSelect" update="messages message" />
+						</p:calendar></td>
+				</tr>
+				<tr>
+					<td colspan="6"></td>
+				</tr>
+
+				<tr>
+					<td colspan="6"></td>
+				</tr>
+
+				<tr>
+						<td colspan="3" ><p:commandButton value="Export"
+							actionListener="#{DailyReportExcelExportBean.prepDownload}"
+							process="@form" update=":dailyReportExportForm" ajax="false"
+							onclick="PrimeFaces.monitorDownload(start, stop);"
+							icon="ui-icon-arrowthick-1-s">
+							<p:fileDownload value="#{DailyReportExcelExportBean.download}" />
+
+						</p:commandButton><p:commandButton value="Show"
+							actionListener="#{DailyReportExcelExportBean.showData}"
+							process="@form"
+							update=":dailyReportExportForm :dailyReportExportTableForm" /></td>
+
+					<td></td>
+					<td></td>
+					<td></td>
+				</tr>
+			</table>
+			<br />
+			<p:separator style="height:5px;margin-top: 2px;margin-bottom: 2px;" />
+		</h:form>
+		<h:form id="dailyReportExportTableForm" styleClass="form-horizontal">
+			<table>
+				<tr>
+					<td><p:commandButton value="Clear"
+							actionListener="#{DailyReportExcelExportBean.clearTable}"
+							process="@form"
+							update=":dailyReportExportForm :dailyReportExportTableForm" /></td>
+				</tr>
+			</table>
+			<p:dataTable var="data"
+				value="#{DailyReportExcelExportBean.dataToShow}"
+				id="dailyReportExportTable" styleClass="fixed-size">
+				<p:columnGroup type="header" style="width:100%;">
+					<p:row>
+						<p:column rowspan="2" headerText="Date" style="width:50%;" />
+						<p:column rowspan="2" headerText="Project ID" style="width:80%;" />
+						<p:column rowspan="2" headerText="WBS No" style="width:50%;" />
+						<p:column colspan="4" headerText="Task" style="width:300%;" />
+						<p:column rowspan="2" headerText="Deliverables /Document"
+							style="width:70%;">
+							<f:facet name="header">
+								<h:outputText value="Deliverables /Document" escape="false"
+									style="white-space:pre-line;" />
+							</f:facet>
+						</p:column>
+						<p:column rowspan="2" headerText="Begin Date" style="width:50%;" />
+						<p:column rowspan="2" headerText="End Date" style="width:50%;" />
+						<p:column rowspan="2" headerText="Progress" style="width:45%;" />
+						<p:column rowspan="2" headerText="Hour" style="width:30%;" />
+						<p:column rowspan="2" headerText="Delay /Forward"
+							style="width:50%;" />
+						<p:column rowspan="2" headerText="Reason" style="width:60%;" />
+						<p:column rowspan="2" headerText="Approval" style="width:60%;" />
+					</p:row>
+					<p:row>
+						<p:column headerText="Function ID" style="width:50%;" />
+						<p:column headerText="Category" style="width:80%;" />
+						<p:column headerText="Activities" style="width:80%;" />
+						<p:column headerText="Description" style="width:200%;" />
+					</p:row>
+				</p:columnGroup>
+				<p:column headerText="Date" rowspan="#{data.rowCount}"
+					rendered="#{data.activity_date!=null}">
+					<h:outputText value="#{data.activity_date}">
+						<f:convertDateTime pattern="yyyy-M-d" />
+					</h:outputText>
+				</p:column>
+				<p:column headerText="Project ID">
+					<h:outputText value="#{data.projectID}">
+					</h:outputText>
+				</p:column>
+				<p:column headerText="WBS No">
+					<h:outputText value="#{data.wbsNo}">
+					</h:outputText>
+				</p:column>
+				<p:column headerText="Function ID">
+					<h:outputText value="#{data.functionID}">
+					</h:outputText>
+				</p:column>
+				<p:column headerText="Category">
+					<h:outputText value="#{data.category}">
+					</h:outputText>
+				</p:column>
+				<p:column headerText="Activities">
+					<h:outputText value="#{data.activities}">
+					</h:outputText>
+				</p:column>
+				<p:column headerText="Description">
+					<h:outputText value="#{data.description}">
+					</h:outputText>
+				</p:column>
+				<p:column headerText="Deliverables /Document">
+					<h:outputText value="#{data.deliveryOutput}">
+					</h:outputText>
+				</p:column>
+				<p:column headerText="Begin Date">
+					<h:outputText value="#{data.beginDate}">
+						<f:convertDateTime pattern="yyyy-M-d" />
+					</h:outputText>
+				</p:column>
+				<p:column headerText="End Date">
+					<h:outputText value="#{data.endDate}">
+						<f:convertDateTime pattern="yyyy-M-d" />
+					</h:outputText>
+				</p:column>
+				<p:column headerText="Progress">
+					<h:outputText value="#{data.progress}">
+					</h:outputText>
+				</p:column>
+				<p:column headerText="Hour">
+					<h:outputText value="#{data.hour}">
+					</h:outputText>
+				</p:column>
+				<p:column headerText="Delay /Forward"
+					style="color : ${data.task_status eq 'DELAY' ? 'red' : data.task_status eq 'FORWARD' ? 'blue':'black'};">
+					<h:outputText value="#{data.taskStatusCount}">
+					</h:outputText>
+				</p:column>
+				<p:column headerText="Reason">
+					<h:outputText value="#{data.reason}">
+					</h:outputText>
+				</p:column>
+				<p:column headerText="Approval" rowspan="#{data.rowCount}">
+					<h:outputText value="#{data.approval}">
+					</h:outputText>
+				</p:column>
+			</p:dataTable>
+		</h:form>
+
+		<script type="text/javascript">
+			function start() {
+				PF('statusDialog').show();
+			}
+
+			function stop() {
+				PF('statusDialog').hide();
+			}
+			history.pushState(null, null, document.URL);
+			window.addEventListener('popstate', function() {
+				history.pushState(null, null, document.URL);
+			});
+			function disableF5(e) {
+				if ((e.which || e.keyCode) == 116
+						|| (e.which || e.keyCode) == 82) {
+					e.preventDefault();
+					e.stopPropagation();
+				}
+			};
+			$(document).bind("load", disableF5);
+		</script>
+	</ui:define>
+</ui:composition>
